@@ -15,20 +15,32 @@
     <button id="sendBtn">إرسال</button>
 
     <script>
-        // When the button is clicked
-        document.getElementById("sendBtn").onclick = function() {
-            // Get the message from the textarea
-            var message = document.getElementById("message").value;
+        const serverUrl = "http://jaafar98765567.loca.lt/send_message"; // replace with your localtunnel URL
 
-            // Send the message to the cloud server using fetch
-            fetch("http://jaafar98765567.loca.lt/send_message", { // replace with your localtunnel URL
+        // Function to check if server is available
+        function checkServerAvailability(callback) {
+            fetch(serverUrl, { method: "GET" })
+                .then(response => {
+                    if (response.ok) {
+                        callback(true); // Server is available
+                    } else {
+                        callback(false); // Server is not available
+                    }
+                })
+                .catch(error => {
+                    console.error("Error checking server:", error);
+                    callback(false); // If fetch fails, assume server is not available
+                });
+        }
+
+        // Function to send message
+        function sendMessage(message) {
+            fetch(serverUrl, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
-                    message: message
-                })
+                body: JSON.stringify({ message: message })
             })
             .then(response => response.json())
             .then(data => {
@@ -40,6 +52,29 @@
                 console.error("Error:", error);
             });
         }
+
+        // When the button is clicked
+        document.getElementById("sendBtn").onclick = function() {
+            var message = document.getElementById("message").value;
+
+            // Check if the server is available before sending the message
+            checkServerAvailability(function(isAvailable) {
+                if (isAvailable) {
+                    sendMessage(message); // Send the message if the server is available
+                } else {
+                    alert("الخادم غير متاح الآن. سيتم المحاولة لاحقًا.");
+                    setTimeout(() => { // Retry after a delay
+                        checkServerAvailability(function(isAvailableAgain) {
+                            if (isAvailableAgain) {
+                                sendMessage(message); // Send the message if available after retry
+                            } else {
+                                alert("مازال الخادم غير متاح.");
+                            }
+                        });
+                    }, 5000); // Retry after 5 seconds
+                }
+            });
+        };
     </script>
 </body>
 </html>
