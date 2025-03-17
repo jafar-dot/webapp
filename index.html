@@ -6,29 +6,28 @@
     <title>إرسال رسالة</title>
 </head>
 <body>
-    <h2>إرسال رسالة yyyyyyإلى الخادم السحابي</h2>
+    <h2>إرسال رسالة tttttttإلى الخادم السحابي</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4" cols="50"></textarea>
     <br><br>
     <button id="sendBtn">إرسال</button>
-    
+
     <script>
         document.getElementById("sendBtn").onclick = function() {
             var message = document.getElementById("message").value;
-            console.log("Sending message:", message); // تسجيل الرسالة في Console
+            console.log("Sending message:", message);
             
             fetch("https://jaafar98765432111.loca.lt/receive-message", {
                 method: "POST",
+                mode: "cors", // تأكد من تفعيل CORS
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
-                    message: message // إرسال الرسالة
-                })
+                body: JSON.stringify({ message: message })
             })
             .then(response => response.json())
             .then(data => {
-                console.log("Response from server:", data); // تسجيل الرد من الخادم
+                console.log("Response from server:", data);
                 if (data.success) {
                     alert("تم إرسال الرسالة بنجاح!");
                 } else {
