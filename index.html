@@ -6,34 +6,34 @@
     <title>إرسال رسالة</title>
 </head>
 <body>
-    <h2>إرسال رس22211122الة إلى الخادم السحابي</h2>
-
+    <h2>إرسال رسالة yyyyyyإلى الخادم السحابي</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4" cols="50"></textarea>
     <br><br>
     <button id="sendBtn">إرسال</button>
-
+    
     <script>
         document.getElementById("sendBtn").onclick = function() {
             var message = document.getElementById("message").value;
-
-            fetch("https://jaafar98765432111.loca.lt/receive-message", { // Ensure this URL matches your hosted Flask app
+            console.log("Sending message:", message); // تسجيل الرسالة في Console
+            
+            fetch("https://jaafar98765432111.loca.lt/receive-message", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    message: message // Only sending the message now
+                    message: message // إرسال الرسالة
                 })
             })
             .then(response => response.json())
             .then(data => {
+                console.log("Response from server:", data); // تسجيل الرد من الخادم
                 if (data.success) {
                     alert("تم إرسال الرسالة بنجاح!");
                 } else {
                     alert(data.error);
                 }
-                console.log("Response from server:", data);
             })
             .catch(error => {
                 alert("حدث خطأ أثناء إرسال الرسالة.");
