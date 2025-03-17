@@ -6,53 +6,31 @@
     <title>إSLOT MACHINE AI CREATOR AI</title>
 </head>
 <body>
-    <h2>إSEND A TEXT NOWletsgooo</h2>
+    <h2>إSEND A TEXT NOW!111222333</h2>
     <label for="message">اكتب رسالتك:</label>
-    <textarea id="message" rows="4" cols="50"></textarea>
-    <br><br>
+    <textarea id="message" rows="4" cols="50"></textarea><br>
     <button id="sendBtn">إرسال</button>
-    
-    <script>
-        const serverUrl = "https://8442-213-173-102-99.ngrok-free.app/receive_text"; // الرابط ثابت
 
-        // دالة لإرسال الرسالة عبر POST
-        function sendMessage(message) {
-            return fetch(serverUrl, {
+    <script>
+        document.getElementById('sendBtn').addEventListener('click', function() {
+            const message = document.getElementById('message').value;
+
+            fetch("http://https://4a50-213-173-102-99.ngrok-free.app/receive_text", { // replace with your actual ngrok url
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({ message: message })
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("استجابة الخادم غير صحيحة");
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                alert("تم إرسال الرسالة بنجاح!");
-                console.log("Response from server:", data);
+                console.log('Success:', data);
+                alert("Message sent: " + message);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
             });
-        }
-
-        // دالة لإعادة المحاولة في حال حدوث خطأ
-        function sendMessageWithRetry(message) {
-            sendMessage(message)
-            .catch(error => {
-                console.error("Error:", error);
-                alert("الخادم غير متاح الآن. سيتم المحاولة لاحقًا.");
-                setTimeout(() => {
-                    sendMessageWithRetry(message);
-                }, 5000); // إعادة المحاولة كل 5 ثواني
-            });
-        }
-
-        // عند النقر على زر الإرسال
-        document.getElementById("sendBtn").onclick = function() {
-            var message = document.getElementById("message").value;
-            sendMessageWithRetry(message);
-        };
+        });
     </script>
 </body>
 </html>
