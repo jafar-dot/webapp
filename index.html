@@ -3,36 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إرسddddddd</title>
+    <title>إرسال رسالة</title>
 </head>
 <body>
-    <h2>إرسال رسالة إلى 5555555555الخادم السحابي</h2>
+    <h2>إرسال رسالة 77777إلى الخادم السحابي</h2>
 
-    <!-- Form to take input -->
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4" cols="50"></textarea>
     <br><br>
     <button id="sendBtn">إرسال</button>
 
     <script>
-        // When the button is clicked
         document.getElementById("sendBtn").onclick = function() {
-            // Get the message from the textarea
             var message = document.getElementById("message").value;
+            var apiKey = 'rpa_FY0CUMREVP88PNOOM1BCJ6II84NL51NKCJPRLQ031p796m'; // Your API key
 
-            // Send the message to the cloud server using fetch
-            fetch("https://jaafar98765432111.loca.lt/receive-message", { // replace with your localtunnel URL
+            fetch("https://jaafar98765432111.loca.lt/receive-message", { // Corrected endpoint
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
+                    api_key: apiKey, // Add API key to body
                     message: message
                 })
             })
             .then(response => response.json())
             .then(data => {
-                alert("تم إرسال الرسالة بنجاح!");
+                if (data.success) {
+                    alert("تم إرسال الرسالة بنجاح!");
+                } else {
+                    alert(data.error);
+                }
                 console.log("Response from server:", data);
             })
             .catch(error => {
