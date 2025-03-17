@@ -3,40 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إSLOT MACHINE AI CREATOR AI</title>
+    <title>إرسddddddd</title>
 </head>
 <body>
-    <h2>إSEND A TEXT NOW!fffffff</h2>
+    <h2>إرسال رسالة إلى الخادم السحابي</h2>
+
+    <!-- Form to take input -->
     <label for="message">اكتب رسالتك:</label>
-    <textarea id="message" rows="4" cols="50"></textarea><br>
+    <textarea id="message" rows="4" cols="50"></textarea>
+    <br><br>
     <button id="sendBtn">إرسال</button>
 
     <script>
-        document.getElementById('sendBtn').addEventListener('click', function() {
-            const message = document.getElementById('message').value;
+        // When the button is clicked
+        document.getElementById("sendBtn").onclick = function() {
+            // Get the message from the textarea
+            var message = document.getElementById("message").value;
 
-            fetch("http://https://4a50-213-173-102-99.ngrok-free.app/receive_text", { // Replace with your Ngrok URL
+            // Send the message to the cloud server using fetch
+            fetch("https://jaafar98765432111.loca.lt/send_message", { // replace with your localtunnel URL
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ message: message })
+                body: JSON.stringify({
+                    message: message
+                })
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok ' + response.statusText);
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                console.log('Success:', data);
-                alert("Message sent: " + message);
+                alert("تم إرسال الرسالة بنجاح!");
+                console.log("Response from server:", data);
             })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert("Error: " + error.message);
+            .catch(error => {
+                alert("حدث خطأ أثناء إرسال الرسالة.");
+                console.error("Error:", error);
             });
-        });
+        }
     </script>
 </body>
 </html>
