@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إرسال رسالة</title>
+</head>
+<body>
+    <h2>إرسال رسالة إلى الخادم السحابي</h2>
+
+    <!-- Form to take input -->
+    <label for="message">اكتب رسالتك:</label>
+    <textarea id="message" rows="4" cols="50"></textarea>
+    <br><br>
+    <button id="sendBtn">إرسال</button>
+
+    <script>
+        // When the button is clicked
+        document.getElementById("sendBtn").onclick = function() {
+            // Get the message from the textarea
+            var message = document.getElementById("message").value;
+
+            // Send the message to the cloud server using fetch
+            fetch("http://jaafar98765567.loca.lt/send_message", { // replace with your localtunnel URL
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("تم إرسال الرسالة بنجاح!");
+                console.log("Response from server:", data);
+            })
+            .catch(error => {
+                alert("حدث خطأ أثناء إرسال الرسالة.");
+                console.error("Error:", error);
+            });
+        }
+    </script>
+</body>
+</html>
