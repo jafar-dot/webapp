@@ -6,37 +6,36 @@
     <title>إرسال رسالة</title>
 </head>
 <body>
-    <h2>إرسال رسالة tttttttإلى الخادم السحابي</h2>
+    <h2>إرسال رسالة ggggggإلى الخادم السحابي</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4" cols="50"></textarea>
     <br><br>
     <button id="sendBtn">إرسال</button>
-
+    
     <script>
         document.getElementById("sendBtn").onclick = function() {
-            var message = document.getElementById("message").value;
-            console.log("Sending message:", message);
-            
-            fetch("https://jaafar98765432111.loca.lt/receive-message", {
+            var message = document.getElementById("message").value;  // الحصول على محتوى الرسالة
+            fetch("https://jaafar98765432111.loca.lt/receive-message", {  // رابط localtunnel
                 method: "POST",
-                mode: "cors", // تأكد من تفعيل CORS
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json"  // تحديد نوع المحتوى
                 },
-                body: JSON.stringify({ message: message })
+                body: JSON.stringify({
+                    message: message  // تحويل الرسالة إلى JSON
+                })
             })
-            .then(response => response.json())
+            .then(response => response.json())  // تحويل الاستجابة إلى JSON
             .then(data => {
-                console.log("Response from server:", data);
                 if (data.success) {
-                    alert("تم إرسال الرسالة بنجاح!");
+                    alert("تم إرسال الرسالة بنجاح!");  // إظهار رسالة نجاح
                 } else {
-                    alert(data.error);
+                    alert(data.error);  // إظهار خطأ إذا كان موجودًا
                 }
+                console.log("Response from server:", data);  // طباعة الاستجابة في وحدة التحكم
             })
             .catch(error => {
-                alert("حدث خطأ أثناء إرسال الرسالة.");
-                console.error("Error:", error);
+                alert("حدث خطأ أثناء إرسال الرسالة.");  // إظهار رسالة خطأ
+                console.error("Error:", error);  // طباعة الخطأ في وحدة التحكم
             });
         }
     </script>
