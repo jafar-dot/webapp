@@ -6,36 +6,35 @@
     <title>إرسال رسالة</title>
 </head>
 <body>
-    <h2>إرسال رسالة klklklklklkإلى الخادم السحابي</h2>
+    <h2>إرسال رسالة إلى ا888لخادم السحابي</h2>
     <label for="message">اكتب رسالتك:</label>
-    <textarea id="message" rows="4" cols="50"></textarea>
-    <br><br>
-    <button id="sendBtn">إرسال</button>
-    
+    <textarea id="message" rows="4" cols="50"></textarea><br>
+    <button id="sendBtn">إرسال</button> <!-- Added send button -->
+
     <script>
         document.getElementById("sendBtn").onclick = function() {
-            var message = document.getElementById("message").value;  // الحصول على محتوى الرسالة
-            fetch("https://wonderful-panther-2.loca.lt/receive-message", {  // رابط localtunnel
+            var message = document.getElementById("message").value;  // Get the message from textarea
+            fetch("https://wonderful-panther-2.loca.lt/receive-message", {  // Localtunnel URL
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"  // تحديد نوع المحتوى
+                    "Content-Type": "application/json"  // Set content type to JSON
                 },
                 body: JSON.stringify({
-                    message: message  // تحويل الرسالة إلى JSON
+                    message: message  // Convert the message to JSON
                 })
             })
-            .then(response => response.json())  // تحويل الاستجابة إلى JSON
+            .then(response => response.json())  // Parse the JSON response
             .then(data => {
                 if (data.success) {
-                    alert("تم إرسال الرسالة بنجاح!");  // إظهار رسالة نجاح
+                    alert("تم إرسال الرسالة بنجاح!");  // Display success alert
                 } else {
-                    alert(data.error);  // إظهار خطأ إذا كان موجودًا
+                    alert(data.error);  // Display error if available
                 }
-                console.log("Response from server:", data);  // طباعة الاستجابة في وحدة التحكم
+                console.log("Response from server:", data);  // Log the response
             })
             .catch(error => {
-                alert("حدث خطأ أثناء إرسال الرسالة.");  // إظهار رسالة خطأ
-                console.error("Error:", error);  // طباعة الخطأ في وحدة التحكم
+                alert("حدث خطأ أثناء إرسال الرسالة.");  // Display error alert
+                console.error("Error:", error);  // Log the error
             });
         }
     </script>
