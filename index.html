@@ -14,7 +14,7 @@
     <script>
         document.getElementById("sendBtn").onclick = function() {
             var message = document.getElementById("message").value;  // Get the message from textarea
-            fetch("https://122c-142-127-93-36.ngrok-free.app/receive_message", {  // Localtunnel URL
+            fetch("http://sterling-ultimately-lizard.ngrok-free.app/receive_message", {  // Localtunnel URL
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"  // Set content type to JSON
