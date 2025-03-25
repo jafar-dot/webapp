@@ -42,34 +42,65 @@
         }
 
         #loadingBanner {
-            display: none;  /* Hidden by default */
+            display: none;
             text-align: center;
-            color: green;
             margin-top: 20px;
+        }
+
+        #loadingText {
+            font-size: 24px; /* Bigger font size */
+            font-weight: bold;  /* Bold text */
+            color: black;  /* Black text */
+        }
+
+        #progressBarBackground {
+            width: 100%;
+            background-color: #ddd; /* Light grey background for progress bar */
+            border-radius: 5px; /* Rounded corners */
+            margin-top: 10px;
+            height: 30px; /* Height of the progress bar */
+            overflow: hidden; /* Ensure the inner div stays within the bounds */
+        }
+
+        #progressBar {
+            height: 100%;
+            width: 0; /* Start at 0 width */
+            background-color: green; /* Green background for progress */
+            transition: width 0.3s ease; /* Smooth transition when width changes */
         }
     </style>
 </head>
 <body>
-    <h2>Write ah prompt</h2>
+    <h2>Write a prompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4" cols="50"></textarea><br>
     <button id="sendBtn">Send</button>
-    <div id="loadingBanner">Processing: <span id="processText"></span></div>
+    
+    <div id="loadingBanner">
+        <div id="loadingText">Processing: <span id="processText"></span></div>
+        <div id="progressBarBackground">
+            <div id="progressBar"></div>
+        </div>
+    </div>
 
     <script>
-        let isProcessing = false;  // State variable to manage processing status
+        let isProcessing = false; // State variable to manage processing status
 
         document.getElementById("sendBtn").onclick = function() {
             if (isProcessing) {
-                alert("Please wait until the current processing is complete.");  // Prevent sending multiple messages
+                alert("Please wait until the current processing is complete."); // Prevent sending multiple messages
                 return;
             }
 
             var message = document.getElementById("message").value;
-            isProcessing = true;  // Mark as processing
-            document.getElementById("loadingBanner").style.display = "block";  // Show loading banner
-            document.getElementById("processText").innerText = "Analyzing text...";  // Initial status
-
+            isProcessing = true; // Mark as processing
+            document.getElementById("loadingBanner").style.display = "block"; // Show loading banner
+            document.getElementById("processText").innerText = "Analyzing text..."; // Initial status
+            
+            // Reset progress bar
+            const progressBar = document.getElementById("progressBar");
+            progressBar.style.width = '0%'; // Start at 0%
+            
             fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
                 method: "POST",
                 headers: {
@@ -82,7 +113,9 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === "success") {
-                    document.getElementById("processText").innerText = data.process;  // Update with final status
+                    // Simulate progress updates based on the server's progress
+                    updateProgressBar(data.percent_process);
+                    document.getElementById("processText").innerText = data.process; // Update with final status
                     alert("تم إرسال الرسالة بنجاح!");
                 } else {
                     alert(data.message);
@@ -94,9 +127,16 @@
                 console.error("Error:", error);
             })
             .finally(() => {
-                isProcessing = false;  // Reset the processing status
-                document.getElementById("loadingBanner").style.display = "none";  // Hide loading banner
+                isProcessing = false; // Reset the processing status
+                setTimeout(() => {
+                    document.getElementById("loadingBanner").style.display = "none"; // Hide loading banner
+                }, 1000); // Delay hiding the banner for visibility
             });
+        }
+
+        function updateProgressBar(percent) {
+            const progressBar = document.getElementById("progressBar");
+            progressBar.style.width = percent + '%'; // Update the width based on the processing percent
         }
     </script>
 </body>
