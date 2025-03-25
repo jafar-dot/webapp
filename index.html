@@ -57,7 +57,7 @@
     </style>
 </head>
 <body>
-    <h2>Write a prddddompt</h2>
+    <h2>Write a pxxxxrddddompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4" cols="50"></textarea><br>
     <button id="sendBtn">Send</button>
@@ -71,7 +71,7 @@
             document.getElementById("loadingBanner").style.display = "block";  
             document.getElementById("processText").innerText = "Analyzing text...";  
 
-            fetch("http://localhost:80/receive_message", {
+            fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
