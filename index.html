@@ -42,14 +42,14 @@
         }
 
         #loadingBanner {
-            display: none;  /* Hidden by default */
+            display: none; 
             text-align: center;
             color: green;
             margin-top: 20px;
         }
 
         #downloadLink {
-            display: none; /* Hidden initially */
+            display: none; 
             text-align: center;
             margin-top: 20px;
             color: yellow;
@@ -57,55 +57,42 @@
     </style>
 </head>
 <body>
-    <h2>Write a prompt</h2>
+    <h2>Write a prddddompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4" cols="50"></textarea><br>
     <button id="sendBtn">Send</button>
     <div id="loadingBanner">Processing: <span id="processText"></span></div>
-    <div id="downloadLink"><a id="downloadAnchor" href="" target="_blank">Download Results</a></div>
+    <div id="downloadLink"><a id="downloadAnchor" href="" target="_blank">Download Images</a></div>
 
     <script>
-        let isProcessing = false;  // State variable to manage processing status
-
         document.getElementById("sendBtn").onclick = function() {
-            if (isProcessing) {
-                alert("Please wait until the current processing is complete.");  // Prevent sending multiple messages
-                return;
-            }
-
             var message = document.getElementById("message").value;
-            isProcessing = true;  // Mark as processing
-            document.getElementById("loadingBanner").style.display = "block";  // Show loading banner
-            document.getElementById("processText").innerText = "Analyzing text...";  // Initial status
+
+            document.getElementById("loadingBanner").style.display = "block";  
+            document.getElementById("processText").innerText = "Analyzing text...";  
 
             fetch("http://localhost:80/receive_message", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
-                    message: message  // Convert the message to JSON
-                })
+                body: JSON.stringify({ message: message })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.status === "success") {
-                    document.getElementById("processText").innerText = data.process;  // Update with final status
-                    document.getElementById("downloadLink").style.display = "block";  // Show download link
-                    document.getElementById("downloadAnchor").href = `http://localhost:80${data.download_link}`;  // Set download link
-                    alert("تم إرسال الرسالة بنجاح!");
+                    document.getElementById("processText").innerText = "Processing complete.";
+                    document.getElementById("downloadLink").style.display = "block";  
+                    document.getElementById("downloadAnchor").href = `http://localhost:80${data.download_link}`; 
                 } else {
                     alert(data.message);
                 }
-                console.log("Response from server:", data);
             })
             .catch(error => {
-                alert("حدث خطأ أثناء إرسال الرسالة.");
                 console.error("Error:", error);
             })
             .finally(() => {
-                isProcessing = false;  // Reset the processing status
-                document.getElementById("loadingBanner").style.display = "none";  // Hide loading banner
+                document.getElementById("loadingBanner").style.display = "none";  
             });
         }
     </script>
