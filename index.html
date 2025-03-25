@@ -5,20 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SLOT MACHINE6666 GENERATOR</title>
     <style>
+        /* Reset default margins and padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             background-image: url('background.png');  /* Set the background image */
             background-size: cover;  /* Ensure the image covers the entire viewport */
-            background-position: center;  /* Center the background image */
-            color: white;  /* Change the text color to make it more readable against the background */
+            background-position: top center;  /* Position the background image at the top center */
+            color: white;  /* Change the text color for readability */
             font-family: Arial, sans-serif;  /* Set a default font */
         }
+
         h2 {
             text-align: center;  /* Center align the heading */
+            margin-top: 20px;  /* Optionally, add some margin at the top */
         }
+
+        label {
+            display: block;  /* Each label gets its own line */
+            text-align: center;  
+            margin-top: 10px;  /* Add margin for spacing */
+        }
+
         #message {
             display: block;  /* Make the textarea a block element */
-            margin: 0 auto;  /* Center the textarea */
+            margin: 20px auto;  /* Center the textarea */
         }
+
         #sendBtn {
             display: block;  /* Make the button a block element */
             margin: 20px auto;  /* Center the button with a margin */
@@ -26,7 +43,7 @@
     </style>
 </head>
 <body>
-    <h2>Write a8 prompt</h2>
+    <h2>Write a prompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4" cols="50"></textarea><br>
     <button id="sendBtn">Send</button> <!-- Added send button -->
@@ -34,7 +51,7 @@
     <script>
         document.getElementById("sendBtn").onclick = function() {
             var message = document.getElementById("message").value;  // Get the message from textarea
-            fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {  // Localtunnel URL
+            fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"  // Set content type to JSON
@@ -45,7 +62,7 @@
             })
             .then(response => response.json())  // Parse the JSON response
             .then(data => {
-                if (data.status === "success") {  // Check for success status instead of success property
+                if (data.status === "success") {  // Check for success status
                     alert("تم إرسال الرسالة بنجاح!");  // Display success alert
                 } else {
                     alert(data.message);  // Display error if available
