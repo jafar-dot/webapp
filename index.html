@@ -4,10 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SLOT MACHINE6666 GENERATOR</title>
+    <style>
+        body {
+            background-image: url('background.png');  /* Set the background image */
+            background-size: cover;  /* Ensure the image covers the entire viewport */
+            background-position: center;  /* Center the background image */
+            color: white;  /* Change the text color to make it more readable against the background */
+            font-family: Arial, sans-serif;  /* Set a default font */
+        }
+        h2 {
+            text-align: center;  /* Center align the heading */
+        }
+        #message {
+            display: block;  /* Make the textarea a block element */
+            margin: 0 auto;  /* Center the textarea */
+        }
+        #sendBtn {
+            display: block;  /* Make the button a block element */
+            margin: 20px auto;  /* Center the button with a margin */
+        }
+    </style>
 </head>
 <body>
-    background-image:url('background.png')
-    <h2>Write a prompt</h2>
+    <h2>Write a8 prompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4" cols="50"></textarea><br>
     <button id="sendBtn">Send</button> <!-- Added send button -->
@@ -26,10 +45,10 @@
             })
             .then(response => response.json())  // Parse the JSON response
             .then(data => {
-                if (data.success) {
+                if (data.status === "success") {  // Check for success status instead of success property
                     alert("تم إرسال الرسالة بنجاح!");  // Display success alert
                 } else {
-                    alert(data.error);  // Display error if available
+                    alert(data.message);  // Display error if available
                 }
                 console.log("Response from server:", data);  // Log the response
             })
