@@ -71,7 +71,7 @@
     </style>
 </head>
 <body>
-    <h2>Write a prompt</h2>
+    <h2>Write a ooprompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4" cols="50"></textarea><br>
     <button id="sendBtn">Send</button>
@@ -116,11 +116,11 @@
                     // Simulate progress updates based on the server's progress
                     updateProgressBar(data.percent_process);
                     document.getElementById("processText").innerText = data.process; // Update with final status
-                    alert("تم إرسال الرسالة بنجاح!");
+                    console.log("Response from server:", data);
                 } else {
                     alert(data.message);
                 }
-                console.log("Response from server:", data);
+                
             })
             .catch(error => {
                 alert("حدث خطأ أثناء إرسال الرسالة.");
