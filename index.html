@@ -11,34 +11,41 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            background-image: url('background.png');  /* Set the background image */
-            background-size: cover;  /* Ensure the image covers the entire viewport */
-            background-position: top center;  /* Position the background image at the top center */
-            color: white;  /* Change the text color for readability */
-            font-family: Arial, sans-serif;  /* Set a default font */
+            background-image: url('background.png');
+            background-size: cover;
+            background-position: top center;
+            color: white;
+            font-family: Arial, sans-serif;
         }
 
         h2 {
-            text-align: center;  /* Center align the heading */
-            margin-top: 20px;  /* Optionally, add some margin at the top */
+            text-align: center;
+            margin-top: 20px;
         }
 
         label {
-            display: block;  /* Each label gets its own line */
-            text-align: center;  
-            margin-top: 10px;  /* Add margin for spacing */
+            display: block;
+            text-align: center;
+            margin-top: 10px;
         }
 
         #message {
-            display: block;  /* Make the textarea a block element */
-            margin: 20px auto;  /* Center the textarea */
+            display: block;
+            margin: 20px auto;
         }
 
         #sendBtn {
-            display: block;  /* Make the button a block element */
-            margin: 20px auto;  /* Center the button with a margin */
+            display: block;
+            margin: 20px auto;
+        }
+
+        #loadingBanner {
+            display: none;  /* Hidden by default */
+            text-align: center;
+            color: green;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -46,32 +53,49 @@
     <h2>Write a prompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4" cols="50"></textarea><br>
-    <button id="sendBtn">Send</button> <!-- Added send button -->
+    <button id="sendBtn">Send</button>
+    <div id="loadingBanner">Processing: <span id="processText"></span></div>
 
     <script>
+        let isProcessing = false;  // State variable to manage processing status
+
         document.getElementById("sendBtn").onclick = function() {
-            var message = document.getElementById("message").value;  // Get the message from textarea
+            if (isProcessing) {
+                alert("Please wait until the current processing is complete.");  // Prevent sending multiple messages
+                return;
+            }
+
+            var message = document.getElementById("message").value;
+            isProcessing = true;  // Mark as processing
+            document.getElementById("loadingBanner").style.display = "block";  // Show loading banner
+            document.getElementById("processText").innerText = "Analyzing text...";  // Initial status
+
             fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"  // Set content type to JSON
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     message: message  // Convert the message to JSON
                 })
             })
-            .then(response => response.json())  // Parse the JSON response
+            .then(response => response.json())
             .then(data => {
-                if (data.status === "success") {  // Check for success status
-                    alert("تم إرسال الرسالة بنجاح!");  // Display success alert
+                if (data.status === "success") {
+                    document.getElementById("processText").innerText = data.process;  // Update with final status
+                    alert("تم إرسال الرسالة بنجاح!");
                 } else {
-                    alert(data.message);  // Display error if available
+                    alert(data.message);
                 }
-                console.log("Response from server:", data);  // Log the response
+                console.log("Response from server:", data);
             })
             .catch(error => {
-                alert("حدث خطأ أثناء إرسال الرسالة.");  // Display error alert
-                console.error("Error:", error);  // Log the error
+                alert("حدث خطأ أثناء إرسال الرسالة.");
+                console.error("Error:", error);
+            })
+            .finally(() => {
+                isProcessing = false;  // Reset the processing status
+                document.getElementById("loadingBanner").style.display = "none";  // Hide loading banner
             });
         }
     </script>
