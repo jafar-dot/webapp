@@ -1,103 +1,49 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLOT MACHINE6666 GENERATOR</title>
-    <style>
-        /* Reset default margins and padding */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+from flask import Flask, request, jsonify  
+from flask_cors import CORS
+import time
+import threading
 
-        body {
-            background-image: url('background.png');
-            background-size: cover;
-            background-position: top center;
-            color: white;
-            font-family: Arial, sans-serif;
-        }
+app = Flask(__name__)  
+CORS(app)
 
-        h2 {
-            text-align: center;
-            margin-top: 20px;
-        }
+process_status = {
+    'process': '',
+    'percent_process': 0,
+    'is_running': False
+}
 
-        label {
-            display: block;
-            text-align: center;
-            margin-top: 10px;
-        }
+@app.route("/")  
+def home():  
+    return "runpod app is running!"  
 
-        #message {
-            display: block;
-            margin: 20px auto;
-        }
+@app.route("/receive_message", methods=["POST"])  
+def receive_message():  
+    global process_status  
+    data = request.get_json()  
+    message = data.get("message", "")  
+    print("Received message:", message)
 
-        #sendBtn {
-            display: block;
-            margin: 20px auto;
-        }
+    process_status['process'] = "Analysing text"
+    process_status['percent_process'] = 0
+    process_status['is_running'] = True
 
-        #loadingBanner {
-            display: none;  /* Hidden by default */
-            text-align: center;
-            color: green;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <h2>Write a prompt</h2>
-    <label for="message">اكتب رسالتك:</label>
-    <textarea id="message" rows="4" cols="50"></textarea><br>
-    <button id="sendBtn">Send</button>
-    <div id="loadingBanner">Processing: <span id="processText"></span></div>
+    # Simulate processing
+    for i in range(1, 11):
+        process_status['percent_process'] = i * 10
+        time.sleep(1)  # Simulate some processing delay
 
-    <script>
-        let isProcessing = false;  // State variable to manage processing status
+    process_status['process'] = "Completed"
+    process_status['percent_process'] = 100
+    process_status['is_running'] = False
 
-        document.getElementById("sendBtn").onclick = function() {
-            if (isProcessing) {
-                alert("Please wait until the current processing is complete.");  // Prevent sending multiple messages
-                return;
-            }
+    return jsonify({'status': 'success', 'message': 'Processing complete'})
 
-            var message = document.getElementById("message").value;
-            isProcessing = true;  // Mark as processing
-            document.getElementById("loadingBanner").style.display = "block";  // Show loading banner
-            document.getElementById("processText").innerText = "Analyzing text...";  // Initial status
+@app.route("/check_progress", methods=["GET"])  
+def check_progress():
+    return jsonify(process_status)
 
-            fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    message: message  // Convert the message to JSON
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "success") {
-                    document.getElementById("processText").innerText = data.process;  // Update with final status
-                    alert("تم إرسال الرسالة بنجاح!");
-                } else {
-                    alert(data.message);
-                }
-                console.log("Response from server:", data);
-            })
-            .catch(error => {
-                alert("حدث خطأ أثناء إرسال الرسالة.");
-                console.error("Error:", error);
-            })
-            .finally(() => {
-                isProcessing = false;  // Reset the processing status
-                document.getElementById("loadingBanner").style.display = "none";  // Hide loading banner
-            });
-        }
-    </script>
-</body>
-</html>
+def run_flask():  
+    app.run(port=80)  
+
+flask_thread = threading.Thread(target=run_flask, daemon=True)  
+flask_thread.start()  
