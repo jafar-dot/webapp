@@ -62,7 +62,7 @@
     <textarea id="message" rows="4" cols="50"></textarea><br>
     <button id="sendBtn">Send</button>
     <div id="loadingBanner">Processing: <span id="processText"></span></div>
-    <div id="downloadLink"><a id="downloadAnchor" href="" target="_blank">Download Result</a></div>
+    <div id="downloadLink"><a id="downloadAnchor" href="" target="_blank">Download Results</a></div>
 
     <script>
         let isProcessing = false;  // State variable to manage processing status
@@ -78,7 +78,7 @@
             document.getElementById("loadingBanner").style.display = "block";  // Show loading banner
             document.getElementById("processText").innerText = "Analyzing text...";  // Initial status
 
-            fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
+            fetch("http://localhost:80/receive_message", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -92,7 +92,7 @@
                 if (data.status === "success") {
                     document.getElementById("processText").innerText = data.process;  // Update with final status
                     document.getElementById("downloadLink").style.display = "block";  // Show download link
-                    document.getElementById("downloadAnchor").href = `https://sterling-ultimately-lizard.ngrok-free.app${data.download_link}`;  // Set download link
+                    document.getElementById("downloadAnchor").href = `http://localhost:80${data.download_link}`;  // Set download link
                     alert("تم إرسال الرسالة بنجاح!");
                 } else {
                     alert(data.message);
