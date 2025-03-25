@@ -57,7 +57,7 @@
     </style>
 </head>
 <body>
-    <h2>Write a pxxxxrddddompt</h2>
+    <h2>Write a pxxxdddddddvvvrddddompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4" cols="50"></textarea><br>
     <button id="sendBtn">Send</button>
@@ -83,7 +83,7 @@
                 if (data.status === "success") {
                     document.getElementById("processText").innerText = "Processing complete.";
                     document.getElementById("downloadLink").style.display = "block";  
-                    document.getElementById("downloadAnchor").href = `http://localhost:80${data.download_link}`; 
+                    document.getElementById("downloadAnchor").href = `https://sterling-ultimately-lizard.ngrok-free.app${data.download_link}`; 
                 } else {
                     alert(data.message);
                 }
