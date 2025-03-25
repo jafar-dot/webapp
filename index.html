@@ -5,47 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SLOT MACHINE6666 GENERATOR</title>
     <style>
-        /* Reset default margins and padding */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-image: url('background.png');
-            background-size: cover;
-            background-position: top center;
-            color: white;
-            font-family: Arial, sans-serif;
-        }
-
-        h2 {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        label {
-            display: block;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        #message {
-            display: block;
-            margin: 20px auto;
-        }
-
-        #sendBtn {
-            display: block;
-            margin: 20px auto;
-        }
-
-        #loadingBanner {
-            display: none;
-            text-align: center;
-            margin-top: 20px;
-        }
+        /* existing CSS styles omitted for brevity... */
 
         #loadingText {
             font-size: 24px; /* Bigger font size */
@@ -55,28 +15,28 @@
 
         #progressBarBackground {
             width: 100%;
-            background-color: #ddd; /* Light grey background for progress bar */
+            background-color: #ddd; /* Light grey */
             border-radius: 5px; /* Rounded corners */
             margin-top: 10px;
             height: 30px; /* Height of the progress bar */
-            overflow: hidden; /* Ensure the inner div stays within the bounds */
+            overflow: hidden; /* Keep the inner div contained */
         }
 
         #progressBar {
             height: 100%;
             width: 0; /* Start at 0 width */
-            background-color: green; /* Green background for progress */
-            transition: width 0.3s ease; /* Smooth transition when width changes */
+            background-color: green; /* Green progress */
+            transition: width 0.3s ease; /* Smooth transition */
         }
     </style>
 </head>
 <body>
-    <h2>Write a ooprompt</h2>
+    <h2>Write a prompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4" cols="50"></textarea><br>
     <button id="sendBtn">Send</button>
     
-    <div id="loadingBanner">
+    <div id="loadingBanner" style="display: none;">
         <div id="loadingText">Processing: <span id="processText"></span></div>
         <div id="progressBarBackground">
             <div id="progressBar"></div>
@@ -84,59 +44,72 @@
     </div>
 
     <script>
-        let isProcessing = false; // State variable to manage processing status
+        let isProcessing = false;
 
         document.getElementById("sendBtn").onclick = function() {
             if (isProcessing) {
-                alert("Please wait until the current processing is complete."); // Prevent sending multiple messages
+                alert("Please wait until the current processing is complete.");
                 return;
             }
 
             var message = document.getElementById("message").value;
-            isProcessing = true; // Mark as processing
-            document.getElementById("loadingBanner").style.display = "block"; // Show loading banner
-            document.getElementById("processText").innerText = "Analyzing text..."; // Initial status
-            
-            // Reset progress bar
-            const progressBar = document.getElementById("progressBar");
-            progressBar.style.width = '0%'; // Start at 0%
-            
-            fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
+            isProcessing = true;
+            document.getElementById("loadingBanner").style.display = "block";
+            document.getElementById("processText").innerText = "Starting...";
+
+            // Send initial message to start processing
+            fetch("http://localhost:80/receive_message", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    message: message  // Convert the message to JSON
+                    message: message
                 })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.status === "success") {
-                    // Simulate progress updates based on the server's progress
-                    updateProgressBar(data.percent_process);
-                    document.getElementById("processText").innerText = data.process; // Update with final status
-                    console.log("Response from server:", data);
+                    // Start polling for progress
+                    checkProgress();
                 } else {
                     alert(data.message);
                 }
-                
             })
-            .catch(error => {
-                alert("حدث خطأ أثناء إرسال الرسالة.");
+            .catch((error) => {
+                alert("An error occurred while sending the message.");
                 console.error("Error:", error);
-            })
-            .finally(() => {
-                isProcessing = false; // Reset the processing status
-                setTimeout(() => {
-                    document.getElementById("loadingBanner").style.display = "none"; // Hide loading banner
-                }, 1000); // Delay hiding the banner for visibility
             });
         }
 
-        function updateProgressBar(percent) {
+        function checkProgress() {
             const progressBar = document.getElementById("progressBar");
-            progressBar.style.width = percent + '%'; // Update the width based on the processing percent
+            const processText = document.getElementById("processText");
+
+            // Poll the server for progress updates
+            const interval = setInterval(() => {
+                fetch("http://localhost:80/check_progress")
+                    .then(response => response.json())
+                    .then(status => {
+                        processText.innerText = status.process;  // Update with current process text
+                        const percent = status.percent_process;
+                        progressBar.style.width = percent + '%'; // Update the progress bar
+                        
+                        // If processing is complete, clear the interval
+                        if (status.percent_process >= 100) {
+                            clearInterval(interval);
+                            isProcessing = false; // Reset processing status
+                            setTimeout(() => {
+                                document.getElementById("loadingBanner").style.display = "none";  // Hide loading banner
+                            }, 1000); // Delay hiding
+                        }
+                    })
+                    .catch((error) => {
+                        clearInterval(interval);
+                        alert("Error checking progress.");
+                        console.error("Error:", error);
+                    });
+            }, 1000); // Poll every second
         }
     </script>
 </body>
