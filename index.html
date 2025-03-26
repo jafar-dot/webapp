@@ -18,27 +18,49 @@
             background-position: top center;
             color: white;
             font-family: Arial, sans-serif;
+            padding: 10px;
         }
 
         h2 {
             text-align: center;
             margin-top: 20px;
+            font-size: 1.5rem; /* Responsive font size */
         }
 
         label {
             display: block;
             text-align: center;
             margin-top: 10px;
+            font-size: 1rem; /* Responsive font size */
         }
 
         #message {
             display: block;
+            width: 100%; /* Full width */
+            max-width: 500px; /* Limit max width */
             margin: 20px auto;
+            padding: 10px;
+            font-size: 1rem; /* Responsive font size */
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
 
         #sendBtn {
             display: block;
+            width: 100%; /* Full width */
+            max-width: 200px; /* Limit max width */
             margin: 20px auto;
+            padding: 10px;
+            font-size: 1rem; /* Responsive font size */
+            border-radius: 5px;
+            border: none;
+            background-color: #4CAF50; /* Green background */
+            color: white;
+            cursor: pointer;
+        }
+
+        #sendBtn:hover {
+            background-color: #45a049; /* Darker green on hover */
         }
 
         #loadingBanner {
@@ -54,12 +76,24 @@
             margin-top: 20px;
             color: yellow;
         }
+
+        @media (max-width: 600px) {
+            h2 {
+                font-size: 1.2rem; /* Smaller font size for small screens */
+            }
+            label {
+                font-size: 0.9rem; /* Smaller font size for small screens */
+            }
+            #message, #sendBtn {
+                font-size: 0.9rem; /* Smaller font size for small screens */
+            }
+        }
     </style>
 </head>
 <body>
-    <h2>Write a pxxxdddddddvvvrddddompt</h2>
+    <h2>Write aggg prompt</h2> <!-- Adjusted text -->
     <label for="message">اكتب رسالتك:</label>
-    <textarea id="message" rows="4" cols="50"></textarea><br>
+    <textarea id="message" rows="4"></textarea><br>
     <button id="sendBtn">Send</button>
     <div id="loadingBanner">Processing: <span id="processText"></span></div>
     <div id="downloadLink"><a id="downloadAnchor" href="" target="_blank">Download Images</a></div>
