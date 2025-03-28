@@ -5,13 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SLOT MACHINE6666 GENERATOR</title>
     <style>
-        /* Reset default margins and padding */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
             background-image: url('background.png');
             background-size: cover;
@@ -20,115 +13,83 @@
             font-family: Arial, sans-serif;
             padding: 10px;
         }
-
         h2 {
             text-align: center;
             margin-top: 20px;
-            font-size: 1.5rem; /* Responsive font size */
         }
-
         label {
             display: block;
             text-align: center;
             margin-top: 10px;
-            font-size: 1rem; /* Responsive font size */
         }
-
         #message {
             display: block;
-            width: 100%; /* Full width */
-            max-width: 500px; /* Limit max width */
+            width: 100%;
+            max-width: 500px;
             margin: 20px auto;
             padding: 10px;
-            font-size: 1rem; /* Responsive font size */
             border-radius: 5px;
             border: 1px solid #ccc;
         }
-
-        #sendBtn {
+        #sendBtn, #openGameBtn {
             display: block;
-            width: 100%; /* Full width */
-            max-width: 200px; /* Limit max width */
+            width: 100%;
+            max-width: 200px;
             margin: 20px auto;
             padding: 10px;
-            font-size: 1rem; /* Responsive font size */
             border-radius: 5px;
             border: none;
-            background-color: #4CAF50; /* Green background */
-            color: white;
             cursor: pointer;
+            text-align: center;
         }
-
+        #sendBtn {
+            background-color: #4CAF50;
+            color: white;
+        }
         #sendBtn:hover {
-            background-color: #45a049; /* Darker green on hover */
+            background-color: #45a049;
         }
-
-        #loadingBanner {
-            display: none; 
-            text-align: center;
-            color: green;
-            margin-top: 20px;
-        }
-
-        #downloadLink {
-            display: none; 
+        #downloadLink, #gameLink {
+            display: none;
             text-align: center;
             margin-top: 20px;
-            color: yellow;
-        }
-
-        @media (max-width: 600px) {
-            h2 {
-                font-size: 1.2rem; /* Smaller font size for small screens */
-            }
-            label {
-                font-size: 0.9rem; /* Smaller font size for small screens */
-            }
-            #message, #sendBtn {
-                font-size: 0.9rem; /* Smaller font size for small screens */
-            }
         }
     </style>
 </head>
 <body>
-    <h2>Write aggg prompt</h2> <!-- Adjusted text -->
+    <h2>Write Your Prompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4"></textarea><br>
     <button id="sendBtn">Send</button>
-    <div id="loadingBanner">Processing: <span id="processText"></span></div>
-    <div id="downloadLink"><a id="downloadAnchor" href="" target="_blank">Download Images</a></div>
+    <div id="downloadLink">
+        <a id="downloadAnchor" href="" target="_blank">Download Images</a>
+    </div>
+    <div id="gameLink">
+        <a id="gameAnchor" href="" target="_blank">Open Game</a>
+    </div>
 
     <script>
         document.getElementById("sendBtn").onclick = function() {
             var message = document.getElementById("message").value;
-
-            document.getElementById("loadingBanner").style.display = "block";  
-            document.getElementById("processText").innerText = "Analyzing text...";  
-
             fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ message: message })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.status === "success") {
-                    document.getElementById("processText").innerText = "Processing complete.";
-                    document.getElementById("downloadLink").style.display = "block";  
-                    document.getElementById("downloadAnchor").href = `https://sterling-ultimately-lizard.ngrok-free.app${data.download_link}`; 
+                    document.getElementById("downloadLink").style.display = "block";
+                    document.getElementById("downloadAnchor").href = `https://sterling-ultimately-lizard.ngrok-free.app${data.download_link}`;
+                    
+                    document.getElementById("gameLink").style.display = "block";
+                    document.getElementById("gameAnchor").href = `https://sterling-ultimately-lizard.ngrok-free.app${data.game_link}`;
                 } else {
                     alert(data.message);
                 }
             })
-            .catch(error => {
-                console.error("Error:", error);
-            })
-            .finally(() => {
-                document.getElementById("loadingBanner").style.display = "none";  
-            });
-        }
+            .catch(error => console.error("Error:", error));
+        };
     </script>
 </body>
 </html>
