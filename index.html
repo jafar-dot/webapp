@@ -57,7 +57,7 @@
     </style>
 </head>
 <body>
-    <h2>Write Your Prompt</h2>
+    <h2>Write ggg Your Prompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4"></textarea><br>
     <button id="sendBtn">Send</button>
@@ -80,6 +80,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === "True") {
+                  
                     checkstatus(); // Start checking the status
                 } else {
                     alert(data.message);
@@ -89,14 +90,16 @@
         };
 
         function checkstatus() {
-            const intervalId = setInterval(() => {
+            let update=true;
+            while(update){
+
                 fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status") // Create a new endpoint to get the status
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById("status").innerText = data.process_text + " " + data.process_percent + "%"; // Ensure property names match
 
                     if (data.process_percent === 100) {
-                        clearInterval(intervalId); // Stop checking once the process is complete
+                        update=false;
                         document.getElementById("downloadLink").style.display = "block";
                         document.getElementById("downloadAnchor").href = `https://sterling-ultimately-lizard.ngrok-free.app${data.download_link}`;
                         
@@ -105,7 +108,7 @@
                     }
                 })
                 .catch(error => console.error("Error:", error));
-            }, 2000); // Check the status every 2 seconds
+            }
         }
     </script>
 </body>
