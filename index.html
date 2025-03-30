@@ -57,7 +57,7 @@
     </style>
 </head>
 <body>
-    <h2>Write ggg Your Prompt</h2>
+    <h2>Write dd Your Prompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4"></textarea><br>
     <button id="sendBtn">Send</button>
@@ -89,27 +89,28 @@
             .catch(error => console.error("Error:", error));
         };
 
-        function checkstatus() {
-            let update=true;
-            while(update){
+      function checkstatus() {
+    let intervalId = setInterval(() => {
+        fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status")
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("status").innerText = data.process_text + " " + data.process_percent + "%"; 
 
-                fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status") // Create a new endpoint to get the status
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById("status").innerText = data.process_text + " " + data.process_percent + "%"; // Ensure property names match
-
-                    if (data.process_percent === 100) {
-                        update=false;
-                        document.getElementById("downloadLink").style.display = "block";
-                        document.getElementById("downloadAnchor").href = `https://sterling-ultimately-lizard.ngrok-free.app${data.download_link}`;
-                        
-                        document.getElementById("gameLink").style.display = "block";
-                        document.getElementById("gameAnchor").href = `https://sterling-ultimately-lizard.ngrok-free.app${data.game_link}`;
-                    }
-                })
-                .catch(error => console.error("Error:", error));
+            if (data.process_percent === 100) {
+                clearInterval(intervalId); // Stop fetching when complete
+                document.getElementById("downloadLink").style.display = "block";
+                document.getElementById("downloadAnchor").href = `https://sterling-ultimately-lizard.ngrok-free.app${data.download_link}`;
+                
+                document.getElementById("gameLink").style.display = "block";
+                document.getElementById("gameAnchor").href = `https://sterling-ultimately-lizard.ngrok-free.app${data.game_link}`;
             }
-        }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            clearInterval(intervalId); // Stop on error
+        });
+    }, 1000); // Check status every second
+}
     </script>
 </body>
 </html>
