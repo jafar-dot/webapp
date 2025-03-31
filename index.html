@@ -63,7 +63,7 @@
     </style>
 </head>
 <body>
-    <h2>WriteRRRR Your Prompt</h2>
+    <h2>WriteRRggggg Your Prompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4"></textarea><br>
     <button id="sendBtn">Send</button>
@@ -88,6 +88,14 @@
                 if (data.status == "True") {
                   document.getElementById("status").innerText =data.message;
                     checkstatus(); // Start checking the status
+        fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status")
+        .then(response =>response.json())
+        .then(data => {
+
+            document.getElementById("status").innerText = data.process_text; 
+
+
+                    
                 } else {
                     alert(data.message);
                 }
@@ -98,22 +106,11 @@
 
 function checkstatus() {
     let intervalId = setInterval(() => {
-        fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status", {
-            method: "GET", // Specify the request method
-            headers: { "Content-Type": "application/json" } // Specify the content type
-        })
-        .then(response => {
-            if (!response.ok) {
-                // Check for a successful response
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json(); // Parse JSON response
-        })
+        fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status")
+        .then(response =>response.json())
         .then(data => {
-            // Update the status text from the server
-            document.getElementById("status").innerText = data.process_text; 
 
-            // Check if the process is complete
+            document.getElementById("status").innerText = data.process_text; 
             if (data.process_percent === 100) {
                 clearInterval(intervalId); // Stop fetching status once complete
                 document.getElementById("downloadLink").style.display = "block";
