@@ -63,7 +63,7 @@
     </style>
 </head>
 <body>
-    <h2>Write  666 Your Prompt</h2>
+    <h2>Write 5 Your Prompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4"></textarea><br>
     <button id="sendBtn">Send</button>
@@ -78,6 +78,7 @@
     <script>
         document.getElementById("sendBtn").onclick = function() {
             var message = document.getElementById("message").value;
+            document.getElementById("status").innerText ="faild";
             fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status")
             .then(response => response.json())
             .then(data => {
