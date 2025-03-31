@@ -63,7 +63,7 @@
     </style>
 </head>
 <body>
-    <h2>WriteRRgggghhddddd33g Your Prompt</h2>
+    <h2>WriteRRgggghheeeee111122223g Your Prompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4"></textarea><br>
     <button id="sendBtn">Send</button>
@@ -78,27 +78,14 @@
     <script>
         document.getElementById("sendBtn").onclick = function() {
             var message = document.getElementById("message").value;
-            fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: message })
-            })
+            fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status")
             .then(response => response.json())
             .then(data => {
-                if (data.status == "True") {
-                  document.getElementById("status").innerText =data.message;
-                    checkstatus(); // Start checking the status
-        fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status")
-        .then(response =>response.json())
-        .then(dataa => {
-
-            document.getElementById("status").innerText = dataa.process_text; 
-        })
-
+           
+                  document.getElementById("status").innerText =data.process_text;
+ 
                     
-                } else {
-                    alert(data.message);
-                }
+
             })
             .catch(error => console.error("Error:", error));
         };
