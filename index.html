@@ -63,7 +63,7 @@
     </style>
 </head>
 <body>
-    <h2>Write   b  Your Prompt</h2>
+    <h2>Write   3  Your Prompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4"></textarea><br>
     <button id="sendBtn">Send</button>
@@ -107,8 +107,8 @@ function checkstatus() {
         .then(response =>response.json())
         .then(data => {
 
-            document.getElementById("status").innerText = data.process_text; 
-            if (data.process_percent == 100) {
+            document.getElementById("status").innerText = data.process_text+data.process_percent+"%"; 
+            if (data.process_percent === 100) {
                 clearInterval(intervalId); // Stop fetching status once complete
                 document.getElementById("downloadLink").style.display = "block";
                 document.getElementById("downloadAnchor").href = `https://sterling-ultimately-lizard.ngrok-free.app${data.download_link}`;
