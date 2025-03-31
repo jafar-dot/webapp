@@ -63,7 +63,7 @@
     </style>
 </head>
 <body>
-    <h2>Write ggggg Your Prompt</h2>
+    <h2>Write 6666 Your Prompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4"></textarea><br>
     <button id="sendBtn">Send</button>
@@ -101,7 +101,7 @@ function checkstatus() {
         fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status")
         .then(response => response.json())
         .then(data => {
-            document.getElementById("status").innerText = ${data.process_text}; 
+            document.getElementById("status").innerText = data.process_text; 
 
             if (data.process_percent === 100) {
                 clearInterval(intervalId); // Stop fetching when complete
