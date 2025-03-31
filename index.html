@@ -81,7 +81,7 @@
             fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: message })
+                body: JSON.stringify({ })
             })
             .then(response => response.json())
             .then(data => {
