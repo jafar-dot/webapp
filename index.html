@@ -63,7 +63,7 @@
     </style>
 </head>
 <body>
-    <h2>Write 878tty Your Prompt</h2>
+    <h2>Write ggggg Your Prompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4"></textarea><br>
     <button id="sendBtn">Send</button>
@@ -95,15 +95,16 @@
             .catch(error => console.error("Error:", error));
         };
 
-      function checkstatus() {
 
+function checkstatus() {
+    let intervalId = setInterval(() => {
         fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status")
         .then(response => response.json())
         .then(data => {
-            document.getElementById("status").innerText = data.process_text; 
+            document.getElementById("status").innerText = ${data.process_text}; 
 
-            if (data.process_percent == 100) {
-
+            if (data.process_percent === 100) {
+                clearInterval(intervalId); // Stop fetching when complete
                 document.getElementById("downloadLink").style.display = "block";
                 document.getElementById("downloadAnchor").href = `https://sterling-ultimately-lizard.ngrok-free.app${data.download_link}`;
                 
@@ -113,10 +114,11 @@
         })
         .catch(error => {
             console.error("Error:", error);
-
+            clearInterval(intervalId); // Stop on error
         });
-
+    }, 1000); // Check status every second
 }
+
     </script>
 </body>
 </html>
