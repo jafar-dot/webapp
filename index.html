@@ -63,7 +63,7 @@
     </style>
 </head>
 <body>
-    <h2>WriteRRgggghhg Your Prompt</h2>
+    <h2>WriteRRgggghhddddd33g Your Prompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4"></textarea><br>
     <button id="sendBtn">Send</button>
@@ -90,9 +90,9 @@
                     checkstatus(); // Start checking the status
         fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status")
         .then(response =>response.json())
-        .then(data => {
+        .then(dataa => {
 
-            document.getElementById("status").innerText = data.process_text; 
+            document.getElementById("status").innerText = dataa.process_text; 
         })
 
                     
