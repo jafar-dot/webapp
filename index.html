@@ -63,7 +63,7 @@
     </style>
 </head>
 <body>
-    <h2>Write 6 Your Prompt</h2>
+    <h2>Write44444Your Prompt</h2>
     <label for="message">اكتب رسالتك:</label>
     <textarea id="message" rows="4"></textarea><br>
     <button id="sendBtn">Send</button>
@@ -85,7 +85,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                if (data.check == "True") {
+                if (data.check == 'True') {
                   document.getElementById("status").innerText =data.process_text;
  
                     
@@ -97,32 +97,6 @@
         };
 
 
-function checkstatus() {
-    let intervalId = setInterval(() => {
-        fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: message })
-            })
-        .then(response =>response.json())
-        .then(data => {
-
-            document.getElementById("status").innerText = data.process_text; 
-            if (data.process_percent === 100) {
-                clearInterval(intervalId); // Stop fetching status once complete
-                document.getElementById("downloadLink").style.display = "block";
-                document.getElementById("downloadAnchor").href = `https://sterling-ultimately-lizard.ngrok-free.app${data.download_link}`;
-                
-                document.getElementById("gameLink").style.display = "block";
-                document.getElementById("gameAnchor").href = `https://sterling-ultimately-lizard.ngrok-free.app${data.game_link}`;
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            clearInterval(intervalId); // Stop interval on error
-        });
-    }, 1000); // Check status every 1000ms (1 second)
-}
 
     </script>
 </body>
