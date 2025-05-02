@@ -88,10 +88,10 @@
 </head>
 <body>
 
-  <h2>اكتب رسالة</h2>
-  <label for="message">رسالتك:</label>
+  <h2>Start chat with AI slot machine generator</h2>
+  <label for="message">Your message:</label>
   <textarea id="message" rows="4"></textarea><br>
-  <button id="sendBtn">إرسال</button>
+  <button id="sendBtn">Send</button>
 
   <div id="chatBox"></div>
 
@@ -100,7 +100,7 @@
       const message = document.getElementById("message").value.trim();
       if (message === "") return;
 
-      appendMessage("أنت", message, "user-label");
+      appendMessage("You", message, "user-label");
 
       fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
         method: "POST",
@@ -109,11 +109,11 @@
       })
       .then(response => response.json())
       .then(data => {
-        const reply = data.reply || "لم يتم استلام رد من الخادم.";
-        appendMessage("الذكاء الاصطناعي", reply, "ai-label");
+        const reply = data.reply || "Something wrong.";
+        appendMessage("AI", reply, "ai-label");
       })
       .catch(error => {
-        appendMessage("الذكاء الاصطناعي", "حدث خطأ أثناء الاتصال بالخادم.", "ai-label");
+        appendMessage("Something wrong","AI",ai-label");
       });
 
       document.getElementById("message").value = "";
