@@ -1,145 +1,130 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SLOT MACHINE GENERATOR</title>
+  <title>Slot Machine Generator</title>
   <style>
     body {
-      background-image: url('background.png');
-      background-size: cover;
-      background-position: top center;
-      color: white;
       font-family: Arial, sans-serif;
-      padding: 10px;
+      background-color: #f0f0f0;
+      padding: 20px;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #chat {
+      width: 100%;
+      max-width: 600px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
     h2 {
       text-align: center;
-      margin-top: 20px;
+      color: #333;
     }
 
-    label {
-      display: block;
-      text-align: center;
-      margin-top: 10px;
+    #messages {
+      max-height: 400px;
+      overflow-y: auto;
+      margin-bottom: 20px;
     }
 
-    #message {
-      display: block;
-      width: 100%;
-      max-width: 500px;
-      margin: 20px auto;
+    .message {
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    .user {
+      color: blue;
+    }
+
+    .bot {
+      color: green;
+    }
+
+    input, button {
       padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+      font-size: 16px;
+      width: calc(100% - 22px);
+      margin: 5px 0;
+      border-radius: 4px;
     }
 
-    #sendBtn {
+    button {
       background-color: #4CAF50;
       color: white;
-      display: block;
-      width: 100%;
-      max-width: 200px;
-      margin: 10px auto;
-      padding: 10px;
-      border-radius: 5px;
-      border: none;
       cursor: pointer;
-      text-align: center;
     }
 
-    #sendBtn:hover {
+    button:hover {
       background-color: #45a049;
     }
 
-    #chatBox {
-      max-width: 600px;
-      margin: 20px auto;
-      padding: 15px;
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 10px;
-    }
-
-    .message-block {
-      margin-bottom: 15px;
-    }
-
-    .user-label,
-    .ai-label {
-      font-weight: bold;
-      margin-bottom: 3px;
-    }
-
-    .user-label {
-      color: #00ccff;
-    }
-
-    .ai-label {
-      color: #ffd700;
-    }
-
-    .message-text {
-      background-color: #222;
-      padding: 8px;
-      border-radius: 5px;
+    input {
+      border: 1px solid #ccc;
     }
   </style>
 </head>
 <body>
 
-  <h2>Start chat with AI slot machine generator</h2>
-  <label for="message">Your message:</label>
-  <textarea id="message" rows="4"></textarea><br>
-  <button id="sendBtn">Send</button>
+<div id="chat">
+  <h2>AI Slot Game Assistant</h2>
+  <div id="messages"></div>
+  <input type="text" id="messageInput" placeholder="Enter your message..." />
+  <button onclick="sendMessage()">Send</button>
+</div>
 
-  <div id="chatBox"></div>
+<script>
+  const session_id = "user_" + Math.floor(Math.random() * 1000000);  // Use a unique session ID for each user
 
-  <script>
-    document.getElementById("sendBtn").onclick = function () {
-      const message = document.getElementById("message").value.trim();
-      if (message === "") return;
+  // Function to display messages
+  function addMessage(text, sender) {
+    const msgDiv = document.createElement("div");
+    msgDiv.className = "message " + sender;
+    msgDiv.textContent = (sender === "user" ? "You: " : "Bot: ") + text;
+    document.getElementById("messages").appendChild(msgDiv);
+    document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;  // Auto-scroll to the latest message
+  }
 
-      appendMessage("You", message, "user-label");
+  // Function to send user message and get bot response
+  function sendMessage() {
+    const input = document.getElementById("messageInput");
+    const message = input.value.trim();
+    if (!message) return;  // Don't send empty messages
 
-      fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: message })
+    addMessage(message, "user");  // Display user's message
+    input.value = "";  // Clear input field
+
+    // Sending the message to the server via POST request
+    fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: message,
+        session_id: session_id
       })
-      .then(response => response.json())
-      .then(data => {
-        const reply = data.reply || "Something wrong.";
-        appendMessage("AI", reply, "ai-label");
-      })
-      .catch(error => {
-        appendMessage("Something wrong","AI",ai-label");
-      });
-
-      document.getElementById("message").value = "";
-    };
-
-    function appendMessage(sender, text, labelClass) {
-      const chatBox = document.getElementById("chatBox");
-
-      const block = document.createElement("div");
-      block.className = "message-block";
-
-      const label = document.createElement("div");
-      label.className = labelClass;
-      label.innerText = sender;
-
-      const messageText = document.createElement("div");
-      messageText.className = "message-text";
-      messageText.innerText = text;
-
-      block.appendChild(label);
-      block.appendChild(messageText);
-      chatBox.appendChild(block);
-
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-  </script>
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Display bot's response
+      if (data.status === "True") {
+        addMessage(data.reply, "bot");
+      } else {
+        addMessage("Error: " + data.reply, "bot");
+      }
+    })
+    .catch(err => {
+      addMessage("Connection error. Please try again later.", "bot");
+    });
+  }
+</script>
 
 </body>
 </html>
