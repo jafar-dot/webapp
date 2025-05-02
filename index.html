@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SLOT MACHINE GENERATOR</title>
   <style>
     body {
@@ -13,15 +13,18 @@
       font-family: Arial, sans-serif;
       padding: 10px;
     }
+
     h2 {
       text-align: center;
       margin-top: 20px;
     }
+
     label {
       display: block;
       text-align: center;
       margin-top: 10px;
     }
+
     #message {
       display: block;
       width: 100%;
@@ -30,8 +33,8 @@
       padding: 10px;
       border-radius: 5px;
       border: 1px solid #ccc;
-      resize: vertical;
     }
+
     #sendBtn {
       background-color: #4CAF50;
       color: white;
@@ -45,107 +48,98 @@
       cursor: pointer;
       text-align: center;
     }
+
     #sendBtn:hover {
       background-color: #45a049;
     }
+
     #chatBox {
       max-width: 600px;
       margin: 20px auto;
       padding: 15px;
       background: rgba(0, 0, 0, 0.5);
       border-radius: 10px;
-      height: 400px;
-      overflow-y: auto;
     }
+
     .message-block {
       margin-bottom: 15px;
     }
-    .user-label, .ai-label {
+
+    .user-label,
+    .ai-label {
       font-weight: bold;
       margin-bottom: 3px;
-      display: block;
     }
+
     .user-label {
       color: #00ccff;
     }
+
     .ai-label {
       color: #ffd700;
     }
+
     .message-text {
       background-color: #222;
       padding: 8px;
       border-radius: 5px;
-      word-wrap: break-word;
     }
   </style>
 </head>
 <body>
+
   <h2>اكتب رسالة</h2>
-  <label for="message">Your message :</label>
-  <textarea id="message" rows="4" placeholder="أدخل رسالتك هنا..."></textarea>
+  <label for="message">رسالتك:</label>
+  <textarea id="message" rows="4"></textarea><br>
   <button id="sendBtn">إرسال</button>
 
   <div id="chatBox"></div>
 
   <script>
-    const sendBtn = document.getElementById('sendBtn');
-    const messageInput = document.getElementById('message');
-    const chatBox = document.getElementById('chatBox');
+    document.getElementById("sendBtn").onclick = function () {
+      const message = document.getElementById("message").value.trim();
+      if (message === "") return;
 
-    // وظيفة لإضافة رسالة إلى الدردشة
-    function appendMessage(sender, text) {
-      const block = document.createElement('div');
-      block.className = 'message-block';
+      appendMessage("أنت", message, "user-label");
 
-      const label = document.createElement('span');
-      label.className = sender === 'user' ? 'user-label' : 'ai-label';
-      label.innerText = sender === 'user' ? 'أنت:' : 'نظام:';
+      fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: message })
+      })
+      .then(response => response.json())
+      .then(data => {
+        const reply = data.reply || "لم يتم استلام رد من الخادم.";
+        appendMessage("الذكاء الاصطناعي", reply, "ai-label");
+      })
+      .catch(error => {
+        appendMessage("الذكاء الاصطناعي", "حدث خطأ أثناء الاتصال بالخادم.", "ai-label");
+      });
 
-      const msgText = document.createElement('div');
-      msgText.className = 'message-text';
-      msgText.innerText = text;
+      document.getElementById("message").value = "";
+    };
+
+    function appendMessage(sender, text, labelClass) {
+      const chatBox = document.getElementById("chatBox");
+
+      const block = document.createElement("div");
+      block.className = "message-block";
+
+      const label = document.createElement("div");
+      label.className = labelClass;
+      label.innerText = sender;
+
+      const messageText = document.createElement("div");
+      messageText.className = "message-text";
+      messageText.innerText = text;
 
       block.appendChild(label);
-      block.appendChild(msgText);
+      block.appendChild(messageText);
       chatBox.appendChild(block);
+
       chatBox.scrollTop = chatBox.scrollHeight;
     }
-
-    // وظيفة لإرسال الرسالة إلى الخادم
-    async function sendMessage() {
-      const message = messageInput.value.trim();
-      if (!message) return;
-      appendMessage('user', message);
-      messageInput.value = '';
-
-      // هنا يمكنك تعديل عنوان الـ API حسب السيرفر الذي تستخدمه
-      try {
-        const response = await fetch('/receive_message', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ message })
-        });
-        const data = await response.json();
-        if (data.reply) {
-          appendMessage('ai', data.reply);
-        }
-      } catch (error) {
-        appendMessage('ai', 'حدث خطأ في الاتصال بالخادم.');
-      }
-    }
-
-    // حدث للزر
-    document.getElementById('sendBtn').onclick = sendMessage;
-
-    // ضغط Enter لإرسال
-    messageInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
-    });
   </script>
+
 </body>
 </html>
