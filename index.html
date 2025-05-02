@@ -1,129 +1,183 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLOT MACHINE GENERATOR</title>
-    <style>
-        body {
-            background-image: url('background.png');
-            background-size: cover;
-            background-position: top center;
-            color: white;
-            font-family: Arial, sans-serif;
-            padding: 10px;
-        }
-        h2 {
-            text-align: center;
-            margin-top: 20px;
-        }
-        label {
-            display: block;
-            text-align: center;
-            margin-top: 10px;
-        }
-        #message {
-            display: block;
-            width: 100%;
-            max-width: 500px;
-            margin: 20px auto;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        #sendBtn, #openGameBtn {
-            display: block;
-            width: 100%;
-            max-width: 200px;
-            margin: 20px auto;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            text-align: center;
-        }
-        #sendBtn {
-            background-color: #4CAF50;
-            color: white;
-        }
-        #sendBtn:hover {
-            background-color: #45a049;
-        }
-        #downloadLink, #gameLink {
-            display: none;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-
-        #status {
-            text-align: center;
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SLOT MACHINE GENERATOR</title>
+  <style>
+    body {
+      background-image: url('background.png');
+      background-size: cover;
+      background-position: top center;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 10px;
+    }
+    h2 {
+      text-align: center;
+      margin-top: 20px;
+    }
+    label {
+      display: block;
+      text-align: center;
+      margin-top: 10px;
+    }
+    #message {
+      display: block;
+      width: 100%;
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      resize: vertical;
+    }
+    #sendBtn {
+      background-color: #4CAF50;
+      color: white;
+      display: block;
+      width: 100%;
+      max-width: 200px;
+      margin: 10px auto;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+    }
+    #sendBtn:hover {
+      background-color: #45a049;
+    }
+    #chatBox {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      height: 400px;
+      overflow-y: auto;
+    }
+    .message-block {
+      margin-bottom: 15px;
+    }
+    .user-label, .ai-label {
+      font-weight: bold;
+      margin-bottom: 3px;
+      display: block;
+    }
+    .user-label {
+      color: #00ccff;
+    }
+    .ai-label {
+      color: #ffd700;
+    }
+    .message-text {
+      background-color: #222;
+      padding: 8px;
+      border-radius: 5px;
+      word-wrap: break-word;
+    }
+  </style>
 </head>
 <body>
-    <h2>Writet t Your Prompt</h2>
-    <label for="message">write a message:</label>
-    <textarea id="message" rows="4"></textarea><br>
-    <button id="sendBtn">Send</button>
-    <div id="status">.....</div>
-    <div id="downloadLink">
-        <a id="downloadAnchor" href="" target="_blank">Download Images</a>
-    </div>
-    <div id="gameLink">
-        <a id="gameAnchor" href="" target="_blank">Open Game</a>
-    </div>
+  <h2>اكتب طلبك</h2>
+  <label for="message">اكتب رسالة:</label>
+  <textarea id="message" rows="4" placeholder="أدخل طلبك هنا..."></textarea>
+  <button id="sendBtn">إرسال</button>
 
-    <script>
-        document.getElementById("sendBtn").onclick = function() {
-            var message = document.getElementById("message").value;
-            fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: message })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status == "True") {
-                  checkstatus();
- 
-                    
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => console.error("Error:", error));
-        };
+  <div id="chatBox"></div>
 
+  <script>
+    const sendBtn = document.getElementById('sendBtn');
+    const messageInput = document.getElementById('message');
+    const chatBox = document.getElementById('chatBox');
 
-function checkstatus() {
-    let intervalId = setInterval(() => {
-        fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ })
-            })
-        .then(response =>response.json())
-        .then(data => {
+    // وظيفة لإضافة رسالة إلى الدردشة
+    function appendMessage(sender, text) {
+      const block = document.createElement('div');
+      block.className = 'message-block';
 
-            document.getElementById("status").innerText = data.process_text+data.process_percent+"%"; 
-            if (data.process_percent === 100) {
-                clearInterval(intervalId); // Stop fetching status once complete
-                document.getElementById("downloadLink").style.display = "block";
-                document.getElementById("downloadAnchor").href = `https://sterling-ultimately-lizard.ngrok-free.app${data.download_link}`;
-                
-                document.getElementById("gameLink").style.display = "block";
-                document.getElementById("gameAnchor").href = `https://sterling-ultimately-lizard.ngrok-free.app${data.game_link}`;
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            clearInterval(intervalId); // Stop interval on error
+      const label = document.createElement('span');
+      label.className = sender === 'user' ? 'user-label' : 'ai-label';
+      label.innerText = sender === 'user' ? 'أنت:' : 'نظام:';
+
+      const msgText = document.createElement('div');
+      msgText.className = 'message-text';
+      msgText.innerText = text;
+
+      block.appendChild(label);
+      block.appendChild(msgText);
+      chatBox.appendChild(block);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // وظيفة لإرسال الطلب إلى الخادم
+    async function sendMessage() {
+      const message = messageInput.value.trim();
+      if (!message) return;
+
+      appendMessage('user', message);
+      messageInput.value = '';
+
+      // استدعاء الخادم لمعالجة الطلب
+      try {
+        const response = await fetch('/receive_message', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ message })
         });
-    }, 10000); // Check status every 10000ms (10 second)
-};
+        const data = await response.json();
 
-    </script>
+        if (data.id) {
+          // متابعة التحديثات من خلال استعلام الحالة
+          checkStatus(data.id);
+        }
+      } catch (err) {
+        appendMessage('ai', 'حدث خطأ أثناء الإرسال.');
+      }
+    }
+
+    // وظيفة لفحص الحالة بشكل دوري
+    async function checkStatus(id) {
+      const interval = setInterval(async () => {
+        try {
+          const response = await fetch('/get_status', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id })
+          });
+          const statusData = await response.json();
+
+          if (statusData.process_text) {
+            appendMessage('ai', statusData.process_text);
+          }
+
+          if (statusData.process_percent >= 100) {
+            clearInterval(interval);
+            appendMessage('ai', 'تم الانتهاء! يمكنك تحميل اللعبة من الرابط التالي:');
+            // يمكنك إضافة رابط تحميل هنا إذا أردت
+          }
+        } catch (err) {
+          clearInterval(interval);
+          appendMessage('ai', 'حدث خطأ في تتبع الحالة.');
+        }
+      }, 3000); // فحص كل 3 ثوانٍ
+    }
+
+    // حدث الضغط على الزر
+    sendBtn.onclick = sendMessage;
+
+    // يمكن إضافة حدث Enter أيضًا
+    messageInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+  </script>
 </body>
 </html>
