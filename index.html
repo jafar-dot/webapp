@@ -80,9 +80,9 @@
   </style>
 </head>
 <body>
-  <h2>اكتب طلبك</h2>
-  <label for="message">اكتب رسالة:</label>
-  <textarea id="message" rows="4" placeholder="أدخل طلبك هنا..."></textarea>
+  <h2>اكتب رسالة</h2>
+  <label for="message">Your message :</label>
+  <textarea id="message" rows="4" placeholder="أدخل رسالتك هنا..."></textarea>
   <button id="sendBtn">إرسال</button>
 
   <div id="chatBox"></div>
@@ -111,15 +111,14 @@
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // وظيفة لإرسال الطلب إلى الخادم
+    // وظيفة لإرسال الرسالة إلى الخادم
     async function sendMessage() {
       const message = messageInput.value.trim();
       if (!message) return;
-
       appendMessage('user', message);
       messageInput.value = '';
 
-      // استدعاء الخادم لمعالجة الطلب
+      // هنا يمكنك تعديل عنوان الـ API حسب السيرفر الذي تستخدمه
       try {
         const response = await fetch('/receive_message', {
           method: 'POST',
@@ -129,49 +128,18 @@
           body: JSON.stringify({ message })
         });
         const data = await response.json();
-
-        if (data.id) {
-          // متابعة التحديثات من خلال استعلام الحالة
-          checkStatus(data.id);
+        if (data.reply) {
+          appendMessage('ai', data.reply);
         }
-      } catch (err) {
-        appendMessage('ai', 'حدث خطأ أثناء الإرسال.');
+      } catch (error) {
+        appendMessage('ai', 'حدث خطأ في الاتصال بالخادم.');
       }
     }
 
-    // وظيفة لفحص الحالة بشكل دوري
-    async function checkStatus(id) {
-      const interval = setInterval(async () => {
-        try {
-          const response = await fetch('/get_status', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id })
-          });
-          const statusData = await response.json();
+    // حدث للزر
+    document.getElementById('sendBtn').onclick = sendMessage;
 
-          if (statusData.process_text) {
-            appendMessage('ai', statusData.process_text);
-          }
-
-          if (statusData.process_percent >= 100) {
-            clearInterval(interval);
-            appendMessage('ai', 'تم الانتهاء! يمكنك تحميل اللعبة من الرابط التالي:');
-            // يمكنك إضافة رابط تحميل هنا إذا أردت
-          }
-        } catch (err) {
-          clearInterval(interval);
-          appendMessage('ai', 'حدث خطأ في تتبع الحالة.');
-        }
-      }, 3000); // فحص كل 3 ثوانٍ
-    }
-
-    // حدث الضغط على الزر
-    sendBtn.onclick = sendMessage;
-
-    // يمكن إضافة حدث Enter أيضًا
+    // ضغط Enter لإرسال
     messageInput.addEventListener('keydown', function(e) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
