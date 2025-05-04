@@ -9,14 +9,15 @@
       background-image: url('background.png');
       background-size: cover;
       background-position: top center;
-      color: white;
       font-family: Arial, sans-serif;
       margin: 0;
+      padding: 10px;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
     }
+
     #chat {
       width: 100%;
       max-width: 600px;
@@ -24,27 +25,39 @@
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      color: black;
     }
+
     h2 {
       text-align: center;
       color: #333;
     }
+
     #messages {
       max-height: 300px;
       overflow-y: auto;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
+
     .message {
       margin: 10px 0;
       font-size: 16px;
     }
+
     .user {
       color: blue;
     }
+
     .bot {
       color: green;
     }
+
+    #waitMessage {
+      display: none;
+      color: gray;
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
     input, button {
       padding: 10px;
       font-size: 16px;
@@ -52,41 +65,58 @@
       margin: 5px 0;
       border-radius: 4px;
     }
+
     button {
       background-color: #4CAF50;
       color: white;
       cursor: pointer;
     }
+
     button:hover {
       background-color: #45a049;
     }
+
     input {
       border: 1px solid #ccc;
     }
+
     #progressContainer {
       display: none;
-      margin: 10px 0;
-      background: #ddd;
-      border-radius: 4px;
+      margin-top: 15px;
+    }
+
+    #progressBar {
+      width: 100%;
+      background-color: #ddd;
+      border-radius: 5px;
       overflow: hidden;
     }
-    #progressBar {
-      width: 0%;
+
+    #progressFill {
       height: 20px;
-      background: #4CAF50;
-      text-align: center;
-      color: white;
-      line-height: 20px;
-      font-size: 14px;
+      width: 0%;
+      background-color: #4CAF50;
+      transition: width 0.5s ease;
     }
+
     #links {
-      margin-top: 10px;
       display: none;
+      margin-top: 15px;
+      text-align: center;
     }
+
     #links a {
       display: block;
-      margin-top: 10px;
-      color: blue;
+      margin: 5px 0;
+      color: white;
+      background-color: #2196F3;
+      padding: 10px;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+
+    #links a:hover {
+      background-color: #1976D2;
     }
   </style>
 </head>
@@ -94,22 +124,22 @@
   <div id="chat">
     <h2>AI Slot Game Assistant</h2>
     <div id="messages"></div>
+    <div id="waitMessage">Generating response, wait few seconds...</div>
     <input type="text" id="messageInput" placeholder="Enter your message..." />
     <button onclick="sendMessage()">Send</button>
 
     <div id="progressContainer">
-      <div id="progressBar">0%</div>
+      <div id="progressBar"><div id="progressFill"></div></div>
     </div>
+
     <div id="links">
-      <a id="gameLink" href="#" target="_blank">Play Game</a>
-      <a id="downloadLink" href="#">Download Game</a>
+      <a id="playLink" href="#" target="_blank">Play the Game</a>
+      <a id="downloadLink" href="#" download>Download Game Files</a>
     </div>
   </div>
 
   <script>
     const session_id = "user_" + Math.floor(Math.random() * 1000000);
-    let trackingProgress = false;
-    let intervalId;
 
     function addMessage(text, sender) {
       const msgDiv = document.createElement("div");
@@ -117,10 +147,6 @@
       msgDiv.textContent = (sender === "user" ? "You: " : "Bot: ") + text;
       document.getElementById("messages").appendChild(msgDiv);
       document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
-
-      if (text.toLowerCase().includes("the game now being generated")) {
-        startProgressTracking();
-      }
     }
 
     function sendMessage() {
@@ -131,13 +157,13 @@
       addMessage(message, "user");
       input.value = "";
 
+      const waitMessage = document.getElementById("waitMessage");
+      waitMessage.style.display = "block";
+
       fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: message,
-          session_id: session_id
-        })
+        body: JSON.stringify({ message: message, session_id: session_id })
       })
       .then(response => response.json())
       .then(data => {
@@ -146,42 +172,47 @@
         } else {
           addMessage("Error: " + data.reply, "bot");
         }
+        waitMessage.style.display = "none";
       })
-      .catch(() => {
+      .catch(err => {
         addMessage("Connection error. Please try again later.", "bot");
+        waitMessage.style.display = "none";
       });
     }
 
-    function startProgressTracking() {
-      if (trackingProgress) return;
-      trackingProgress = true;
-      document.getElementById("progressContainer").style.display = "block";
+    function checkStatus() {
+      fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status", {
+        method: "POST"
+      })
+      .then(response => response.json())
+      .then(data => {
+        const percent = data.process_percent;
+        const progressContainer = document.getElementById("progressContainer");
+        const progressFill = document.getElementById("progressFill");
+        const links = document.getElementById("links");
 
-      intervalId = setInterval(() => {
-        fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status", {
-          method: "POST"
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.check === "True") {
-            const percent = data.process_percent;
-            const progressBar = document.getElementById("progressBar");
-            progressBar.style.width = percent + "%";
-            progressBar.textContent = percent + "%";
-
-            if (percent >= 100) {
-              clearInterval(intervalId);
-              document.getElementById("links").style.display = "block";
-              document.getElementById("gameLink").href = data.game_link;
-              document.getElementById("downloadLink").href = data.download_link;
-            }
-          }
-        })
-        .catch(err => {
-          console.error("Error getting status:", err);
-        });
-      }, 3000);
+        if (percent > 0 && percent < 100) {
+          progressContainer.style.display = "block";
+          links.style.display = "none";
+          progressFill.style.width = percent + "%";
+        } else if (percent === 100) {
+          progressFill.style.width = "100%";
+          progressContainer.style.display = "block";
+          links.style.display = "block";
+          document.getElementById("playLink").href = data.game_link;
+          document.getElementById("downloadLink").href = data.download_link;
+        } else {
+          progressContainer.style.display = "none";
+          links.style.display = "none";
+          progressFill.style.width = "0%";
+        }
+      })
+      .catch(err => {
+        console.error("Error checking status:", err);
+      });
     }
+
+    setInterval(checkStatus, 3000); // check every 3 seconds
   </script>
 </body>
 </html>
