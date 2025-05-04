@@ -6,12 +6,10 @@
   <title>Slot Machine Generator</title>
   <style>
     body {
-      background-image: url('background.png');
-      background-size: cover;
-      background-position: top center;
-      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #ece9e6, #ffffff);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
-      padding: 10px;
+      padding: 20px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -20,64 +18,85 @@
 
     #chat {
       width: 100%;
-      max-width: 600px;
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      max-width: 640px;
+      background: #ffffffee;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
     }
 
     h2 {
       text-align: center;
       color: #333;
+      margin-bottom: 20px;
     }
 
     #messages {
       max-height: 300px;
       overflow-y: auto;
-      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      background: #fafafa;
+      border-radius: 8px;
+      margin-bottom: 15px;
     }
 
     .message {
-      margin: 10px 0;
-      font-size: 16px;
+      margin: 8px 0;
+      font-size: 15px;
+      line-height: 1.5;
     }
 
     .user {
-      color: blue;
+      color: #1565c0;
+      font-weight: 500;
     }
 
     .bot {
-      color: green;
+      color: #2e7d32;
+      font-weight: 500;
     }
 
     #waitMessage {
       display: none;
-      color: gray;
+      color: #777;
       font-style: italic;
       margin-bottom: 10px;
+      text-align: center;
     }
 
-    input, button {
-      padding: 10px;
+    textarea {
+      padding: 12px;
       font-size: 16px;
-      width: calc(100% - 22px);
-      margin: 5px 0;
-      border-radius: 4px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: vertical;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 8px;
     }
 
     button {
+      padding: 12px;
+      font-size: 16px;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
       background-color: #4CAF50;
       color: white;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
-    button:hover {
-      background-color: #45a049;
+    button:hover:enabled {
+      background-color: #43a047;
     }
 
-    input {
-      border: 1px solid #ccc;
+    button:disabled {
+      background-color: #a5d6a7;
+      cursor: not-allowed;
     }
 
     #progressContainer {
@@ -87,32 +106,34 @@
 
     #progressBar {
       width: 100%;
-      background-color: #ddd;
-      border-radius: 5px;
+      background-color: #e0e0e0;
+      border-radius: 8px;
       overflow: hidden;
+      height: 22px;
     }
 
     #progressFill {
-      height: 20px;
+      height: 100%;
       width: 0%;
-      background-color: #4CAF50;
+      background-color: #66bb6a;
       transition: width 0.5s ease;
     }
 
     #links {
       display: none;
-      margin-top: 15px;
+      margin-top: 20px;
       text-align: center;
     }
 
     #links a {
       display: block;
-      margin: 5px 0;
-      color: white;
+      margin: 8px 0;
+      padding: 12px;
       background-color: #2196F3;
-      padding: 10px;
-      border-radius: 5px;
+      color: white;
       text-decoration: none;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
     }
 
     #links a:hover {
@@ -125,11 +146,13 @@
     <h2>AI Slot Game Assistant</h2>
     <div id="messages"></div>
     <div id="waitMessage">Generating response, wait few seconds...</div>
-    <input type="text" id="messageInput" placeholder="Enter your message..." />
-    <button onclick="sendMessage()">Send</button>
+    <textarea id="messageInput" placeholder="Enter your message..." rows="6"></textarea>
+    <button id="sendButton" onclick="sendMessage()">Send</button>
 
     <div id="progressContainer">
-      <div id="progressBar"><div id="progressFill"></div></div>
+      <div id="progressBar">
+        <div id="progressFill"></div>
+      </div>
     </div>
 
     <div id="links">
@@ -140,6 +163,7 @@
 
   <script>
     const session_id = "user_" + Math.floor(Math.random() * 1000000);
+    const sendButton = document.getElementById("sendButton");
 
     function addMessage(text, sender) {
       const msgDiv = document.createElement("div");
@@ -152,13 +176,11 @@
     function sendMessage() {
       const input = document.getElementById("messageInput");
       const message = input.value.trim();
-      if (!message) return;
+      if (!message || sendButton.disabled) return;
 
       addMessage(message, "user");
       input.value = "";
-
-      const waitMessage = document.getElementById("waitMessage");
-      waitMessage.style.display = "block";
+      document.getElementById("waitMessage").style.display = "block";
 
       fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
         method: "POST",
@@ -172,11 +194,11 @@
         } else {
           addMessage("Error: " + data.reply, "bot");
         }
-        waitMessage.style.display = "none";
+        document.getElementById("waitMessage").style.display = "none";
       })
       .catch(err => {
         addMessage("Connection error. Please try again later.", "bot");
-        waitMessage.style.display = "none";
+        document.getElementById("waitMessage").style.display = "none";
       });
     }
 
@@ -195,6 +217,7 @@
           progressContainer.style.display = "block";
           links.style.display = "none";
           progressFill.style.width = percent + "%";
+          sendButton.disabled = true;
         } else if (percent === 100) {
           progressFill.style.width = "100%";
           progressContainer.style.display = "block";
