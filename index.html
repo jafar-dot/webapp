@@ -1,135 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Slot Machine Generator</title>
   <style>
-body {
-    background-image: url('background.png');
-    background-size: cover;
-    background-position: top center;
-    color: white;
-    font-family: Arial, sans-serif;
-    padding: 10px;
-    background-color: #f0f0f0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-
-  #chat {
-    width: 100%;
-    max-width: 600px;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  }
-
-  h2 {
-    text-align: center;
-    color: #333;
-  }
-
-  #messages {
-    max-height: 400px;
-    overflow-y: auto;
-    margin-bottom: 20px;
-  }
-
-  .message {
-    margin: 10px 0;
-    font-size: 16px;
-  }
-
-  .user {
-    color: blue;
-  }
-
-  .bot {
-    color: green;
-  }
-
-  input,
-  button {
-    padding: 10px;
-    font-size: 16px;
-    width: calc(100% - 22px);
-    margin: 5px 0;
-    border-radius: 4px;
-  }
-
-  button {
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-  }
-
-  button:hover {
-    background-color: #45a049;
-  }
-
-  input {
-    border: 1px solid #ccc;
-  }
+    body {
+      background-image: url('background.png');
+      background-size: cover;
+      background-position: top center;
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #chat {
+      width: 100%;
+      max-width: 600px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      color: black;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    #messages {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+    }
+    .message {
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    .user {
+      color: blue;
+    }
+    .bot {
+      color: green;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      width: calc(100% - 22px);
+      margin: 5px 0;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    input {
+      border: 1px solid #ccc;
+    }
+    #progressContainer {
+      display: none;
+      margin: 10px 0;
+      background: #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    #progressBar {
+      width: 0%;
+      height: 20px;
+      background: #4CAF50;
+      text-align: center;
+      color: white;
+      line-height: 20px;
+      font-size: 14px;
+    }
+    #links {
+      margin-top: 10px;
+      display: none;
+    }
+    #links a {
+      display: block;
+      margin-top: 10px;
+      color: blue;
+    }
   </style>
 </head>
 <body>
+  <div id="chat">
+    <h2>AI Slot Game Assistant</h2>
+    <div id="messages"></div>
+    <input type="text" id="messageInput" placeholder="Enter your message..." />
+    <button onclick="sendMessage()">Send</button>
 
-<div id="chat">
-  <h2>AI Slot Game Assistant</h2>
-  <div id="messages"></div>
-  <input type="text" id="messageInput" placeholder="Enter your message..." />
-  <button onclick="sendMessage()">Send</button>
-</div>
+    <div id="progressContainer">
+      <div id="progressBar">0%</div>
+    </div>
+    <div id="links">
+      <a id="gameLink" href="#" target="_blank">Play Game</a>
+      <a id="downloadLink" href="#">Download Game</a>
+    </div>
+  </div>
 
-<script>
-  const session_id = "user_" + Math.floor(Math.random() * 1000000);  // Use a unique session ID for each user
+  <script>
+    const session_id = "user_" + Math.floor(Math.random() * 1000000);
+    let trackingProgress = false;
+    let intervalId;
 
-  // Function to display messages
-  function addMessage(text, sender) {
-    const msgDiv = document.createElement("div");
-    msgDiv.className = "message " + sender;
-    msgDiv.textContent = (sender === "user" ? "You: " : "Bot: ") + text;
-    document.getElementById("messages").appendChild(msgDiv);
-    document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;  // Auto-scroll to the latest message
-  }
+    function addMessage(text, sender) {
+      const msgDiv = document.createElement("div");
+      msgDiv.className = "message " + sender;
+      msgDiv.textContent = (sender === "user" ? "You: " : "Bot: ") + text;
+      document.getElementById("messages").appendChild(msgDiv);
+      document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
 
-  // Function to send user message and get bot response
-  function sendMessage() {
-    const input = document.getElementById("messageInput");
-    const message = input.value.trim();
-    if (!message) return;  // Don't send empty messages
-
-    addMessage(message, "user");  // Display user's message
-    input.value = "";  // Clear input field
-
-    // Sending the message to the server via POST request
-    fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message: message,
-        session_id: session_id
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      // Display bot's response
-      if (data.status === "True") {
-        addMessage(data.reply, "bot");
-      } else {
-        addMessage("Error: " + data.reply, "bot");
+      if (text.toLowerCase().includes("the game now being generated")) {
+        startProgressTracking();
       }
-    })
-    .catch(err => {
-      addMessage("Connection error. Please try again later.", "bot");
-    });
-  }
-</script>
+    }
 
+    function sendMessage() {
+      const input = document.getElementById("messageInput");
+      const message = input.value.trim();
+      if (!message) return;
+
+      addMessage(message, "user");
+      input.value = "";
+
+      fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: message,
+          session_id: session_id
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "True") {
+          addMessage(data.reply, "bot");
+        } else {
+          addMessage("Error: " + data.reply, "bot");
+        }
+      })
+      .catch(() => {
+        addMessage("Connection error. Please try again later.", "bot");
+      });
+    }
+
+    function startProgressTracking() {
+      if (trackingProgress) return;
+      trackingProgress = true;
+      document.getElementById("progressContainer").style.display = "block";
+
+      intervalId = setInterval(() => {
+        fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status", {
+          method: "POST"
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.check === "True") {
+            const percent = data.process_percent;
+            const progressBar = document.getElementById("progressBar");
+            progressBar.style.width = percent + "%";
+            progressBar.textContent = percent + "%";
+
+            if (percent >= 100) {
+              clearInterval(intervalId);
+              document.getElementById("links").style.display = "block";
+              document.getElementById("gameLink").href = data.game_link;
+              document.getElementById("downloadLink").href = data.download_link;
+            }
+          }
+        })
+        .catch(err => {
+          console.error("Error getting status:", err);
+        });
+      }, 3000);
+    }
+  </script>
 </body>
 </html>
