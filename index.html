@@ -145,7 +145,7 @@
 </head>
 <body>
   <div id="chat">
-    <h2>AI Slot Game Assistant</h2>
+    <h2>AI Slot Game Assistanttt</h2>
     <div id="messages"></div>
     <div id="waitMessage">Generating response, wait few seconds...</div>
     <textarea id="messageInput" placeholder="Enter your message..." rows="6"></textarea>
@@ -204,38 +204,40 @@
       });
     }
 
-    function checkStatus() {
-      fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status", {
-        method: "POST"
-      })
-      .then(response => response.json())
-      .then(data => {
-        const percent = data.process_percent;
-        const progressContainer = document.getElementById("progressContainer");
-        const progressFill = document.getElementById("progressFill");
-        const links = document.getElementById("links");
+   function checkStatus() {
+  fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ session_id: session_id })  
+  })
+  .then(response => response.json())
+  .then(data => {
+    const percent = data.process_percent;
+    const progressContainer = document.getElementById("progressContainer");
+    const progressFill = document.getElementById("progressFill");
+    const links = document.getElementById("links");
 
-        if (percent > 0 && percent < 100) {
-          progressContainer.style.display = "block";
-          links.style.display = "none";
-          progressFill.style.width = percent + "%";
-          sendButton.disabled = true;
-        } else if (percent === 100) {
-          progressFill.style.width = "100%";
-          progressContainer.style.display = "block";
-          links.style.display = "block";
-          document.getElementById("playLink").href = data.game_link;
-          document.getElementById("downloadLink").href = data.download_link;
-        } else {
-          progressContainer.style.display = "none";
-          links.style.display = "none";
-          progressFill.style.width = "0%";
-        }
-      })
-      .catch(err => {
-        console.error("Error checking status:", err);
-      });
+    if (percent > 0 && percent < 100) {
+      progressContainer.style.display = "block";
+      links.style.display = "none";
+      progressFill.style.width = percent + "%";
+      sendButton.disabled = true;
+    } else if (percent === 100) {
+      progressFill.style.width = "100%";
+      progressContainer.style.display = "block";
+      links.style.display = "block";
+      document.getElementById("playLink").href = data.game_link;
+      document.getElementById("downloadLink").href = data.download_link;
+    } else {
+      progressContainer.style.display = "none";
+      links.style.display = "none";
+      progressFill.style.width = "0%";
     }
+  })
+  .catch(err => {
+    console.error("Error checking status:", err);
+  });
+}
 
     setInterval(checkStatus, 3000); // check every 3 seconds
   </script>
