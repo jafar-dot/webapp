@@ -184,7 +184,7 @@
       input.value = "";
       document.getElementById("waitMessage").style.display = "block";
 
-      fetch("https://sterling-ultimately-lizard.ngrok-free.app/receive_message", {
+      fetch("https://chigger-blessed-bat.ngrok-free.app/receive_message", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: message, session_id: session_id })
@@ -205,7 +205,7 @@
     }
 
    function checkStatus() {
-  fetch("https://sterling-ultimately-lizard.ngrok-free.app/get_status", {
+  fetch("https://chigger-blessed-bat.ngrok-free.app/get_status", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ session_id: session_id })  
@@ -228,7 +228,7 @@
       links.style.display = "block";
 
       // Construct full URLs for play and download
-      const baseUrl = "https://sterling-ultimately-lizard.ngrok-free.app";
+      const baseUrl = "https://chigger-blessed-bat.ngrok-free.app";
       const playUrl = `${baseUrl}${data.game_link}`;
       const downloadUrl = `${baseUrl}${data.download_link}`;
 
@@ -252,7 +252,7 @@
 }
 
 
-    setInterval(checkStatus, 3000); // check every 3 seconds
+    setInterval(checkStatus, 10000); // check every 3 seconds
   </script>
 </body>
 </html>
