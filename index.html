@@ -5,22 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Slot Machine Generator</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: url('new_back.png') no-repeat center center fixed;
       background-size: cover;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 20px;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 240px;
+      background-color: #1b1b1bcc;
+      padding: 20px;
+      color: white;
+    }
+    .sidebar h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #444;
+      padding-bottom: 10px;
+    }
+    .sidebar a {
+      display: block;
+      color: #ccc;
+      text-decoration: none;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    .sidebar a:hover {
+      background-color: #333;
+      color: white;
     }
     #chat {
-      width: 100%;
-      max-width: 640px;
+      flex: 1;
+      max-width: 800px;
       background: #ffffffee;
       padding: 25px;
+      margin: auto;
       border-radius: 12px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
       display: flex;
@@ -126,8 +152,16 @@
   </style>
 </head>
 <body>
+  <div class="sidebar">
+    <h2>Menu</h2>
+    <a href="#">Conversation with AI</a>
+    <a href="#">Text to Slot</a>
+    <a href="#">Slot Machine Repository</a>
+    <a href="#">Contact Us</a>
+    <a href="#">About</a>
+  </div>
   <div id="chat">
-    <h2>AI Slot Game Assistant</h2>
+    <h2>AI -- Slot Game Assistant</h2>
     <div id="messages"></div>
     <div id="waitMessage">Generating response, wait few seconds...</div>
     <textarea id="messageInput" placeholder="Enter your message..." rows="6"></textarea>
@@ -202,12 +236,9 @@
           links.style.display = "block";
           sendButton.disabled = false;
           const baseUrl = "https://chigger-blessed-bat.ngrok-free.app";
-          const playUrl = `${baseUrl}${data.game_link}`;
-          const downloadUrl = `${baseUrl}${data.download_link}`;
-          const analysisUrl = `${baseUrl}${data.analysis_link}`;
-          document.getElementById("playLink").href = playUrl;
-          document.getElementById("downloadLink").href = downloadUrl;
-          document.getElementById("analysisLink").href = analysisUrl;
+          document.getElementById("playLink").href = `${baseUrl}${data.game_link}`;
+          document.getElementById("downloadLink").href = `${baseUrl}${data.download_link}`;
+          document.getElementById("analysisLink").href = `${baseUrl}${data.analysis_link}`;
         } else {
           progressContainer.style.display = "none";
           links.style.display = "none";
