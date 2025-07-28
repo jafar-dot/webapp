@@ -6,18 +6,16 @@
   <title>Slot Machine Generator</title>
   <style>
     body {
-  background: url('new_back.png') no-repeat center center fixed;
-  background-size: cover;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-   height: 100vh;
- 
-}
-
+      background: url('new_back.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
     #chat {
       width: 100%;
       max-width: 640px;
@@ -28,13 +26,11 @@
       display: flex;
       flex-direction: column;
     }
-
     h2 {
       text-align: center;
       color: #333;
       margin-bottom: 20px;
     }
-
     #messages {
       max-height: 300px;
       overflow-y: auto;
@@ -44,23 +40,19 @@
       border-radius: 8px;
       margin-bottom: 15px;
     }
-
     .message {
       margin: 8px 0;
       font-size: 15px;
       line-height: 1.5;
     }
-
     .user {
       color: #1565c0;
       font-weight: 500;
     }
-
     .bot {
       color: #2e7d32;
       font-weight: 500;
     }
-
     #waitMessage {
       display: none;
       color: #777;
@@ -68,7 +60,6 @@
       margin-bottom: 10px;
       text-align: center;
     }
-
     textarea {
       padding: 12px;
       font-size: 16px;
@@ -79,7 +70,6 @@
       box-sizing: border-box;
       margin-bottom: 8px;
     }
-
     button {
       padding: 12px;
       font-size: 16px;
@@ -91,21 +81,17 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-
     button:hover:enabled {
       background-color: #43a047;
     }
-
     button:disabled {
       background-color: #a5d6a7;
       cursor: not-allowed;
     }
-
     #progressContainer {
       display: none;
       margin-top: 15px;
     }
-
     #progressBar {
       width: 100%;
       background-color: #e0e0e0;
@@ -113,20 +99,17 @@
       overflow: hidden;
       height: 22px;
     }
-
     #progressFill {
       height: 100%;
       width: 0%;
       background-color: #66bb6a;
       transition: width 0.5s ease;
     }
-
     #links {
       display: none;
       margin-top: 20px;
       text-align: center;
     }
-
     #links a {
       display: block;
       margin: 8px 0;
@@ -137,7 +120,6 @@
       border-radius: 6px;
       transition: background-color 0.3s ease;
     }
-
     #links a:hover {
       background-color: #1976D2;
     }
@@ -150,23 +132,20 @@
     <div id="waitMessage">Generating response, wait few seconds...</div>
     <textarea id="messageInput" placeholder="Enter your message..." rows="6"></textarea>
     <button id="sendButton" onclick="sendMessage()">Send</button>
-
     <div id="progressContainer">
       <div id="progressBar">
         <div id="progressFill"></div>
       </div>
     </div>
-
     <div id="links">
       <a id="playLink" href="#" target="_blank">Play the Game</a>
       <a id="downloadLink" href="#" download>Download Game Files</a>
+      <a id="analysisLink" href="#" download>Download Analysis PDF</a>
     </div>
   </div>
-
   <script>
     const session_id = "user_" + Math.floor(Math.random() * 1000000);
     const sendButton = document.getElementById("sendButton");
-
     function addMessage(text, sender) {
       const msgDiv = document.createElement("div");
       msgDiv.className = "message " + sender;
@@ -174,16 +153,13 @@
       document.getElementById("messages").appendChild(msgDiv);
       document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
     }
-
     function sendMessage() {
       const input = document.getElementById("messageInput");
       const message = input.value.trim();
       if (!message || sendButton.disabled) return;
-
       addMessage(message, "user");
       input.value = "";
       document.getElementById("waitMessage").style.display = "block";
-
       fetch("https://chigger-blessed-bat.ngrok-free.app/receive_message", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -203,56 +179,47 @@
         document.getElementById("waitMessage").style.display = "none";
       });
     }
-
-   function checkStatus() {
-  fetch("https://chigger-blessed-bat.ngrok-free.app/get_status", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ session_id: session_id })  
-  })
-  .then(response => response.json())
-  .then(data => {
-    const percent = data.process_percent;
-    const progressContainer = document.getElementById("progressContainer");
-    const progressFill = document.getElementById("progressFill");
-    const links = document.getElementById("links");
-
-    if (percent > 0 && percent < 100) {
-      progressContainer.style.display = "block";
-      links.style.display = "none";
-      progressFill.style.width = percent + "%";
-      sendButton.disabled = true;
-    } else if (percent === 100) {
-      progressFill.style.width = "100%";
-      progressContainer.style.display = "block";
-      links.style.display = "block";
-
-      // Construct full URLs for play and download
-      const baseUrl = "https://chigger-blessed-bat.ngrok-free.app";
-      const playUrl = `${baseUrl}${data.game_link}`;
-      const downloadUrl = `${baseUrl}${data.download_link}`;
-
-      document.getElementById("playLink").href = playUrl;
-      document.getElementById("downloadLink").href = downloadUrl;
-
-      // Optional: preview game in iframe if needed
-      const iframe = document.getElementById("gamePreview");
-      if (iframe) {
-        iframe.src = playUrl;
-      }
-    } else {
-      progressContainer.style.display = "none";
-      links.style.display = "none";
-      progressFill.style.width = "0%";
+    function checkStatus() {
+      fetch("https://chigger-blessed-bat.ngrok-free.app/get_status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: session_id })
+      })
+      .then(response => response.json())
+      .then(data => {
+        const percent = data.process_percent;
+        const progressContainer = document.getElementById("progressContainer");
+        const progressFill = document.getElementById("progressFill");
+        const links = document.getElementById("links");
+        if (percent > 0 && percent < 100) {
+          progressContainer.style.display = "block";
+          links.style.display = "none";
+          progressFill.style.width = percent + "%";
+          sendButton.disabled = true;
+        } else if (percent === 100) {
+          progressFill.style.width = "100%";
+          progressContainer.style.display = "block";
+          links.style.display = "block";
+          sendButton.disabled = false;
+          const baseUrl = "https://chigger-blessed-bat.ngrok-free.app";
+          const playUrl = `${baseUrl}${data.game_link}`;
+          const downloadUrl = `${baseUrl}${data.download_link}`;
+          const analysisUrl = `${baseUrl}${data.analysis_link}`;
+          document.getElementById("playLink").href = playUrl;
+          document.getElementById("downloadLink").href = downloadUrl;
+          document.getElementById("analysisLink").href = analysisUrl;
+        } else {
+          progressContainer.style.display = "none";
+          links.style.display = "none";
+          progressFill.style.width = "0%";
+          sendButton.disabled = false;
+        }
+      })
+      .catch(err => {
+        console.error("Error checking status:", err);
+      });
     }
-  })
-  .catch(err => {
-    console.error("Error checking status:", err);
-  });
-}
-
-
-    setInterval(checkStatus, 1000); // check every 1 seconds
+    setInterval(checkStatus, 1000);
   </script>
 </body>
 </html>
