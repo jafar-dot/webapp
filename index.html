@@ -6,19 +6,57 @@
   <title>Slot Machine Generator</title>
   <style>
     body {
-  background: url('new_back.png') no-repeat center center fixed;
-  background-size: cover;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-   height: 100vh;
- 
-}
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('new_back.png') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: #1a1a1aee;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      color: #fff;
+    }
+
+    .sidebar h3 {
+      margin-bottom: 1.5rem;
+      color: #f5f5f5;
+      text-align: center;
+    }
+
+    .sidebar button {
+      margin-bottom: 15px;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .sidebar button:hover {
+      background-color: #388e3c;
+    }
 
     #chat {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+    }
+
+    #chatInner {
       width: 100%;
       max-width: 640px;
       background: #ffffffee;
@@ -80,7 +118,7 @@
       margin-bottom: 8px;
     }
 
-    button {
+    button#sendButton {
       padding: 12px;
       font-size: 16px;
       width: 100%;
@@ -92,11 +130,11 @@
       transition: background-color 0.3s ease;
     }
 
-    button:hover:enabled {
+    #sendButton:hover:enabled {
       background-color: #43a047;
     }
 
-    button:disabled {
+    #sendButton:disabled {
       background-color: #a5d6a7;
       cursor: not-allowed;
     }
@@ -141,25 +179,64 @@
     #links a:hover {
       background-color: #1976D2;
     }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 10px;
+      }
+
+      .sidebar h3 {
+        display: none;
+      }
+
+      .sidebar button {
+        flex-grow: 1;
+        margin: 5px;
+        font-size: 14px;
+      }
+
+      #chat {
+        padding: 20px;
+      }
+
+      #chatInner {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
+  <div class="sidebar">
+    <h3>Quick Access</h3>
+    <button onclick="window.open('https://jafar-dot.github.io/slot-machine-analyzer/', '_blank')">🎲 AI Game Mathematician</button>
+    <button onclick="window.open('https://jafar-dot.github.io/slot-machine-analyzer/', '_blank')">🎰 AI Slot Expert</button>
+  </div>
+
   <div id="chat">
-    <h2>AI Slot Game Assistant</h2>
-    <div id="messages"></div>
-    <div id="waitMessage">Generating response, wait few seconds...</div>
-    <textarea id="messageInput" placeholder="Enter your message..." rows="6"></textarea>
-    <button id="sendButton" onclick="sendMessage()">Send</button>
+    <div id="chatInner">
+      <h2>AI Slot Game Assistant</h2>
+      <div id="messages"></div>
+      <div id="waitMessage">Generating response, wait few seconds...</div>
+      <textarea id="messageInput" placeholder="Enter your message..." rows="6"></textarea>
+      <button id="sendButton" onclick="sendMessage()">Send</button>
 
-    <div id="progressContainer">
-      <div id="progressBar">
-        <div id="progressFill"></div>
+      <div id="progressContainer">
+        <div id="progressBar">
+          <div id="progressFill"></div>
+        </div>
       </div>
-    </div>
 
-    <div id="links">
-      <a id="playLink" href="#" target="_blank">Play the Game</a>
-      <a id="downloadLink" href="#" download>Download Game Files</a>
+      <div id="links">
+        <a id="playLink" href="#" target="_blank">Play the Game</a>
+        <a id="downloadLink" href="#" download>Download Game Files</a>
+      </div>
     </div>
   </div>
 
@@ -204,19 +281,18 @@
       });
     }
 
-   function checkStatus() {
-  fetch("https://chigger-blessed-bat.ngrok-free.app/get_status", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ session_id: session_id })  
-  })
-  .then(response => response.json())
-  .then(data => {
-    const percent = data.process_percent;
-    const progressContainer = document.getElementById("progressContainer");
-    const progressFill = document.getElementById("progressFill");
-    const links = document.getElementById("links");
-
+    function checkStatus() {
+      fetch("https://chigger-blessed-bat.ngrok-free.app/get_status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: session_id })
+      })
+      .then(response => response.json())
+      .then(data => {
+        const percent = data.process_percent;
+        const progressContainer = document.getElementById("progressContainer");
+        const progressFill = document.getElementById("progressFill");
+        const links = document.getElementById("links");
     if (percent > 0 && percent < 100) {
       progressContainer.style.display = "block";
       links.style.display = "none";
@@ -256,3 +332,4 @@
   </script>
 </body>
 </html>
+
