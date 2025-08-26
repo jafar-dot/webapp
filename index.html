@@ -215,7 +215,7 @@
 <body>
   <div class="sidebar">
     <h3>Quick Access</h3>
-    <button onclick="window.open('https://jafar-dot.github.io/slot-machine-analyzer/', '_blank')">AI -- Game Mathematician</button>
+    <button onclick="window.open('https://jafar-dot.github.io/slot-machine-analyzer/', '_blank')">AI 22 Game Mathematician</button>
     <button onclick="window.open('', '_blank')">AI Slot Machine Designer</button>
     <button onclick="window.open('', '_blank')">Slot Machine Repository</button>
   </div>
@@ -264,7 +264,7 @@
       input.value = "";
       document.getElementById("waitMessage").style.display = "block";
 
-      fetch("https://2460dae6bd71.ngrok-free.app/receive_message", {
+      fetch("https://b429b736d970.ngrok-free.app/receive_message", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: message, session_id: session_id })
@@ -285,7 +285,7 @@
     }
 
     function checkStatus() {
-      fetch("https://2460dae6bd71.ngrok-free.app/get_status", {
+      fetch("https://b429b736d970.ngrok-free.app/get_status", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ session_id: session_id })
@@ -307,7 +307,7 @@
       links.style.display = "block";
 
       // Construct full URLs for play and download
-      const baseUrl = "https://2460dae6bd71.ngrok-free.app";
+      const baseUrl = "https://b429b736d970.ngrok-free.app";
       const playUrl = `${baseUrl}${data.game_link}`;
       const downloadUrl = `${baseUrl}${data.download_link}`;
 
@@ -335,6 +335,7 @@
   </script>
 </body>
 </html>
+
 
 
 
