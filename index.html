@@ -264,7 +264,7 @@
       input.value = "";
       document.getElementById("waitMessage").style.display = "block";
 
-      fetch("https://b429b736d970.ngrok-free.app/receive_message", {
+      fetch("https://chigger-blessed-bat.ngrok-free.app/receive_message", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: message, session_id: session_id })
@@ -285,7 +285,7 @@
     }
 
     function checkStatus() {
-      fetch("https://b429b736d970.ngrok-free.app/get_status", {
+      fetch("https://chigger-blessed-bat.ngrok-free.app/get_status", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ session_id: session_id })
@@ -306,8 +306,7 @@
       progressContainer.style.display = "block";
       links.style.display = "block";
 
-      // Construct full URLs for play and download
-      const baseUrl = "https://b429b736d970.ngrok-free.app";
+      const baseUrl = "https://chigger-blessed-bat.ngrok-free.app";
       const playUrl = `${baseUrl}${data.game_link}`;
       const downloadUrl = `${baseUrl}${data.download_link}`;
 
@@ -335,6 +334,7 @@
   </script>
 </body>
 </html>
+
 
 
 
