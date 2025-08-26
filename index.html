@@ -215,7 +215,7 @@
 <body>
   <div class="sidebar">
     <h3>Quick Access</h3>
-    <button onclick="window.open('https://jafar-dot.github.io/slot-machine-analyzer/', '_blank')">AI 88 Game Mathematician</button>
+    <button onclick="window.open('https://jafar-dot.github.io/slot-machine-analyzer/', '_blank')">AI  Game Mathematician</button>
     <button onclick="window.open('', '_blank')">AI Slot Machine Designer</button>
     <button onclick="window.open('', '_blank')">Slot Machine Repository</button>
   </div>
@@ -244,6 +244,7 @@
   </div>
 
   <script>
+    const url="https://dual-harvest-steal-badly.trycloudflare.com";
     const session_id = "user_" + Math.floor(Math.random() * 1000000);
     const sendButton = document.getElementById("sendButton");
 
@@ -264,7 +265,7 @@
       input.value = "";
       document.getElementById("waitMessage").style.display = "block";
 
-      fetch("https://musicians-probe-rhode-engines.trycloudflare.com/receive_message", {
+      fetch(`${url}/receive_message`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: message, session_id: session_id })
@@ -285,7 +286,7 @@
     }
 
     function checkStatus() {
-      fetch("https://musicians-probe-rhode-engines.trycloudflare.com/get_status", {
+      fetch(`${url}/get_status`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ session_id: session_id })
@@ -306,7 +307,7 @@
       progressContainer.style.display = "block";
       links.style.display = "block";
 
-      const baseUrl = "https://musicians-probe-rhode-engines.trycloudflare.com";
+      const baseUrl = url;
       const playUrl = `${baseUrl}${data.game_link}`;
       const downloadUrl = `${baseUrl}${data.download_link}`;
 
@@ -334,6 +335,7 @@
   </script>
 </body>
 </html>
+
 
 
 
