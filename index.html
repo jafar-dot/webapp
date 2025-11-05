@@ -5,36 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AI Slot Machine Developer</title>
   <style>
-    /* ===== GENERAL ===== */
+    /* ===== GLOBAL STYLES ===== */
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
-      height: 100vh;
+      background: linear-gradient(120deg, #005c97, #363795, #00b4db);
+      background-size: 400% 400%;
+      animation: bgShift 12s ease-in-out infinite;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: radial-gradient(circle at 20% 20%, #0a0f15, #060b10 60%);
+      height: 100vh;
+      color: #f5f5f5;
       overflow: hidden;
-      color: #fff;
-      animation: backgroundPulse 8s ease-in-out infinite alternate;
     }
 
-    @keyframes backgroundPulse {
-      0% { background: radial-gradient(circle at 20% 20%, #0a0f15, #060b10 60%); }
-      100% { background: radial-gradient(circle at 80% 80%, #0a131b, #05080d 60%); }
+    @keyframes bgShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
-    /* ===== CHAT CONTAINER ===== */
+    /* ===== MAIN CARD ===== */
     #chatInner {
       width: 90%;
-      max-width: 700px;
-      background: rgba(255, 255, 255, 0.05);
+      max-width: 750px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(25px);
       border-radius: 25px;
-      backdrop-filter: blur(20px);
-      padding: 40px 35px;
-      box-shadow: 0 0 40px rgba(0, 255, 160, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      animation: fadeIn 1s ease forwards;
+      padding: 45px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 30px rgba(0, 255, 200, 0.25);
+      animation: fadeIn 1.2s ease forwards, floatUp 3s ease-in-out infinite alternate;
+      display: flex;
+      flex-direction: column;
     }
 
     @keyframes fadeIn {
@@ -42,143 +50,149 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    @keyframes floatUp {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
+    }
+
     h2 {
       text-align: center;
-      font-size: 1.8rem;
-      margin-bottom: 25px;
-      background: linear-gradient(90deg, #00ffa8, #00c873);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 1px;
-      text-shadow: 0 0 15px #00ffa055;
-      animation: glowPulse 3s infinite alternate;
+      font-size: 2.6rem;
+      font-weight: 800;
+      margin-bottom: 30px;
+      color: #00ffe6;
+      letter-spacing: 1.5px;
+      text-shadow: 0 0 20px #00ffe6, 0 0 40px #00bfa5, 0 0 60px #00897b;
+      animation: glowPulse 2.5s infinite alternate;
     }
 
     @keyframes glowPulse {
-      0% { text-shadow: 0 0 10px #00ffa055; }
-      100% { text-shadow: 0 0 20px #00ffa0aa; }
+      from { text-shadow: 0 0 15px #00ffe6, 0 0 25px #00bfa5; }
+      to { text-shadow: 0 0 30px #00ffe6, 0 0 50px #00bfa5; }
     }
 
-    /* ===== MESSAGES ===== */
+    /* ===== MESSAGE BOX ===== */
     #messages {
-      max-height: 320px;
+      max-height: 300px;
       overflow-y: auto;
-      background: rgba(255, 255, 255, 0.04);
-      border-radius: 18px;
-      padding: 15px 20px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 18px;
       margin-bottom: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      animation: fadeIn 0.8s ease forwards;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: inset 0 0 15px rgba(0, 255, 200, 0.1);
     }
 
     .message {
-      margin: 12px 0;
-      font-size: 16px;
+      margin: 10px 0;
+      font-size: 17px;
       line-height: 1.6;
-      opacity: 0;
-      transform: translateY(10px);
-      animation: messagePop 0.5s ease forwards;
+      animation: fadeInMsg 0.5s ease;
     }
 
-    @keyframes messagePop {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    @keyframes fadeInMsg {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .user {
-      color: #5dc1ff;
+      color: #80d4ff;
       font-weight: 600;
     }
 
     .bot {
-      color: #00ffa8;
+      color: #00ffc6;
       font-weight: 600;
     }
 
     #waitMessage {
       display: none;
-      color: #aaa;
+      color: #eee;
       font-style: italic;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
       text-align: center;
-      animation: fadeIn 0.6s ease forwards;
+      animation: blink 1.2s infinite;
     }
 
-    /* ===== INPUT AREA ===== */
+    @keyframes blink {
+      50% { opacity: 0.5; }
+    }
+
+    /* ===== TEXTAREA ===== */
     textarea {
-      width: 100%;
       padding: 15px 18px;
+      font-size: 17px;
       border-radius: 20px;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #fff;
-      font-size: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.25);
+      color: #111;
       resize: vertical;
+      width: 100%;
       margin-bottom: 15px;
+      outline: none;
       transition: all 0.3s ease;
     }
 
     textarea:focus {
-      outline: none;
-      border-color: #00ffa8;
-      box-shadow: 0 0 15px #00ffa055;
+      border-color: #00ffe6;
+      box-shadow: 0 0 10px #00ffe655;
+      background: rgba(255, 255, 255, 0.35);
     }
 
-    /* ===== BUTTON ===== */
+    textarea::placeholder {
+      color: #333;
+      font-weight: 500;
+    }
+
+    /* ===== SEND BUTTON ===== */
     #sendButton {
       padding: 14px;
       font-size: 17px;
-      font-weight: 600;
-      width: 100%;
+      font-weight: 700;
       border: none;
       border-radius: 50px;
+      background: linear-gradient(90deg, #00ffe6, #00c8a0);
       color: #111;
-      background: linear-gradient(90deg, #00ffa8, #00c873);
       cursor: pointer;
       transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
+      animation: buttonPulse 3s infinite alternate;
+    }
+
+    @keyframes buttonPulse {
+      from { box-shadow: 0 0 15px #00ffe650; }
+      to { box-shadow: 0 0 30px #00ffe6aa; }
     }
 
     #sendButton:hover:enabled {
-      transform: scale(1.03);
-      box-shadow: 0 0 20px #00ffa0aa;
+      transform: scale(1.05);
+      background: linear-gradient(90deg, #00ffec, #00d6b0);
     }
 
     #sendButton:disabled {
-      background: #444;
+      background: #666;
       cursor: not-allowed;
+      box-shadow: none;
     }
 
     /* ===== PROGRESS BAR ===== */
     #progressContainer {
       display: none;
-      margin-top: 20px;
+      margin-top: 15px;
     }
 
     #progressBar {
       width: 100%;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.25);
       border-radius: 20px;
       overflow: hidden;
-      height: 20px;
-      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
+      height: 22px;
     }
 
     #progressFill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #00ffa8, #00c873);
+      background: linear-gradient(90deg, #00ffe6, #00c8a0);
       transition: width 0.5s ease;
-      animation: shimmer 2s infinite linear;
-    }
-
-    @keyframes shimmer {
-      0% { filter: brightness(1); }
-      50% { filter: brightness(1.5); }
-      100% { filter: brightness(1); }
     }
 
     /* ===== LINKS ===== */
@@ -186,26 +200,24 @@
       display: none;
       margin-top: 25px;
       text-align: center;
-      animation: fadeIn 0.6s ease forwards;
     }
 
     #links a {
       display: inline-block;
-      margin: 8px;
+      margin: 10px;
       padding: 14px 28px;
       background: linear-gradient(90deg, #0077ff, #00aaff);
-      color: #fff;
+      color: white;
       text-decoration: none;
-      border-radius: 50px;
+      border-radius: 40px;
       transition: all 0.3s ease;
       font-weight: 600;
     }
 
     #links a:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 20px #00aaffaa;
+      box-shadow: 0 0 15px #00aaffaa;
     }
-
   </style>
 </head>
 
@@ -214,7 +226,6 @@
     <h2>AI Slot Machine Developer</h2>
     <div id="messages"></div>
     <div id="waitMessage">Generating response, please wait...</div>
-
     <textarea id="messageInput" placeholder="Enter your message..." rows="6"></textarea>
     <button id="sendButton" onclick="sendMessage()">Send</button>
 
@@ -231,7 +242,7 @@
   </div>
 
   <script>
-    const url="https://hamster-teaching-serval.ngrok-free.app";
+    const url = "https://hamster-teaching-serval.ngrok-free.app";
     const session_id = "user_" + Math.floor(Math.random() * 1000000);
     const sendButton = document.getElementById("sendButton");
 
@@ -294,7 +305,6 @@
           progressFill.style.width = "100%";
           progressContainer.style.display = "block";
           links.style.display = "block";
-
           const baseUrl = url;
           const playUrl = `${baseUrl}${data.game_link}`;
           const downloadUrl = `${baseUrl}${data.download_link}`;
