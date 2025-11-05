@@ -6,101 +6,93 @@
   <title>AI Slot Machine Developer</title>
   <style>
     /* ===== GLOBAL STYLES ===== */
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #0a0a0f, #101722, #0b1e2b);
-      color: #f0f0f0;
-      display: flex;
-      flex-direction: row;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    /* ===== SIDEBAR ===== */
-    .sidebar {
-      width: 260px;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(20px);
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-      padding: 30px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      border-right: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .sidebar h3 {
-      font-size: 1.3rem;
-      text-align: center;
-      color: #9ef7d0;
-      margin-bottom: 2rem;
-      letter-spacing: 1px;
-    }
-
-    .sidebar button {
-      margin-bottom: 15px;
-      padding: 14px;
-      border: none;
-      border-radius: 50px;
-      background: linear-gradient(90deg, #00c76f, #00e6a8);
-      color: #fff;
-      font-weight: 600;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .sidebar button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px #00ff99aa;
-    }
-
-    /* ===== CHAT AREA ===== */
-    #chat {
-      flex-grow: 1;
+      font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(120deg, #0a0a0f, #0e1c2c, #001f1f);
+      background-size: 400% 400%;
+      animation: bgShift 10s ease-in-out infinite;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 40px;
+      height: 100vh;
+      color: #f5f5f5;
+      overflow: hidden;
     }
 
+    @keyframes bgShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ===== MAIN CARD ===== */
     #chatInner {
-      width: 100%;
+      width: 90%;
       max-width: 700px;
-      background: rgba(255, 255, 255, 0.07);
+      background: rgba(255, 255, 255, 0.06);
       backdrop-filter: blur(25px);
-      padding: 35px;
       border-radius: 25px;
-      box-shadow: 0 0 25px rgba(0, 255, 160, 0.15);
+      padding: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 25px rgba(0, 255, 160, 0.2);
+      animation: fadeIn 1.2s ease forwards, floatUp 3s ease-in-out infinite alternate;
       display: flex;
       flex-direction: column;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
     }
 
     h2 {
       text-align: center;
-      color: #9ef7d0;
+      font-size: 1.9rem;
+      font-weight: 700;
       margin-bottom: 25px;
-      font-size: 1.8rem;
-      text-shadow: 0 0 10px #00ffa8;
+      color: #00ffb3;
+      text-shadow: 0 0 15px #00ffa0;
+      letter-spacing: 1px;
+      animation: glowPulse 2.5s infinite alternate;
     }
 
-    /* ===== MESSAGES ===== */
+    @keyframes glowPulse {
+      from { text-shadow: 0 0 10px #00ffa0; }
+      to { text-shadow: 0 0 25px #00ffa0; }
+    }
+
+    /* ===== MESSAGE BOX ===== */
     #messages {
-      max-height: 300px;
+      max-height: 280px;
       overflow-y: auto;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.07);
       border-radius: 20px;
       padding: 15px;
       margin-bottom: 20px;
       border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 0 10px rgba(0, 255, 170, 0.05);
     }
 
     .message {
       margin: 10px 0;
       font-size: 16px;
-      line-height: 1.5;
+      line-height: 1.6;
+      animation: fadeInMsg 0.5s ease;
+    }
+
+    @keyframes fadeInMsg {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .user {
@@ -119,30 +111,35 @@
       font-style: italic;
       margin-bottom: 10px;
       text-align: center;
+      animation: blink 1.2s infinite;
     }
 
-    /* ===== INPUT AREA ===== */
+    @keyframes blink {
+      50% { opacity: 0.5; }
+    }
+
+    /* ===== TEXTAREA ===== */
     textarea {
-      padding: 14px 18px;
+      padding: 15px 18px;
       font-size: 16px;
       border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       background: rgba(255, 255, 255, 0.1);
       color: #fff;
       resize: vertical;
       width: 100%;
       margin-bottom: 15px;
-      box-sizing: border-box;
-      transition: border 0.2s;
+      outline: none;
+      transition: all 0.3s ease;
     }
 
     textarea:focus {
       border-color: #00ffa0;
-      outline: none;
       box-shadow: 0 0 10px #00ffa055;
     }
 
-    button#sendButton {
+    /* ===== SEND BUTTON ===== */
+    #sendButton {
       padding: 14px;
       font-size: 17px;
       font-weight: 600;
@@ -152,16 +149,23 @@
       color: #111;
       cursor: pointer;
       transition: all 0.3s ease;
+      animation: buttonPulse 3s infinite alternate;
+    }
+
+    @keyframes buttonPulse {
+      from { box-shadow: 0 0 10px #00ffa055; }
+      to { box-shadow: 0 0 25px #00ffa0aa; }
     }
 
     #sendButton:hover:enabled {
       transform: scale(1.05);
-      box-shadow: 0 0 15px #00ffa0aa;
+      background: linear-gradient(90deg, #00ffc3, #00d38b);
     }
 
     #sendButton:disabled {
       background: #444;
       cursor: not-allowed;
+      box-shadow: none;
     }
 
     /* ===== PROGRESS BAR ===== */
@@ -208,72 +212,31 @@
       transform: scale(1.05);
       box-shadow: 0 0 15px #00aaffaa;
     }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: 100%;
-        flex-direction: row;
-        justify-content: space-around;
-        padding: 10px;
-      }
-
-      .sidebar h3 {
-        display: none;
-      }
-
-      .sidebar button {
-        flex-grow: 1;
-        margin: 5px;
-        font-size: 14px;
-      }
-
-      #chat {
-        padding: 20px;
-      }
-
-      #chatInner {
-        border-radius: 15px;
-      }
-    }
   </style>
 </head>
 
 <body>
-  <div class="sidebar">
-    <h3>Quick Access</h3>
-    <button onclick="window.open('https://jafar-dot.github.io/slot-machine-analyzer/', '_blank')">Game Mathematician</button>
-    <button onclick="window.open('https://jafar-dot.github.io/Custom-Slot-Machine/', '_blank')">Custom Slot Machine</button>
-    <button onclick="window.open('', '_blank')">Repository</button>
-  </div>
+  <div id="chatInner">
+    <h2>AI Slot Machine Developer</h2>
+    <div id="messages"></div>
+    <div id="waitMessage">Generating response, please wait...</div>
+    <textarea id="messageInput" placeholder="Enter your message..." rows="6"></textarea>
+    <button id="sendButton" onclick="sendMessage()">Send</button>
 
-  <div id="chat">
-    <div id="chatInner">
-      <h2>AI Slot Machine Developer</h2>
-      <div id="messages"></div>
-      <div id="waitMessage">Generating response, please wait...</div>
-      <textarea id="messageInput" placeholder="Enter your message..." rows="6"></textarea>
-      <button id="sendButton" onclick="sendMessage()">Send</button>
-
-      <div id="progressContainer">
-        <div id="progressBar">
-          <div id="progressFill"></div>
-        </div>
+    <div id="progressContainer">
+      <div id="progressBar">
+        <div id="progressFill"></div>
       </div>
+    </div>
 
-      <div id="links">
-        <a id="playLink" href="#" target="_blank">Play Game</a>
-        <a id="downloadLink" href="#" download>Download Files</a>
-      </div>
+    <div id="links">
+      <a id="playLink" href="#" target="_blank">Play Game</a>
+      <a id="downloadLink" href="#" download>Download Files</a>
     </div>
   </div>
 
   <script>
-    const url="https://hamster-teaching-serval.ngrok-free.app";
+    const url = "https://hamster-teaching-serval.ngrok-free.app";
     const session_id = "user_" + Math.floor(Math.random() * 1000000);
     const sendButton = document.getElementById("sendButton");
 
@@ -336,7 +299,6 @@
           progressFill.style.width = "100%";
           progressContainer.style.display = "block";
           links.style.display = "block";
-
           const baseUrl = url;
           const playUrl = `${baseUrl}${data.game_link}`;
           const downloadUrl = `${baseUrl}${data.download_link}`;
