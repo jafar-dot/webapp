@@ -4,27 +4,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AI Slot Machine Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    /* ===== GLOBAL STYLES ===== */
+    /* ===== VARIABLES & RESET ===== */
+    :root {
+      --primary-color: #3b82f6; /* Professional Tech Blue */
+      --primary-hover: #2563eb;
+      --bg-dark: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --glass-shine: rgba(255, 255, 255, 0.05);
+    }
+
     * {
       box-sizing: border-box;
     }
 
     body {
       margin: 0;
-      font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
-      background: linear-gradient(120deg, #005c97, #363795, #00b4db);
-      background-size: 400% 400%;
-      animation: bgShift 12s ease-in-out infinite;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      /* Professional subtle moving mesh gradient */
+      background-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                        radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                        radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+      background-size: 200% 200%;
+      animation: aurora 15s ease infinite;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      color: #f5f5f5;
+      color: var(--text-main);
       overflow: hidden;
     }
 
-    @keyframes bgShift {
+    @keyframes aurora {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
@@ -32,146 +48,197 @@
 
     /* ===== MAIN CARD ===== */
     #chatInner {
-      width: 90%;
-      max-width: 750px;
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(25px);
-      border-radius: 25px;
-      padding: 45px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      box-shadow: 0 0 30px rgba(0, 255, 200, 0.25);
-      animation: fadeIn 1.2s ease forwards, floatUp 3s ease-in-out infinite alternate;
+      width: 95%;
+      max-width: 800px;
+      height: 90vh;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 16px;
+      padding: 0; /* Reset padding for layout */
+      border: 1px solid var(--border-color);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      animation: scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
     }
 
-    @keyframes floatUp {
-      from { transform: translateY(0); }
-      to { transform: translateY(-10px); }
+    /* ===== HEADER ===== */
+    .header {
+      padding: 20px 30px;
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(15, 23, 42, 0.4);
     }
 
     h2 {
-      text-align: center;
-      font-size: 2.6rem;
-      font-weight: 800;
-      margin-bottom: 30px;
-      color: #00ffe6;
-      letter-spacing: 1.5px;
-      text-shadow: 0 0 20px #00ffe6, 0 0 40px #00bfa5, 0 0 60px #00897b;
-      animation: glowPulse 2.5s infinite alternate;
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    @keyframes glowPulse {
-      from { text-shadow: 0 0 15px #00ffe6, 0 0 25px #00bfa5; }
-      to { text-shadow: 0 0 30px #00ffe6, 0 0 50px #00bfa5; }
+    h2::before {
+      content: '';
+      display: block;
+      width: 8px;
+      height: 8px;
+      background-color: #10b981; /* Online Green Indicator */
+      border-radius: 50%;
+      box-shadow: 0 0 10px #10b981;
     }
 
-    /* ===== MESSAGE BOX ===== */
+    /* ===== MESSAGE AREA ===== */
     #messages {
-      max-height: 300px;
+      flex: 1;
       overflow-y: auto;
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 20px;
-      padding: 18px;
-      margin-bottom: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: inset 0 0 15px rgba(0, 255, 200, 0.1);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      scroll-behavior: smooth;
+    }
+
+    /* Custom Scrollbar */
+    #messages::-webkit-scrollbar {
+      width: 6px;
+    }
+    #messages::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    #messages::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
     }
 
     .message {
-      margin: 10px 0;
-      font-size: 17px;
-      line-height: 1.6;
-      animation: fadeInMsg 0.5s ease;
+      max-width: 80%;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      position: relative;
+      animation: slideUp 0.4s ease forwards;
+      word-wrap: break-word;
     }
 
-    @keyframes fadeInMsg {
-      from { opacity: 0; transform: translateY(5px); }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     .user {
-      color: #80d4ff;
-      font-weight: 600;
+      align-self: flex-end;
+      background: var(--primary-color);
+      color: white;
+      border-bottom-right-radius: 2px;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
     }
 
     .bot {
-      color: #00ffc6;
-      font-weight: 600;
+      align-self: flex-start;
+      background: rgba(51, 65, 85, 0.8); /* Slate 700 */
+      color: #e2e8f0;
+      border-bottom-left-radius: 2px;
+      border: 1px solid var(--border-color);
+    }
+
+    /* ===== INPUT AREA ===== */
+    .input-area {
+      padding: 20px 30px;
+      background: rgba(15, 23, 42, 0.6);
+      border-top: 1px solid var(--border-color);
     }
 
     #waitMessage {
       display: none;
-      color: #eee;
-      font-style: italic;
+      color: var(--text-muted);
+      font-size: 0.85rem;
       margin-bottom: 10px;
-      text-align: center;
-      animation: blink 1.2s infinite;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    /* Subtle pulse animation for wait message */
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
     }
 
-    @keyframes blink {
-      50% { opacity: 0.5; }
-    }
-
-    /* ===== TEXTAREA ===== */
     textarea {
-      padding: 15px 18px;
-      font-size: 17px;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      background: rgba(255, 255, 255, 0.25);
-      color: #111;
-      resize: vertical;
       width: 100%;
-      margin-bottom: 15px;
+      padding: 14px 16px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: rgba(0, 0, 0, 0.2);
+      color: #fff;
+      resize: none;
       outline: none;
-      transition: all 0.3s ease;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      margin-bottom: 15px;
+      height: 80px;
     }
 
     textarea:focus {
-      border-color: #00ffe6;
-      box-shadow: 0 0 10px #00ffe655;
-      background: rgba(255, 255, 255, 0.35);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+      background: rgba(0, 0, 0, 0.3);
     }
 
     textarea::placeholder {
-      color: #333;
-      font-weight: 500;
+      color: rgba(255, 255, 255, 0.3);
     }
 
-    /* ===== SEND BUTTON ===== */
     #sendButton {
-      padding: 14px;
-      font-size: 17px;
-      font-weight: 700;
+      width: 100%;
+      padding: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
       border: none;
-      border-radius: 50px;
-      background: linear-gradient(90deg, #00ffe6, #00c8a0);
-      color: #111;
+      border-radius: 8px;
+      background: var(--primary-color);
+      color: white;
       cursor: pointer;
-      transition: all 0.3s ease;
-      animation: buttonPulse 3s infinite alternate;
-    }
-
-    @keyframes buttonPulse {
-      from { box-shadow: 0 0 15px #00ffe650; }
-      to { box-shadow: 0 0 30px #00ffe6aa; }
+      transition: all 0.2s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      letter-spacing: 0.5px;
     }
 
     #sendButton:hover:enabled {
-      transform: scale(1.05);
-      background: linear-gradient(90deg, #00ffec, #00d6b0);
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    #sendButton:active:enabled {
+      transform: translateY(0);
     }
 
     #sendButton:disabled {
-      background: #666;
+      background: #475569;
+      color: #94a3b8;
       cursor: not-allowed;
-      box-shadow: none;
     }
 
     /* ===== PROGRESS BAR ===== */
@@ -180,64 +247,100 @@
       margin-top: 15px;
     }
 
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
     #progressBar {
       width: 100%;
-      background: rgba(255, 255, 255, 0.25);
-      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
       overflow: hidden;
-      height: 22px;
+      height: 6px;
     }
 
     #progressFill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #00ffe6, #00c8a0);
-      transition: width 0.5s ease;
+      background: linear-gradient(90deg, var(--primary-color), #60a5fa);
+      transition: width 0.4s ease;
+      border-radius: 4px;
     }
 
     /* ===== LINKS ===== */
     #links {
       display: none;
-      margin-top: 25px;
+      margin-top: 20px;
       text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; } 
+      to { opacity: 1; }
     }
 
     #links a {
-      display: inline-block;
-      margin: 10px;
-      padding: 14px 28px;
-      background: linear-gradient(90deg, #0077ff, #00aaff);
-      color: white;
+      display: inline-flex;
+      align-items: center;
+      margin: 0 8px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
       text-decoration: none;
-      border-radius: 40px;
-      transition: all 0.3s ease;
-      font-weight: 600;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
     }
 
     #links a:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px #00aaffaa;
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--primary-color);
+      color: #fff;
     }
   </style>
 </head>
 
 <body>
   <div id="chatInner">
-    <h2>AI Slot Machine Developer</h2>
-    <div id="messages"></div>
-    <div id="waitMessage">Generating response, please wait...</div>
-    <textarea id="messageInput" placeholder="Enter your message..." rows="6"></textarea>
-    <button id="sendButton" onclick="sendMessage()">Send</button>
-
-    <div id="progressContainer">
-      <div id="progressBar">
-        <div id="progressFill"></div>
-      </div>
+    <div class="header">
+      <h2>AI Slot Machine Architect</h2>
     </div>
 
-    <div id="links">
-      <a id="playLink" href="#" target="_blank">Play Game</a>
-      <a id="downloadLink" href="#" download>Download Files</a>
+    <div id="messages">
+      <div class="message bot">Hello. Describe the slot machine mechanics you wish to build today.</div>
+    </div>
+
+    <div class="input-area">
+      <div id="waitMessage" style="display:none;">
+        <div class="pulse-dot"></div>
+        <span>Processing logic...</span>
+      </div>
+      
+      <textarea id="messageInput" placeholder="e.g., Create a 3x5 slot with wild symbols and free spins..." rows="3"></textarea>
+      
+      <button id="sendButton" onclick="sendMessage()">Initialize Generation</button>
+
+      <div id="progressContainer">
+        <div class="progress-label">
+          <span>Compiling Assets</span>
+          <span id="percentText">0%</span>
+        </div>
+        <div id="progressBar">
+          <div id="progressFill"></div>
+        </div>
+      </div>
+
+      <div id="links">
+        <a id="playLink" href="#" target="_blank">Launch Simulation</a>
+        <a id="downloadLink" href="#" download>Export Source Code</a>
+      </div>
     </div>
   </div>
 
@@ -249,7 +352,11 @@
     function addMessage(text, sender) {
       const msgDiv = document.createElement("div");
       msgDiv.className = "message " + sender;
-      msgDiv.textContent = (sender === "user" ? "You: " : "Bot: ") + text;
+      // Check for sender to determine prefix, though in professional UI 
+      // visuals often distinguish users better than text prefixes.
+      // Keeping logic same as requested:
+      msgDiv.textContent = text; 
+      
       document.getElementById("messages").appendChild(msgDiv);
       document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
     }
@@ -261,7 +368,9 @@
 
       addMessage(message, "user");
       input.value = "";
-      document.getElementById("waitMessage").style.display = "block";
+      
+      // Show custom waiter
+      document.getElementById("waitMessage").style.display = "flex";
 
       fetch(`${url}/receive_message`, {
         method: "POST",
@@ -278,7 +387,7 @@
         document.getElementById("waitMessage").style.display = "none";
       })
       .catch(err => {
-        addMessage("Connection error. Please try again later.", "bot");
+        addMessage("System connection error. Please retry.", "bot");
         document.getElementById("waitMessage").style.display = "none";
       });
     }
@@ -295,28 +404,37 @@
         const progressContainer = document.getElementById("progressContainer");
         const progressFill = document.getElementById("progressFill");
         const links = document.getElementById("links");
+        const percentText = document.getElementById("percentText");
 
         if (percent > 0 && percent < 100) {
           progressContainer.style.display = "block";
           links.style.display = "none";
           progressFill.style.width = percent + "%";
+          if(percentText) percentText.innerText = percent + "%";
           sendButton.disabled = true;
+          sendButton.innerText = "Processing...";
         } else if (percent === 100) {
           progressFill.style.width = "100%";
+          if(percentText) percentText.innerText = "100%";
           progressContainer.style.display = "block";
-          links.style.display = "block";
+          links.style.display = "block"; // Changed to flex in CSS for alignment
+          
           const baseUrl = url;
           const playUrl = `${baseUrl}${data.game_link}`;
           const downloadUrl = `${baseUrl}${data.download_link}`;
+          
           document.getElementById("playLink").href = playUrl;
           document.getElementById("downloadLink").href = downloadUrl;
+          
+          sendButton.disabled = false;
+          sendButton.innerText = "Initialize Generation";
         } else {
           progressContainer.style.display = "none";
           links.style.display = "none";
           progressFill.style.width = "0%";
         }
       })
-      .catch(err => console.error("Error checking status:", err));
+      .catch(err => console.error("Status poll error:", err));
     }
 
     setInterval(checkStatus, 1000);
