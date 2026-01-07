@@ -3,239 +3,196 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Console // Slot Architect</title>
+  <title>Architect Pro // Core Terminal</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
   
   <style>
-    /* =========================================
-       1. INDUSTRIAL DESIGN SYSTEM
-       ========================================= */
+    /* 1. PROFESSIONAL ARCHITECTURE VARIABLES */
     :root {
-      --bg-canvas: #f2f2f7;      /* Precise industrial gray */
-      --bg-panel: #ffffff;
-      --border-main: #1a1a1a;    /* High-contrast black borders */
-      --text-main: #1a1a1a;
-      --text-dim: #707070;
+      --studio-white: #ffffff;
+      --studio-gray: #fcfcfc;
+      --border-dark: #111111;
+      --border-light: #e5e5e5;
+      --text-main: #111111;
+      --text-muted: #888888;
+      --accent-active: #000000;
       
-      --action-color: #ff5f1f;   /* International Orange (Safety/Industrial) */
-      --action-hover: #e04e10;
-      
-      --mono: 'JetBrains Mono', monospace;
-      --sans: 'Inter', sans-serif;
+      --mono: 'Roboto Mono', monospace;
+      --sans: 'Inter', -apple-system, sans-serif;
     }
 
-    * { box-sizing: border-box; outline: none; cursor: crosshair; }
+    * { box-sizing: border-box; outline: none; }
     
     body {
       margin: 0;
       font-family: var(--sans);
-      background-color: var(--bg-canvas);
+      background-color: var(--studio-white);
       color: var(--text-main);
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       overflow: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* =========================================
-       2. CONSOLE ARCHITECTURE
-       ========================================= */
-    #console-container {
-      width: 98vw;
-      height: 96vh;
-      background: var(--bg-panel);
-      border: 2px solid var(--border-main);
+    /* 2. THE STUDIO INTERFACE */
+    #studio-core {
+      width: 100vw;
+      height: 100vh;
       display: grid;
-      grid-template-rows: 60px 1fr 140px;
-      position: relative;
+      grid-template-rows: 50px 1fr 120px;
+      border: 15px solid var(--studio-white); /* Elegant white padding */
+      background: var(--studio-white);
     }
 
-    /* Header / Data Strip */
-    .data-strip {
-      border-bottom: 2px solid var(--border-main);
-      padding: 0 30px;
+    /* Minimal Top Navigation */
+    .nav-bar {
+      border-bottom: 1.5px solid var(--border-dark);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #fff;
+      padding: 0 5px;
     }
 
-    .system-id {
+    .brand-id {
       font-family: var(--mono);
-      font-weight: 700;
-      font-size: 14px;
-      letter-spacing: 1px;
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: -0.2px;
     }
 
-    .metrics {
+    .system-metrics {
       display: flex;
-      gap: 40px;
+      gap: 30px;
       font-family: var(--mono);
-      font-size: 11px;
-      text-transform: uppercase;
+      font-size: 10px;
+      color: var(--text-muted);
     }
 
-    .metric-item span { color: var(--text-dim); margin-right: 5px; }
-
-    /* =========================================
-       3. WORKSPACE (LOG)
-       ========================================= */
-    #log-view {
+    /* 3. LOG FEED (The Core Output) */
+    #stream-view {
+      padding: 40px 0;
       overflow-y: auto;
-      padding: 60px;
       display: flex;
       flex-direction: column;
-      gap: 40px;
+      gap: 35px;
     }
 
-    #log-view::-webkit-scrollbar { width: 4px; }
-    #log-view::-webkit-scrollbar-thumb { background: var(--border-main); }
+    #stream-view::-webkit-scrollbar { width: 0px; }
 
-    .entry {
+    .block {
       display: grid;
-      grid-template-columns: 100px 1fr;
-      gap: 20px;
-      max-width: 900px;
-      margin: 0 auto;
+      grid-template-columns: 140px 1fr;
+      max-width: 1100px;
       width: 100%;
+      margin: 0 auto;
     }
 
-    .entry-label {
+    .block-meta {
       font-family: var(--mono);
-      font-weight: 700;
-      font-size: 12px;
-      text-transform: uppercase;
-      padding-top: 4px;
+      font-size: 11px;
+      color: var(--text-muted);
+      padding-top: 5px;
     }
 
-    .entry-content {
-      font-size: 1.1rem;
-      line-height: 1.5;
-      font-weight: 400;
+    .block-body {
+      font-size: 15px;
+      line-height: 1.7;
+      letter-spacing: -0.1px;
+      max-width: 700px;
     }
 
-    .entry.user .entry-label { color: var(--action-color); }
-    .entry.bot .entry-label { color: var(--border-main); }
+    .user-block .block-body { font-weight: 500; }
 
-    /* =========================================
-       4. CONTROL MODULE (INPUT)
-       ========================================= */
-    .controls {
-      border-top: 2px solid var(--border-main);
-      background: #fff;
+    /* 4. COMMAND INPUT (The Control Center) */
+    .command-area {
+      border-top: 1.5px solid var(--border-dark);
       display: grid;
-      grid-template-columns: 1fr 300px;
+      grid-template-columns: 1fr 200px;
+      background: var(--studio-white);
     }
 
-    .input-zone {
-      padding: 20px 30px;
-      border-right: 2px solid var(--border-main);
+    .input-wrapper {
+      padding: 25px 5px;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
     }
 
     textarea {
       width: 100%;
-      height: 60px;
       border: none;
       font-family: var(--sans);
-      font-size: 1.2rem;
-      font-weight: 500;
+      font-size: 16px;
       resize: none;
       background: transparent;
+      color: var(--text-main);
     }
 
-    textarea::placeholder { color: #ccc; }
+    textarea::placeholder { color: #d1d1d1; }
 
-    .action-zone {
-      display: grid;
-      grid-template-rows: 1fr 1fr;
-    }
-
-    .btn {
-      width: 100%;
-      height: 100%;
+    /* The Only Button */
+    .send-trigger {
       border: none;
-      font-family: var(--mono);
-      font-weight: 700;
-      font-size: 13px;
-      text-transform: uppercase;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.1s;
-    }
-
-    #sendButton {
-      background: var(--border-main);
+      background: var(--accent-active);
       color: #fff;
-      grid-row: span 2;
-    }
-
-    #sendButton:hover { background: var(--action-color); }
-    #sendButton:active { transform: scale(0.98); }
-    #sendButton:disabled { background: #eee; color: #aaa; cursor: not-allowed; }
-
-    /* Progress Overlay */
-    #progress-overlay {
-      display: none;
-      position: absolute;
-      bottom: 142px;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      background: #eee;
-    }
-
-    #progress-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--action-color);
-      transition: width 0.3s;
-    }
-
-    /* Result buttons */
-    #final-module {
-      display: none;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      border: 2px solid var(--border-main);
-      padding: 40px;
-      box-shadow: 20px 20px 0px var(--border-main);
-      z-index: 100;
-      text-align: center;
-      animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes pop { from { transform: translate(-50%, -40%) scale(0.9); } }
-
-    .res-link {
-      display: block;
-      margin: 10px 0;
-      padding: 15px 40px;
-      text-decoration: none;
-      color: white;
       font-family: var(--mono);
-      font-weight: 700;
+      font-weight: 500;
+      font-size: 12px;
       text-transform: uppercase;
-      background: var(--border-main);
+      cursor: pointer;
+      height: 100%;
+      transition: opacity 0.2s;
     }
 
-    .res-link:first-child { background: var(--action-color); }
+    .send-trigger:hover:enabled { opacity: 0.8; }
+    .send-trigger:disabled { background: #f0f0f0; color: #ccc; cursor: not-allowed; }
 
-    .close-btn {
-      margin-top: 15px;
+    /* 5. PROCESS MONITOR & MODALS */
+    #progress-line {
+      display: none;
+      height: 2px;
+      background: #eee;
+      width: 100%;
+      position: absolute;
+      bottom: 120px;
+    }
+
+    #progress-fill { height: 100%; width: 0%; background: #000; transition: width 0.4s; }
+
+    #result-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255,255,255,0.95);
+      z-index: 1000;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .action-link {
+      margin: 10px 0;
+      font-size: 32px;
+      text-decoration: none;
+      color: #000;
+      font-weight: 600;
+      letter-spacing: -1px;
+      border-bottom: 3px solid transparent;
+      transition: border-bottom 0.2s;
+    }
+
+    .action-link:hover { border-bottom: 3px solid #000; }
+
+    .dismiss {
+      margin-top: 50px;
       font-family: var(--mono);
-      font-size: 10px;
-      text-decoration: underline;
+      font-size: 11px;
       cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
   </style>
@@ -243,86 +200,74 @@
 
 <body>
 
-  <div id="console-container">
-    <header class="data-strip">
-      <div class="system-id">SLOT_ARCHITECT // CORE</div>
-      <div class="metrics">
-        <div class="metric-item"><span>CLOCK:</span> <span id="clock" style="color:#1a1a1a">00:00:00</span></div>
-        <div class="metric-item"><span>STATUS:</span> ONLINE</div>
-        <div class="metric-item"><span>LATENCY:</span> 24MS</div>
+  <div id="studio-core">
+    <nav class="nav-bar">
+      <div class="brand-id">SLOT_ARCHITECT / 2026.PRO</div>
+      <div class="system-metrics">
+        <div>LIVE_STREAM</div>
+        <div id="sys-time">00:00:00</div>
+        <div style="color:#000">LINK: STABLE</div>
       </div>
-    </header>
+    </nav>
 
-    <main id="log-view">
-      <div class="entry bot">
-        <div class="entry-label">SYS_OUT</div>
-        <div class="entry-content">Kernel initialized. Ready for slot logic parameters. Input prompt to begin generation sequence.</div>
+    <main id="stream-view">
+      <div class="block bot">
+        <div class="block-meta">[OUT_01]</div>
+        <div class="block-body">System initialized. Define core mechanics, reel arrays, and volatility index for the new game environment.</div>
       </div>
     </main>
 
-    <div id="progress-overlay">
+    <div id="progress-line">
       <div id="progress-fill"></div>
     </div>
 
-    <div id="final-module">
-      <h2 style="font-family:var(--mono); font-size: 18px; margin-bottom: 20px;">GENERATION COMPLETE</h2>
-      <a id="playLink" href="#" target="_blank" class="res-link">Play the Game</a>
-      <a id="downloadLink" href="#" download class="res-link">Download Game File</a>
-      <div class="close-btn" onclick="this.parentElement.style.display='none'">DISMISS WINDOW</div>
+    <div id="result-overlay">
+      <a id="playLink" href="#" target="_blank" class="action-link">Play the Game</a>
+      <a id="downloadLink" href="#" download class="action-link">Download Game File</a>
+      <div class="dismiss" onclick="document.getElementById('result-overlay').style.display='none'">[ Return to Terminal ]</div>
     </div>
 
-    <footer class="controls">
-      <div class="input-zone">
-        <textarea id="messageInput" placeholder="TYPE COMMAND..."></textarea>
+    <footer class="command-area">
+      <div class="input-wrapper">
+        <textarea id="messageInput" placeholder="Define your logic..."></textarea>
       </div>
-      <div class="action-zone">
-        <button id="sendButton" onclick="sendMessage()">EXECUTE SEND</button>
-      </div>
+      <button class="send-trigger" id="sendBtn" onclick="sendMessage()">Initialize Send</button>
     </footer>
   </div>
 
   <script>
-    // Live Clock Logic
-    function updateClock() {
-      const now = new Date();
-      document.getElementById('clock').innerText = now.toTimeString().split(' ')[0];
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
+    // Time Logic
+    setInterval(() => {
+      document.getElementById('sys-time').innerText = new Date().toLocaleTimeString('en-GB');
+    }, 1000);
 
     const url = "https://hamster-teaching-serval.ngrok-free.app";
-    const session_id = "core_" + Math.random().toString(36).substr(2, 9);
+    const session_id = "pro_id_" + Math.floor(Math.random() * 90000);
     
-    const sendBtn = document.getElementById("sendButton");
-    const input = document.getElementById("messageInput");
-
-    function addEntry(text, type) {
-      const row = document.createElement("div");
-      row.className = "entry " + type;
+    function addBlock(text, type) {
+      const container = document.getElementById("stream-view");
+      const blockId = container.children.length + 1;
       
-      const label = document.createElement("div");
-      label.className = "entry-label";
-      label.innerText = type === "user" ? "USER_IN" : "SYS_OUT";
-      
-      const content = document.createElement("div");
-      content.className = "entry-content";
-      content.textContent = text;
-      
-      row.appendChild(label);
-      row.appendChild(content);
-      
-      const view = document.getElementById("log-view");
-      view.appendChild(row);
-      view.scrollTop = view.scrollHeight;
+      const html = `
+        <div class="block ${type}">
+          <div class="block-meta">[${type === 'user' ? 'IN' : 'OUT'}_0${blockId}]</div>
+          <div class="block-body">${text}</div>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', html);
+      container.scrollTop = container.scrollHeight;
     }
 
     function sendMessage() {
+      const input = document.getElementById("messageInput");
+      const btn = document.getElementById("sendBtn");
       const msg = input.value.trim();
-      if (!msg || sendBtn.disabled) return;
+      
+      if (!msg || btn.disabled) return;
 
-      addEntry(msg, "user");
+      addBlock(msg, "user");
       input.value = "";
-      sendBtn.disabled = true;
+      btn.disabled = true;
 
       fetch(`${url}/receive_message`, {
         method: "POST",
@@ -331,12 +276,12 @@
       })
       .then(r => r.json())
       .then(data => {
-        if (data.status === "True") addEntry(data.reply, "bot");
-        sendBtn.disabled = false;
+        if (data.status === "True") addBlock(data.reply, "bot");
+        btn.disabled = false;
       })
       .catch(e => {
-        addEntry("LINK FAILURE: TERMINAL DISCONNECTED", "bot");
-        sendBtn.disabled = false;
+        addBlock("CRITICAL: DISCONNECTED FROM BACKEND", "bot");
+        btn.disabled = false;
       });
     }
 
@@ -349,28 +294,25 @@
       .then(r => r.json())
       .then(data => {
         const p = data.process_percent;
-        const overlay = document.getElementById("progress-overlay");
+        const line = document.getElementById("progress-line");
         const fill = document.getElementById("progress-fill");
-        const modal = document.getElementById("final-module");
+        const modal = document.getElementById("result-overlay");
 
         if (p > 0 && p < 100) {
-          overlay.style.display = "block";
+          line.style.display = "block";
           fill.style.width = p + "%";
-          sendBtn.innerText = "PROCESSING...";
-          sendBtn.disabled = true;
+          document.getElementById("sendBtn").innerText = "BUILDING...";
         } 
         else if (p === 100) {
           fill.style.width = "100%";
-          modal.style.display = "block";
-          
+          modal.style.display = "flex";
           document.getElementById("playLink").href = `${url}${data.game_link}`;
           document.getElementById("downloadLink").href = `${url}${data.download_link}`;
-          
-          sendBtn.innerText = "EXECUTE SEND";
-          sendBtn.disabled = false;
+          document.getElementById("sendBtn").innerText = "INITIALIZE SEND";
+          document.getElementById("sendBtn").disabled = false;
         } 
         else {
-          overlay.style.display = "none";
+          line.style.display = "none";
         }
       });
     }
