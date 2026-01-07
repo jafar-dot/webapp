@@ -3,271 +3,322 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Architect Pro // Core Terminal</title>
+  <title>Architect Pro | Neural Engine</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
   
   <style>
-    /* 1. PROFESSIONAL ARCHITECTURE VARIABLES */
+    /* ===== MODERN SYSTEM VARIABLES ===== */
     :root {
-      --studio-white: #ffffff;
-      --studio-gray: #fcfcfc;
-      --border-dark: #111111;
-      --border-light: #e5e5e5;
-      --text-main: #111111;
-      --text-muted: #888888;
-      --accent-active: #000000;
-      
-      --mono: 'Roboto Mono', monospace;
-      --sans: 'Inter', -apple-system, sans-serif;
+      --primary: #3b82f6;
+      --primary-glow: rgba(59, 130, 246, 0.5);
+      --bg-dark: #020617; /* Deeper midnight blue */
+      --glass-bg: rgba(15, 23, 42, 0.6);
+      --border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #10b981;
     }
 
-    * { box-sizing: border-box; outline: none; }
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
     
     body {
       margin: 0;
-      font-family: var(--sans);
-      background-color: var(--studio-white);
-      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      /* High-end animated mesh gradient */
+      background: radial-gradient(circle at 0% 0%, #1e1b4b 0%, transparent 40%),
+                  radial-gradient(circle at 100% 100%, #0f172a 0%, transparent 40%),
+                  #020617;
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      color: var(--text-main);
       overflow: hidden;
-      -webkit-font-smoothing: antialiased;
     }
 
-    /* 2. THE STUDIO INTERFACE */
-    #studio-core {
-      width: 100vw;
-      height: 100vh;
-      display: grid;
-      grid-template-rows: 50px 1fr 120px;
-      border: 15px solid var(--studio-white); /* Elegant white padding */
-      background: var(--studio-white);
+    /* ===== MAIN ARCHITECT INTERFACE ===== */
+    #chatContainer {
+      width: 95%;
+      max-width: 900px;
+      height: 92vh;
+      background: var(--glass-bg);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
+      animation: entrance 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
-    /* Minimal Top Navigation */
-    .nav-bar {
-      border-bottom: 1.5px solid var(--border-dark);
+    @keyframes entrance {
+      from { opacity: 0; transform: scale(0.98) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Header Section */
+    .header {
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 5px;
+      background: rgba(0, 0, 0, 0.2);
     }
 
-    .brand-id {
-      font-family: var(--mono);
+    .header h2 {
+      margin: 0;
+      font-size: 1.1rem;
       font-weight: 500;
-      font-size: 13px;
-      letter-spacing: -0.2px;
-    }
-
-    .system-metrics {
+      letter-spacing: -0.02em;
       display: flex;
-      gap: 30px;
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--text-muted);
+      align-items: center;
+      gap: 12px;
     }
 
-    /* 3. LOG FEED (The Core Output) */
-    #stream-view {
-      padding: 40px 0;
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--success);
+      animation: breathe 2s infinite ease-in-out;
+    }
+
+    @keyframes breathe {
+      0%, 100% { opacity: 0.5; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    /* Messages Area */
+    #messages {
+      flex: 1;
       overflow-y: auto;
+      padding: 32px;
       display: flex;
       flex-direction: column;
-      gap: 35px;
+      gap: 20px;
     }
 
-    #stream-view::-webkit-scrollbar { width: 0px; }
+    #messages::-webkit-scrollbar { width: 4px; }
+    #messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
-    .block {
-      display: grid;
-      grid-template-columns: 140px 1fr;
-      max-width: 1100px;
-      width: 100%;
-      margin: 0 auto;
+    .msg {
+      max-width: 85%;
+      padding: 14px 20px;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      animation: slideIn 0.3s ease-out forwards;
     }
 
-    .block-meta {
-      font-family: var(--mono);
-      font-size: 11px;
+    .bot {
+      align-self: flex-start;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      border-bottom-left-radius: 4px;
+    }
+
+    .user {
+      align-self: flex-end;
+      background: var(--primary);
+      color: white;
+      border-bottom-right-radius: 4px;
+      box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.3);
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Input & Control Area */
+    .control-panel {
+      padding: 32px;
+      background: rgba(0, 0, 0, 0.3);
+      border-top: 1px solid var(--border);
+    }
+
+    #waitIndicator {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 0.8rem;
       color: var(--text-muted);
-      padding-top: 5px;
+      font-family: 'JetBrains Mono', monospace;
     }
 
-    .block-body {
-      font-size: 15px;
-      line-height: 1.7;
-      letter-spacing: -0.1px;
-      max-width: 700px;
+    .spinner {
+      width: 12px; height: 12px;
+      border: 2px solid var(--text-muted);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
     }
-
-    .user-block .block-body { font-weight: 500; }
-
-    /* 4. COMMAND INPUT (The Control Center) */
-    .command-area {
-      border-top: 1.5px solid var(--border-dark);
-      display: grid;
-      grid-template-columns: 1fr 200px;
-      background: var(--studio-white);
-    }
-
-    .input-wrapper {
-      padding: 25px 5px;
-      display: flex;
-      align-items: flex-start;
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     textarea {
       width: 100%;
-      border: none;
-      font-family: var(--sans);
-      font-size: 16px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      color: white;
+      font-family: inherit;
+      font-size: 1rem;
       resize: none;
-      background: transparent;
-      color: var(--text-main);
+      transition: all 0.3s;
+      margin-bottom: 16px;
     }
 
-    textarea::placeholder { color: #d1d1d1; }
-
-    /* The Only Button */
-    .send-trigger {
-      border: none;
-      background: var(--accent-active);
-      color: #fff;
-      font-family: var(--mono);
-      font-weight: 500;
-      font-size: 12px;
-      text-transform: uppercase;
-      cursor: pointer;
-      height: 100%;
-      transition: opacity 0.2s;
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
     }
 
-    .send-trigger:hover:enabled { opacity: 0.8; }
-    .send-trigger:disabled { background: #f0f0f0; color: #ccc; cursor: not-allowed; }
-
-    /* 5. PROCESS MONITOR & MODALS */
-    #progress-line {
-      display: none;
-      height: 2px;
-      background: #eee;
+    #sendBtn {
       width: 100%;
-      position: absolute;
-      bottom: 120px;
-    }
-
-    #progress-fill { height: 100%; width: 0%; background: #000; transition: width 0.4s; }
-
-    #result-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(255,255,255,0.95);
-      z-index: 1000;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .action-link {
-      margin: 10px 0;
-      font-size: 32px;
-      text-decoration: none;
-      color: #000;
+      padding: 14px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
       font-weight: 600;
-      letter-spacing: -1px;
-      border-bottom: 3px solid transparent;
-      transition: border-bottom 0.2s;
-    }
-
-    .action-link:hover { border-bottom: 3px solid #000; }
-
-    .dismiss {
-      margin-top: 50px;
-      font-family: var(--mono);
-      font-size: 11px;
       cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
+    #sendBtn:hover:enabled {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px -6px rgba(59, 130, 246, 0.5);
+    }
+
+    #sendBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Progress System */
+    #progContainer {
+      display: none;
+      margin-top: 24px;
+    }
+
+    .prog-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .prog-track {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    #progFill {
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      box-shadow: 0 0 10px var(--primary);
+      transition: width 0.4s ease;
+    }
+
+    /* Result Actions */
+    #actionLinks {
+      display: none;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: 0.2s;
+      border: 1px solid var(--border);
+    }
+
+    .launch-btn { background: var(--text-main); color: var(--bg-dark); }
+    .export-btn { background: transparent; color: var(--text-main); }
+    .action-btn:hover { filter: brightness(0.9); transform: translateY(-1px); }
 
   </style>
 </head>
 
 <body>
 
-  <div id="studio-core">
-    <nav class="nav-bar">
-      <div class="brand-id">SLOT_ARCHITECT / 2026.PRO</div>
-      <div class="system-metrics">
-        <div>LIVE_STREAM</div>
-        <div id="sys-time">00:00:00</div>
-        <div style="color:#000">LINK: STABLE</div>
-      </div>
-    </nav>
-
-    <main id="stream-view">
-      <div class="block bot">
-        <div class="block-meta">[OUT_01]</div>
-        <div class="block-body">System initialized. Define core mechanics, reel arrays, and volatility index for the new game environment.</div>
-      </div>
-    </main>
-
-    <div id="progress-line">
-      <div id="progress-fill"></div>
+  <div id="chatContainer">
+    <div class="header">
+      <h2><div class="status-indicator"></div> NEURAL ARCHITECT <span style="color:var(--text-muted); font-weight:300;">| v4.0</span></h2>
     </div>
 
-    <div id="result-overlay">
-      <a id="playLink" href="#" target="_blank" class="action-link">Play the Game</a>
-      <a id="downloadLink" href="#" download class="action-link">Download Game File</a>
-      <div class="dismiss" onclick="document.getElementById('result-overlay').style.display='none'">[ Return to Terminal ]</div>
+    <div id="messages">
+      <div class="msg bot">System ready. Initialize your slot machine parameters for compilation.</div>
     </div>
 
-    <footer class="command-area">
-      <div class="input-wrapper">
-        <textarea id="messageInput" placeholder="Define your logic..."></textarea>
+    <div class="control-panel">
+      <div id="waitIndicator">
+        <div class="spinner"></div>
+        <span>ANALYZING LOGIC...</span>
       </div>
-      <button class="send-trigger" id="sendBtn" onclick="sendMessage()">Initialize Send</button>
-    </footer>
+
+      <textarea id="messageInput" placeholder="Specify mechanics (e.g., 5x4 Grid, Volatility: High, Feature: Cascading Reels)..." rows="2"></textarea>
+      
+      <button id="sendBtn" onclick="sendMessage()">GENERATE CORE MODULE</button>
+
+      <div id="progContainer">
+        <div class="prog-header">
+          <span>MODULE COMPILATION</span>
+          <span id="progPercent">0%</span>
+        </div>
+        <div class="prog-track">
+          <div id="progFill"></div>
+        </div>
+      </div>
+
+      <div id="actionLinks">
+        <a id="playLink" href="#" target="_blank" class="action-btn launch-btn">LAUNCH SIMULATION</a>
+        <a id="downloadLink" href="#" download class="action-btn export-btn">EXPORT SOURCE</a>
+      </div>
+    </div>
   </div>
 
   <script>
-    // Time Logic
-    setInterval(() => {
-      document.getElementById('sys-time').innerText = new Date().toLocaleTimeString('en-GB');
-    }, 1000);
-
     const url = "https://hamster-teaching-serval.ngrok-free.app";
-    const session_id = "pro_id_" + Math.floor(Math.random() * 90000);
-    
-    function addBlock(text, type) {
-      const container = document.getElementById("stream-view");
-      const blockId = container.children.length + 1;
-      
-      const html = `
-        <div class="block ${type}">
-          <div class="block-meta">[${type === 'user' ? 'IN' : 'OUT'}_0${blockId}]</div>
-          <div class="block-body">${text}</div>
-        </div>
-      `;
-      container.insertAdjacentHTML('beforeend', html);
-      container.scrollTop = container.scrollHeight;
+    const session_id = "pro_user_" + Math.random().toString(36).substr(2, 9);
+    const sendBtn = document.getElementById("sendBtn");
+
+    function addMsg(text, type) {
+      const div = document.createElement("div");
+      div.className = "msg " + type;
+      div.textContent = text;
+      const box = document.getElementById("messages");
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
     }
 
     function sendMessage() {
       const input = document.getElementById("messageInput");
-      const btn = document.getElementById("sendBtn");
       const msg = input.value.trim();
-      
-      if (!msg || btn.disabled) return;
+      if (!msg || sendBtn.disabled) return;
 
-      addBlock(msg, "user");
+      addMsg(msg, "user");
       input.value = "";
-      btn.disabled = true;
+      
+      document.getElementById("waitIndicator").style.display = "flex";
+      sendBtn.disabled = true;
 
       fetch(`${url}/receive_message`, {
         method: "POST",
@@ -276,16 +327,18 @@
       })
       .then(r => r.json())
       .then(data => {
-        if (data.status === "True") addBlock(data.reply, "bot");
-        btn.disabled = false;
+        if (data.status === "True") addMsg(data.reply, "bot");
+        document.getElementById("waitIndicator").style.display = "none";
+        sendBtn.disabled = false;
       })
-      .catch(e => {
-        addBlock("CRITICAL: DISCONNECTED FROM BACKEND", "bot");
-        btn.disabled = false;
+      .catch(err => {
+        addMsg("Critical: Connection to Neural Engine failed.", "bot");
+        document.getElementById("waitIndicator").style.display = "none";
+        sendBtn.disabled = false;
       });
     }
 
-    function checkStatus() {
+    function syncStatus() {
       fetch(`${url}/get_status`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -294,30 +347,36 @@
       .then(r => r.json())
       .then(data => {
         const p = data.process_percent;
-        const line = document.getElementById("progress-line");
-        const fill = document.getElementById("progress-fill");
-        const modal = document.getElementById("result-overlay");
+        const container = document.getElementById("progContainer");
+        const fill = document.getElementById("progFill");
+        const links = document.getElementById("actionLinks");
 
         if (p > 0 && p < 100) {
-          line.style.display = "block";
+          container.style.display = "block";
+          links.style.display = "none";
           fill.style.width = p + "%";
-          document.getElementById("sendBtn").innerText = "BUILDING...";
-        } 
-        else if (p === 100) {
+          document.getElementById("progPercent").innerText = p + "%";
+          sendBtn.innerText = "COMPILING MODULE...";
+          sendBtn.disabled = true;
+        } else if (p === 100) {
           fill.style.width = "100%";
-          modal.style.display = "flex";
+          document.getElementById("progPercent").innerText = "100%";
+          container.style.display = "block";
+          links.style.display = "flex";
+          
           document.getElementById("playLink").href = `${url}${data.game_link}`;
           document.getElementById("downloadLink").href = `${url}${data.download_link}`;
-          document.getElementById("sendBtn").innerText = "INITIALIZE SEND";
-          document.getElementById("sendBtn").disabled = false;
-        } 
-        else {
-          line.style.display = "none";
+          
+          sendBtn.innerText = "GENERATE CORE MODULE";
+          sendBtn.disabled = false;
+        } else {
+          container.style.display = "none";
+          links.style.display = "none";
         }
       });
     }
 
-    setInterval(checkStatus, 1500);
+    setInterval(syncStatus, 1500);
   </script>
 </body>
 </html>
