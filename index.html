@@ -3,375 +3,440 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AI Slot Machine Developer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <title>AI Game Architect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    /* ===== VARIABLES & RESET ===== */
+    /* =========================================
+       1. VARIABLES & RESET
+       ========================================= */
     :root {
-      --primary-color: #3b82f6; /* Professional Tech Blue */
-      --primary-hover: #2563eb;
-      --bg-dark: #0f172a;
-      --card-bg: rgba(30, 41, 59, 0.7);
-      --text-main: #f1f5f9;
-      --text-muted: #94a3b8;
-      --border-color: rgba(255, 255, 255, 0.1);
-      --glass-shine: rgba(255, 255, 255, 0.05);
+      /* Palette: Deep Cosmic Dark with Neon Accents */
+      --bg-deep: #050511;
+      --glass-panel: rgba(20, 20, 35, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      
+      --accent-primary: #6366f1; /* Indigo */
+      --accent-secondary: #ec4899; /* Pink */
+      --accent-glow: #8b5cf6; /* Violet */
+      
+      --text-main: #f8fafc;
+      --text-dim: #94a3b8;
+      
+      --chat-user-bg: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      --chat-bot-bg: rgba(255, 255, 255, 0.05);
+      
+      --shadow-soft: 0 10px 40px -10px rgba(0,0,0,0.5);
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; outline: none; }
+    
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-dark);
-      /* Professional subtle moving mesh gradient */
-      background-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                        radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
-                        radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
-      background-size: 200% 200%;
-      animation: aurora 15s ease infinite;
+      background-color: var(--bg-deep);
+      /* Animated Mesh Gradient Background */
+      background-image: 
+        radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+        radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+        radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+      background-size: 150% 150%;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      color: var(--text-main);
       overflow: hidden;
+      color: var(--text-main);
     }
 
-    @keyframes aurora {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* ===== MAIN CARD ===== */
-    #chatInner {
+    /* =========================================
+       2. MAIN CONTAINER (The Glass Card)
+       ========================================= */
+    #interface-card {
       width: 95%;
-      max-width: 800px;
+      max-width: 900px;
       height: 90vh;
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-radius: 16px;
-      padding: 0; /* Reset padding for layout */
-      border: 1px solid var(--border-color);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-      animation: scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      background: var(--glass-panel);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft), inset 0 0 0 1px rgba(255,255,255,0.05);
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
-    @keyframes scaleIn {
-      from { opacity: 0; transform: scale(0.95) translateY(10px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* ===== HEADER ===== */
+    /* =========================================
+       3. HEADER
+       ========================================= */
     .header {
-      padding: 20px 30px;
-      border-bottom: 1px solid var(--border-color);
-      background: rgba(15, 23, 42, 0.4);
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.2);
     }
 
-    h2 {
-      margin: 0;
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #fff;
-      letter-spacing: 0.5px;
+    .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
-    h2::before {
-      content: '';
-      display: block;
+    .brand h1 {
+      margin: 0;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      background: rgba(255,255,255,0.05);
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--glass-border);
+    }
+
+    .dot {
       width: 8px;
       height: 8px;
-      background-color: #10b981; /* Online Green Indicator */
+      background: #10b981;
       border-radius: 50%;
-      box-shadow: 0 0 10px #10b981;
+      box-shadow: 0 0 8px #10b981;
     }
 
-    /* ===== MESSAGE AREA ===== */
+    /* =========================================
+       4. CHAT AREA
+       ========================================= */
     #messages {
       flex: 1;
-      overflow-y: auto;
       padding: 30px;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 20px;
       scroll-behavior: smooth;
     }
 
-    /* Custom Scrollbar */
-    #messages::-webkit-scrollbar {
-      width: 6px;
-    }
-    #messages::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    #messages::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 3px;
-    }
+    #messages::-webkit-scrollbar { width: 6px; }
+    #messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
 
     .message {
-      max-width: 80%;
-      padding: 12px 18px;
-      border-radius: 12px;
+      max-width: 85%;
+      padding: 16px 22px;
+      border-radius: 18px;
       font-size: 0.95rem;
-      line-height: 1.5;
+      line-height: 1.6;
       position: relative;
-      animation: slideUp 0.4s ease forwards;
-      word-wrap: break-word;
+      animation: slideIn 0.4s ease forwards;
     }
 
-    @keyframes slideUp {
+    @keyframes slideIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .user {
-      align-self: flex-end;
-      background: var(--primary-color);
-      color: white;
-      border-bottom-right-radius: 2px;
-      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
-    }
-
     .bot {
       align-self: flex-start;
-      background: rgba(51, 65, 85, 0.8); /* Slate 700 */
+      background: var(--chat-bot-bg);
+      border: 1px solid var(--glass-border);
       color: #e2e8f0;
-      border-bottom-left-radius: 2px;
-      border: 1px solid var(--border-color);
+      border-top-left-radius: 4px;
     }
 
-    /* ===== INPUT AREA ===== */
-    .input-area {
-      padding: 20px 30px;
-      background: rgba(15, 23, 42, 0.6);
-      border-top: 1px solid var(--border-color);
+    .user {
+      align-self: flex-end;
+      background: var(--chat-user-bg);
+      color: white;
+      border-top-right-radius: 4px;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
     }
 
+    /* =========================================
+       5. INPUT & CONTROLS
+       ========================================= */
+    .input-section {
+      padding: 24px 32px;
+      background: rgba(0, 0, 0, 0.3);
+      border-top: 1px solid var(--glass-border);
+    }
+
+    /* Processing Waiter */
     #waitMessage {
-      display: none;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      margin-bottom: 10px;
-      display: flex;
+      display: none; /* Hidden by default */
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      margin-bottom: 12px;
+      color: var(--accent-glow);
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
-    
-    /* Subtle pulse animation for wait message */
-    .pulse-dot {
-      width: 6px;
-      height: 6px;
-      background: var(--text-muted);
+
+    .pulse-ring {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-glow);
       border-radius: 50%;
-      animation: pulse 1.5s infinite;
+      animation: pulseEffect 1.5s infinite;
+      box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7);
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 0.4; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.2); }
+
+    @keyframes pulseEffect {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(139, 92, 246, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      gap: 12px;
+      align-items: stretch;
     }
 
     textarea {
-      width: 100%;
-      padding: 14px 16px;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-      background: rgba(0, 0, 0, 0.2);
+      flex: 1;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 16px;
       color: #fff;
-      resize: none;
-      outline: none;
+      font-size: 1rem;
       font-family: 'Inter', sans-serif;
-      transition: border-color 0.3s, box-shadow 0.3s;
-      margin-bottom: 15px;
-      height: 80px;
+      resize: none;
+      height: 60px;
+      transition: all 0.3s ease;
     }
 
     textarea:focus {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(255, 255, 255, 0.07);
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
     }
 
-    textarea::placeholder {
-      color: rgba(255, 255, 255, 0.3);
-    }
-
+    /* The Main Send Button */
     #sendButton {
-      width: 100%;
-      padding: 12px;
-      font-size: 0.95rem;
-      font-weight: 600;
+      width: 100px;
       border: none;
-      border-radius: 8px;
-      background: var(--primary-color);
-      color: white;
+      border-radius: 12px;
+      background: #fff;
+      color: #000;
+      font-weight: 700;
+      font-family: 'Space Grotesk', sans-serif;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
       display: flex;
       justify-content: center;
       align-items: center;
-      letter-spacing: 0.5px;
+      font-size: 1rem;
     }
 
     #sendButton:hover:enabled {
-      background: var(--primary-hover);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      background: var(--accent-primary);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
     }
 
-    #sendButton:active:enabled {
-      transform: translateY(0);
-    }
+    #sendButton:active:enabled { transform: translateY(0); }
+    #sendButton:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
 
-    #sendButton:disabled {
-      background: #475569;
-      color: #94a3b8;
-      cursor: not-allowed;
-    }
-
-    /* ===== PROGRESS BAR ===== */
+    /* =========================================
+       6. PROGRESS BAR & LINKS
+       ========================================= */
     #progressContainer {
       display: none;
-      margin-top: 15px;
+      margin-top: 20px;
     }
 
-    .progress-label {
+    .progress-meta {
       display: flex;
       justify-content: space-between;
       font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-bottom: 6px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: 0.5px;
     }
 
-    #progressBar {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-      overflow: hidden;
+    .progress-track {
       height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      overflow: hidden;
     }
 
     #progressFill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, var(--primary-color), #60a5fa);
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      box-shadow: 0 0 10px var(--accent-primary);
       transition: width 0.4s ease;
-      border-radius: 4px;
+      border-radius: 10px;
     }
 
-    /* ===== LINKS ===== */
+    /* Result Links */
     #links {
-      display: none;
+      display: none; /* Changed via JS to flex */
       margin-top: 20px;
+      gap: 15px;
+      justify-content: center;
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    .action-btn {
+      flex: 1;
+      padding: 14px;
       text-align: center;
-      animation: fadeIn 0.5s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; } 
-      to { opacity: 1; }
-    }
-
-    #links a {
-      display: inline-flex;
-      align-items: center;
-      margin: 0 8px;
-      padding: 10px 20px;
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-main);
       text-decoration: none;
-      border-radius: 6px;
-      border: 1px solid var(--border-color);
-      font-size: 0.9rem;
-      font-weight: 500;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
       transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
-    #links a:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: var(--primary-color);
-      color: #fff;
+    .btn-play {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
     }
+    .btn-play:hover { background: rgba(16, 185, 129, 0.25); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+
+    .btn-download {
+      background: rgba(99, 102, 241, 0.15);
+      color: #818cf8;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+    .btn-download:hover { background: rgba(99, 102, 241, 0.25); box-shadow: 0 0 15px rgba(99, 102, 241, 0.2); }
+
   </style>
 </head>
 
 <body>
-  <div id="chatInner">
+
+  <div id="interface-card">
     <div class="header">
-      <h2>AI Slot Machine Architect</h2>
+      <div class="brand">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="url(#grad1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+        <h1>Slot Architect</h1>
+      </div>
+      <div class="status-indicator">
+        <div class="dot"></div>
+        <span>System Online</span>
+      </div>
     </div>
 
     <div id="messages">
-      <div class="message bot">Hello. Describe the slot machine mechanics you wish to build today.</div>
+      <div class="message bot">
+        Welcome. I am your Slot Machine Logic Architect. Please describe the mechanics, volatility, and visual theme you wish to generate.
+      </div>
     </div>
 
-    <div class="input-area">
-      <div id="waitMessage" style="display:none;">
-        <div class="pulse-dot"></div>
-        <span>Processing logic...</span>
+    <div class="input-section">
+      
+      <div id="waitMessage">
+        <div class="pulse-ring"></div>
+        <span>Analyzing Logic...</span>
       </div>
-      
-      <textarea id="messageInput" placeholder="e.g., Create a 3x5 slot with wild symbols and free spins..." rows="3"></textarea>
-      
-      <button id="sendButton" onclick="sendMessage()">Initialize Generation</button>
+
+      <div class="input-wrapper">
+        <textarea id="messageInput" placeholder="Describe your game logic (e.g. 5x3 reel, 96% RTP, Ancient Egypt theme)..."></textarea>
+        <button id="sendButton" onclick="sendMessage()">Send</button>
+      </div>
 
       <div id="progressContainer">
-        <div class="progress-label">
-          <span>Compiling Assets</span>
+        <div class="progress-meta">
+          <span id="statusLabel">Compiling Assets</span>
           <span id="percentText">0%</span>
         </div>
-        <div id="progressBar">
+        <div class="progress-track">
           <div id="progressFill"></div>
         </div>
       </div>
 
       <div id="links">
-        <a id="playLink" href="#" target="_blank">Launch Simulation</a>
-        <a id="downloadLink" href="#" download>Export Source Code</a>
+        <a id="playLink" href="#" target="_blank" class="action-btn btn-play">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            Play the Game
+        </a>
+        <a id="downloadLink" href="#" download class="action-btn btn-download">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Download Game File
+        </a>
       </div>
+
     </div>
   </div>
 
   <script>
+    /* =========================================
+       LOGIC CONFIGURATION
+       ========================================= */
     const url = "https://hamster-teaching-serval.ngrok-free.app";
     const session_id = "user_" + Math.floor(Math.random() * 1000000);
     const sendButton = document.getElementById("sendButton");
+    const inputField = document.getElementById("messageInput");
 
+    // Helper: Add Message to UI
     function addMessage(text, sender) {
       const msgDiv = document.createElement("div");
       msgDiv.className = "message " + sender;
-      // Check for sender to determine prefix, though in professional UI 
-      // visuals often distinguish users better than text prefixes.
-      // Keeping logic same as requested:
-      msgDiv.textContent = text; 
+      msgDiv.textContent = text;
       
-      document.getElementById("messages").appendChild(msgDiv);
-      document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+      const container = document.getElementById("messages");
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
     }
 
+    // Helper: Send Message to Backend
     function sendMessage() {
-      const input = document.getElementById("messageInput");
-      const message = input.value.trim();
+      const message = inputField.value.trim();
       if (!message || sendButton.disabled) return;
 
+      // 1. Add User Message
       addMessage(message, "user");
-      input.value = "";
+      inputField.value = "";
       
-      // Show custom waiter
+      // 2. UI State: Loading
       document.getElementById("waitMessage").style.display = "flex";
+      sendButton.disabled = true;
+      inputField.disabled = true;
 
+      // 3. API Call
       fetch(`${url}/receive_message`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -384,14 +449,21 @@
         } else {
           addMessage("Error: " + data.reply, "bot");
         }
+        // Hide waiter, allow input again
         document.getElementById("waitMessage").style.display = "none";
+        sendButton.disabled = false;
+        inputField.disabled = false;
+        inputField.focus();
       })
       .catch(err => {
-        addMessage("System connection error. Please retry.", "bot");
+        addMessage("System connection error. Please verify backend.", "bot");
         document.getElementById("waitMessage").style.display = "none";
+        sendButton.disabled = false;
+        inputField.disabled = false;
       });
     }
 
+    // Helper: Poll for Progress Status
     function checkStatus() {
       fetch(`${url}/get_status`, {
         method: "POST",
@@ -401,42 +473,63 @@
       .then(response => response.json())
       .then(data => {
         const percent = data.process_percent;
+        
         const progressContainer = document.getElementById("progressContainer");
         const progressFill = document.getElementById("progressFill");
-        const links = document.getElementById("links");
         const percentText = document.getElementById("percentText");
-
+        const links = document.getElementById("links");
+        
+        // CASE A: Processing
         if (percent > 0 && percent < 100) {
           progressContainer.style.display = "block";
           links.style.display = "none";
           progressFill.style.width = percent + "%";
-          if(percentText) percentText.innerText = percent + "%";
+          percentText.innerText = percent + "%";
+          
           sendButton.disabled = true;
-          sendButton.innerText = "Processing...";
-        } else if (percent === 100) {
+          sendButton.innerText = "Building..."; // Temporary text while processing
+          inputField.disabled = true;
+        } 
+        // CASE B: Complete
+        else if (percent === 100) {
           progressFill.style.width = "100%";
-          if(percentText) percentText.innerText = "100%";
+          percentText.innerText = "100%";
           progressContainer.style.display = "block";
-          links.style.display = "block"; // Changed to flex in CSS for alignment
+          
+          // Show the result buttons
+          links.style.display = "flex";
           
           const baseUrl = url;
-          const playUrl = `${baseUrl}${data.game_link}`;
-          const downloadUrl = `${baseUrl}${data.download_link}`;
+          // Set text exactly as requested
+          const playLink = document.getElementById("playLink");
+          const downloadLink = document.getElementById("downloadLink");
+
+          playLink.href = `${baseUrl}${data.game_link}`;
+          downloadLink.href = `${baseUrl}${data.download_link}`;
           
-          document.getElementById("playLink").href = playUrl;
-          document.getElementById("downloadLink").href = downloadUrl;
-          
+          // Reset Input State
           sendButton.disabled = false;
-          sendButton.innerText = "Initialize Generation";
-        } else {
+          sendButton.innerText = "Send"; // Reset text
+          inputField.disabled = false;
+        } 
+        // CASE C: Idle / Reset
+        else {
           progressContainer.style.display = "none";
           links.style.display = "none";
           progressFill.style.width = "0%";
+          
+          if(!document.getElementById("waitMessage").style.display === "flex") {
+             sendButton.innerText = "Send";
+          }
         }
       })
-      .catch(err => console.error("Status poll error:", err));
+      .catch(err => {
+        // Silent catch to prevent console spam on polling errors
+        console.log("Status poll paused.");
+      });
     }
 
+    // Poll every second
     setInterval(checkStatus, 1000);
   </script>
 </body>
