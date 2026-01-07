@@ -3,380 +3,650 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Architect Pro | Neural Engine</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
-  
+  <title>AI Slot Machine Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ===== MODERN SYSTEM VARIABLES ===== */
+    /* ===== VARIABLES & RESET ===== */
     :root {
-      --primary: #3b82f6;
-      --primary-glow: rgba(59, 130, 246, 0.5);
-      --bg-dark: #020617; /* Deeper midnight blue */
-      --glass-bg: rgba(15, 23, 42, 0.6);
-      --border: rgba(255, 255, 255, 0.08);
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-light: rgba(99, 102, 241, 0.1);
+      --bg-dark: #0a0a0f;
+      --card-bg: rgba(17, 17, 27, 0.85);
+      --card-border: rgba(99, 102, 241, 0.15);
+      --text-main: #e4e4e7;
+      --text-muted: #a1a1aa;
       --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.1);
     }
 
-    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
-    
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-dark);
-      /* High-end animated mesh gradient */
-      background: radial-gradient(circle at 0% 0%, #1e1b4b 0%, transparent 40%),
-                  radial-gradient(circle at 100% 100%, #0f172a 0%, transparent 40%),
-                  #020617;
-      height: 100vh;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-dark);
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.15), transparent),
+        radial-gradient(ellipse 60% 50% at 50% 120%, rgba(139, 92, 246, 0.1), transparent);
       display: flex;
       justify-content: center;
       align-items: center;
+      min-height: 100vh;
       color: var(--text-main);
       overflow: hidden;
+      padding: 20px;
     }
 
-    /* ===== MAIN ARCHITECT INTERFACE ===== */
-    #chatContainer {
-      width: 95%;
+    /* ===== MAIN CARD ===== */
+    #chatInner {
+      width: 100%;
       max-width: 900px;
       height: 92vh;
-      background: var(--glass-bg);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
-      border: 1px solid var(--border);
+      max-height: 900px;
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       border-radius: 24px;
+      border: 1px solid var(--card-border);
+      box-shadow: 
+        0 0 0 1px rgba(99, 102, 241, 0.05),
+        0 20px 60px -15px rgba(0, 0, 0, 0.7),
+        0 0 100px -20px rgba(99, 102, 241, 0.2);
+      animation: fadeInScale 0.7s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       flex-direction: column;
-      box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
-      animation: entrance 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+      overflow: hidden;
+      position: relative;
     }
 
-    @keyframes entrance {
-      from { opacity: 0; transform: scale(0.98) translateY(20px); }
+    /* Ambient glow effect */
+    #chatInner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.03) 0%, transparent 70%);
+      pointer-events: none;
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.96) translateY(20px); }
       to { opacity: 1; transform: scale(1) translateY(0); }
     }
 
-    /* Header Section */
-    .header {
-      padding: 24px 32px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(0, 0, 0, 0.2);
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
-    .header h2 {
-      margin: 0;
-      font-size: 1.1rem;
-      font-weight: 500;
+    /* ===== HEADER ===== */
+    .header {
+      padding: 28px 36px;
+      border-bottom: 1px solid var(--card-border);
+      background: rgba(17, 17, 27, 0.6);
+      position: relative;
+      z-index: 1;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
       letter-spacing: -0.02em;
       display: flex;
       align-items: center;
       gap: 12px;
     }
 
-    .status-indicator {
-      width: 8px;
-      height: 8px;
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: var(--primary-light);
+      border: 1px solid var(--primary);
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--primary);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .ai-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
       background: var(--success);
       border-radius: 50%;
-      box-shadow: 0 0 12px var(--success);
-      animation: breathe 2s infinite ease-in-out;
+      box-shadow: 0 0 8px var(--success);
+      animation: pulse-badge 2s ease infinite;
     }
 
-    @keyframes breathe {
-      0%, 100% { opacity: 0.5; transform: scale(0.9); }
-      50% { opacity: 1; transform: scale(1.1); }
+    @keyframes pulse-badge {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.9); }
     }
 
-    /* Messages Area */
+    /* ===== MESSAGE AREA ===== */
     #messages {
       flex: 1;
       overflow-y: auto;
-      padding: 32px;
+      padding: 32px 36px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 18px;
+      scroll-behavior: smooth;
+      position: relative;
+      z-index: 1;
     }
 
-    #messages::-webkit-scrollbar { width: 4px; }
-    #messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+    #messages::-webkit-scrollbar {
+      width: 8px;
+    }
+    #messages::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    #messages::-webkit-scrollbar-thumb {
+      background: rgba(99, 102, 241, 0.2);
+      border-radius: 4px;
+    }
+    #messages::-webkit-scrollbar-thumb:hover {
+      background: rgba(99, 102, 241, 0.3);
+    }
 
-    .msg {
-      max-width: 85%;
+    .message {
+      max-width: 75%;
       padding: 14px 20px;
       border-radius: 16px;
       font-size: 0.95rem;
       line-height: 1.6;
-      animation: slideIn 0.3s ease-out forwards;
+      position: relative;
+      animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      word-wrap: break-word;
     }
 
-    .bot {
-      align-self: flex-start;
-      background: rgba(30, 41, 59, 0.5);
-      border: 1px solid var(--border);
-      color: var(--text-main);
-      border-bottom-left-radius: 4px;
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .user {
       align-self: flex-end;
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
       color: white;
       border-bottom-right-radius: 4px;
-      box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.3);
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25);
     }
 
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .bot {
+      align-self: flex-start;
+      background: rgba(39, 39, 52, 0.6);
+      color: var(--text-main);
+      border-bottom-left-radius: 4px;
+      border: 1px solid rgba(99, 102, 241, 0.1);
     }
 
-    /* Input & Control Area */
-    .control-panel {
-      padding: 32px;
-      background: rgba(0, 0, 0, 0.3);
-      border-top: 1px solid var(--border);
+    /* ===== INPUT AREA ===== */
+    .input-area {
+      padding: 24px 36px 28px;
+      background: rgba(17, 17, 27, 0.8);
+      border-top: 1px solid var(--card-border);
+      position: relative;
+      z-index: 1;
     }
 
-    #waitIndicator {
+    #waitMessage {
       display: none;
       align-items: center;
       gap: 10px;
-      margin-bottom: 12px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 14px;
+      padding: 12px 16px;
+      background: var(--primary-light);
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+    }
+    
+    .pulse-dots {
+      display: flex;
+      gap: 4px;
     }
 
-    .spinner {
-      width: 12px; height: 12px;
-      border: 2px solid var(--text-muted);
-      border-top-color: transparent;
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      animation: pulse-dot 1.4s ease infinite;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .pulse-dot:nth-child(2) { animation-delay: 0.2s; }
+    .pulse-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes pulse-dot {
+      0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+      40% { opacity: 1; transform: scale(1.2); }
+    }
+
+    #waitMessage span {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+
+    .input-wrapper {
+      position: relative;
+      margin-bottom: 14px;
+    }
 
     textarea {
       width: 100%;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--border);
+      padding: 16px 18px;
+      font-size: 0.95rem;
       border-radius: 12px;
-      padding: 16px;
-      color: white;
-      font-family: inherit;
-      font-size: 1rem;
+      border: 1.5px solid var(--card-border);
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--text-main);
       resize: none;
-      transition: all 0.3s;
-      margin-bottom: 16px;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.3s ease;
+      height: 100px;
+      line-height: 1.5;
     }
 
     textarea:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+      background: rgba(0, 0, 0, 0.4);
+      box-shadow: 0 0 0 3px var(--primary-light);
     }
 
-    #sendBtn {
+    textarea::placeholder {
+      color: rgba(161, 161, 170, 0.5);
+    }
+
+    #sendButton {
       width: 100%;
-      padding: 14px;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 10px;
+      padding: 14px 24px;
+      font-size: 0.95rem;
       font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      color: white;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.3px;
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
     }
 
-    #sendBtn:hover:enabled {
+    #sendButton:hover:enabled {
       transform: translateY(-2px);
-      box-shadow: 0 12px 24px -6px rgba(59, 130, 246, 0.5);
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
     }
 
-    #sendBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+    #sendButton:active:enabled {
+      transform: translateY(0);
+    }
 
-    /* Progress System */
-    #progContainer {
+    #sendButton:disabled {
+      background: rgba(71, 85, 105, 0.5);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* ===== PROGRESS BAR ===== */
+    #progressContainer {
       display: none;
-      margin-top: 24px;
+      margin: 18px 0 14px;
+      padding: 16px;
+      background: rgba(39, 39, 52, 0.4);
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
     }
 
-    .prog-header {
+    .progress-label {
       display: flex;
       justify-content: space-between;
-      font-size: 0.75rem;
-      font-family: 'JetBrains Mono', monospace;
+      align-items: center;
+      font-size: 0.85rem;
       color: var(--text-muted);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      font-weight: 500;
     }
 
-    .prog-track {
-      height: 4px;
+    #percentText {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    #progressBar {
+      width: 100%;
       background: rgba(255, 255, 255, 0.05);
-      border-radius: 2px;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 8px;
+      position: relative;
+    }
+
+    #progressFill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), #818cf8);
+      transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 8px;
+      position: relative;
       overflow: hidden;
     }
 
-    #progFill {
-      height: 100%;
-      width: 0%;
-      background: var(--primary);
-      box-shadow: 0 0 10px var(--primary);
-      transition: width 0.4s ease;
+    #progressFill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shimmer 2s infinite;
     }
 
-    /* Result Actions */
-    #actionLinks {
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* ===== ACTION BUTTONS ===== */
+    #links {
       display: none;
       gap: 12px;
-      margin-top: 24px;
+      margin-top: 14px;
+      animation: fadeInUp 0.5s ease;
     }
 
-    .action-btn {
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); } 
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #links a {
       flex: 1;
-      padding: 12px;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 20px;
       text-decoration: none;
-      border-radius: 8px;
-      font-size: 0.85rem;
+      border-radius: 12px;
+      font-size: 0.92rem;
       font-weight: 600;
-      transition: 0.2s;
-      border: 1px solid var(--border);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      letter-spacing: 0.3px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .launch-btn { background: var(--text-main); color: var(--bg-dark); }
-    .export-btn { background: transparent; color: var(--text-main); }
-    .action-btn:hover { filter: brightness(0.9); transform: translateY(-1px); }
+    #links a::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
 
+    #links a:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    #playLink {
+      background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+      color: white;
+      border: 1px solid transparent;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+    }
+
+    #playLink:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+    }
+
+    #downloadLink {
+      background: rgba(39, 39, 52, 0.6);
+      color: var(--text-main);
+      border: 1.5px solid var(--card-border);
+    }
+
+    #downloadLink:hover {
+      background: rgba(39, 39, 52, 0.8);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Icon styles */
+    .icon {
+      width: 18px;
+      height: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      #chatInner {
+        height: 95vh;
+        border-radius: 16px;
+      }
+      
+      .header {
+        padding: 20px 24px;
+      }
+      
+      h2 {
+        font-size: 1.2rem;
+      }
+      
+      #messages {
+        padding: 24px;
+      }
+      
+      .input-area {
+        padding: 20px 24px;
+      }
+
+      #links {
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
 
 <body>
-
-  <div id="chatContainer">
+  <div id="chatInner">
     <div class="header">
-      <h2><div class="status-indicator"></div> NEURAL ARCHITECT <span style="color:var(--text-muted); font-weight:300;">| v4.0</span></h2>
+      <h2>
+        AI Slot Machine Architect
+        <span class="ai-badge">AI Powered</span>
+      </h2>
     </div>
 
     <div id="messages">
-      <div class="msg bot">System ready. Initialize your slot machine parameters for compilation.</div>
+      <div class="message bot">Hello! Describe the slot machine mechanics you wish to build today.</div>
     </div>
 
-    <div class="control-panel">
-      <div id="waitIndicator">
-        <div class="spinner"></div>
-        <span>ANALYZING LOGIC...</span>
+    <div class="input-area">
+      <div id="waitMessage" style="display:none;">
+        <div class="pulse-dots">
+          <div class="pulse-dot"></div>
+          <div class="pulse-dot"></div>
+          <div class="pulse-dot"></div>
+        </div>
+        <span>AI is processing your request...</span>
       </div>
-
-      <textarea id="messageInput" placeholder="Specify mechanics (e.g., 5x4 Grid, Volatility: High, Feature: Cascading Reels)..." rows="2"></textarea>
       
-      <button id="sendBtn" onclick="sendMessage()">GENERATE CORE MODULE</button>
+      <div class="input-wrapper">
+        <textarea id="messageInput" placeholder="Describe your slot machine idea (e.g., 3x5 grid with wild symbols and free spins...)" rows="3"></textarea>
+      </div>
+      
+      <button id="sendButton" onclick="sendMessage()">
+        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+        </svg>
+        Send
+      </button>
 
-      <div id="progContainer">
-        <div class="prog-header">
-          <span>MODULE COMPILATION</span>
-          <span id="progPercent">0%</span>
+      <div id="progressContainer">
+        <div class="progress-label">
+          <span>Building your game</span>
+          <span id="percentText">0%</span>
         </div>
-        <div class="prog-track">
-          <div id="progFill"></div>
+        <div id="progressBar">
+          <div id="progressFill"></div>
         </div>
       </div>
 
-      <div id="actionLinks">
-        <a id="playLink" href="#" target="_blank" class="action-btn launch-btn">LAUNCH SIMULATION</a>
-        <a id="downloadLink" href="#" download class="action-btn export-btn">EXPORT SOURCE</a>
+      <div id="links">
+        <a id="playLink" href="#" target="_blank">
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Play Game
+        </a>
+        <a id="downloadLink" href="#" download>
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          Download Game File
+        </a>
       </div>
     </div>
   </div>
 
   <script>
     const url = "https://hamster-teaching-serval.ngrok-free.app";
-    const session_id = "pro_user_" + Math.random().toString(36).substr(2, 9);
-    const sendBtn = document.getElementById("sendBtn");
+    const session_id = "user_" + Math.floor(Math.random() * 1000000);
+    const sendButton = document.getElementById("sendButton");
 
-    function addMsg(text, type) {
-      const div = document.createElement("div");
-      div.className = "msg " + type;
-      div.textContent = text;
-      const box = document.getElementById("messages");
-      box.appendChild(div);
-      box.scrollTop = box.scrollHeight;
+    function addMessage(text, sender) {
+      const msgDiv = document.createElement("div");
+      msgDiv.className = "message " + sender;
+      msgDiv.textContent = text; 
+      
+      document.getElementById("messages").appendChild(msgDiv);
+      document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
     }
 
     function sendMessage() {
       const input = document.getElementById("messageInput");
-      const msg = input.value.trim();
-      if (!msg || sendBtn.disabled) return;
+      const message = input.value.trim();
+      if (!message || sendButton.disabled) return;
 
-      addMsg(msg, "user");
+      addMessage(message, "user");
       input.value = "";
       
-      document.getElementById("waitIndicator").style.display = "flex";
-      sendBtn.disabled = true;
+      document.getElementById("waitMessage").style.display = "flex";
 
       fetch(`${url}/receive_message`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: msg, session_id: session_id })
+        body: JSON.stringify({ message: message, session_id: session_id })
       })
-      .then(r => r.json())
+      .then(response => response.json())
       .then(data => {
-        if (data.status === "True") addMsg(data.reply, "bot");
-        document.getElementById("waitIndicator").style.display = "none";
-        sendBtn.disabled = false;
+        if (data.status === "True") {
+          addMessage(data.reply, "bot");
+        } else {
+          addMessage("Error: " + data.reply, "bot");
+        }
+        document.getElementById("waitMessage").style.display = "none";
       })
       .catch(err => {
-        addMsg("Critical: Connection to Neural Engine failed.", "bot");
-        document.getElementById("waitIndicator").style.display = "none";
-        sendBtn.disabled = false;
+        addMessage("System connection error. Please retry.", "bot");
+        document.getElementById("waitMessage").style.display = "none";
       });
     }
 
-    function syncStatus() {
+    function checkStatus() {
       fetch(`${url}/get_status`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ session_id: session_id })
       })
-      .then(r => r.json())
+      .then(response => response.json())
       .then(data => {
-        const p = data.process_percent;
-        const container = document.getElementById("progContainer");
-        const fill = document.getElementById("progFill");
-        const links = document.getElementById("actionLinks");
+        const percent = data.process_percent;
+        const progressContainer = document.getElementById("progressContainer");
+        const progressFill = document.getElementById("progressFill");
+        const links = document.getElementById("links");
+        const percentText = document.getElementById("percentText");
 
-        if (p > 0 && p < 100) {
-          container.style.display = "block";
+        if (percent > 0 && percent < 100) {
+          progressContainer.style.display = "block";
           links.style.display = "none";
-          fill.style.width = p + "%";
-          document.getElementById("progPercent").innerText = p + "%";
-          sendBtn.innerText = "COMPILING MODULE...";
-          sendBtn.disabled = true;
-        } else if (p === 100) {
-          fill.style.width = "100%";
-          document.getElementById("progPercent").innerText = "100%";
-          container.style.display = "block";
+          progressFill.style.width = percent + "%";
+          if(percentText) percentText.innerText = percent + "%";
+          sendButton.disabled = true;
+          sendButton.innerHTML = `
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            Processing...
+          `;
+        } else if (percent === 100) {
+          progressFill.style.width = "100%";
+          if(percentText) percentText.innerText = "100%";
+          progressContainer.style.display = "block";
           links.style.display = "flex";
           
-          document.getElementById("playLink").href = `${url}${data.game_link}`;
-          document.getElementById("downloadLink").href = `${url}${data.download_link}`;
+          const baseUrl = url;
+          const playUrl = `${baseUrl}${data.game_link}`;
+          const downloadUrl = `${baseUrl}${data.download_link}`;
           
-          sendBtn.innerText = "GENERATE CORE MODULE";
-          sendBtn.disabled = false;
+          document.getElementById("playLink").href = playUrl;
+          document.getElementById("downloadLink").href = downloadUrl;
+          
+          sendButton.disabled = false;
+          sendButton.innerHTML = `
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+            </svg>
+            Send
+          `;
         } else {
-          container.style.display = "none";
+          progressContainer.style.display = "none";
           links.style.display = "none";
+          progressFill.style.width = "0%";
         }
-      });
+      })
+      .catch(err => console.error("Status poll error:", err));
     }
 
-    setInterval(syncStatus, 1500);
+    // Allow Enter to send (Shift+Enter for new line)
+    document.getElementById("messageInput").addEventListener("keydown", function(e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    setInterval(checkStatus, 1000);
   </script>
 </body>
 </html>
