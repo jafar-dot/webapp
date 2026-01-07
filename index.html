@@ -3,349 +3,325 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Architect Studio | Game Engine</title>
+  <title>Console // Slot Architect</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   
   <style>
     /* =========================================
-       1. MODERN LIGHT THEME (STRIPE/APPLE STYLE)
+       1. INDUSTRIAL DESIGN SYSTEM
        ========================================= */
     :root {
-      --bg-main: #f8fafc;        /* Soft White */
-      --bg-card: #ffffff;
-      --border-color: #e2e8f0;   /* Light Gray Border */
+      --bg-canvas: #f2f2f7;      /* Precise industrial gray */
+      --bg-panel: #ffffff;
+      --border-main: #1a1a1a;    /* High-contrast black borders */
+      --text-main: #1a1a1a;
+      --text-dim: #707070;
       
-      --text-main: #0f172a;      /* Slate 900 */
-      --text-muted: #64748b;     /* Slate 500 */
+      --action-color: #ff5f1f;   /* International Orange (Safety/Industrial) */
+      --action-hover: #e04e10;
       
-      --accent: #0066ff;         /* Electric Blue */
-      --accent-soft: #e6f0ff;
-      
-      --success: #10b981;
-      --shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.08);
-      --radius: 16px;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', sans-serif;
     }
 
-    * { box-sizing: border-box; outline: none; }
+    * { box-sizing: border-box; outline: none; cursor: crosshair; }
     
     body {
       margin: 0;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: var(--bg-main);
+      font-family: var(--sans);
+      background-color: var(--bg-canvas);
       color: var(--text-main);
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       overflow: hidden;
-      
-      /* Subtle Modern Gradient Background */
-      background-image: 
-        radial-gradient(at 0% 0%, #e0e7ff 0px, transparent 50%),
-        radial-gradient(at 100% 100%, #f1f5f9 0px, transparent 50%);
     }
 
     /* =========================================
-       2. MAIN CONTAINER
+       2. CONSOLE ARCHITECTURE
        ========================================= */
-    #studio-app {
-      width: 95%;
-      max-width: 1000px;
-      height: 85vh;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      animation: appFadeIn 0.8s ease-out;
+    #console-container {
+      width: 98vw;
+      height: 96vh;
+      background: var(--bg-panel);
+      border: 2px solid var(--border-main);
+      display: grid;
+      grid-template-rows: 60px 1fr 140px;
+      position: relative;
     }
 
-    @keyframes appFadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* =========================================
-       3. NAVIGATION BAR
-       ========================================= */
-    .navbar {
-      height: 70px;
-      padding: 0 32px;
-      border-bottom: 1px solid var(--border-color);
+    /* Header / Data Strip */
+    .data-strip {
+      border-bottom: 2px solid var(--border-main);
+      padding: 0 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      background: #fff;
     }
 
-    .logo-area {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .logo-circle {
-      width: 36px;
-      height: 36px;
-      background: var(--accent);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
-    }
-
-    .brand-name {
+    .system-id {
+      font-family: var(--mono);
       font-weight: 700;
-      font-size: 1.1rem;
-      letter-spacing: -0.5px;
+      font-size: 14px;
+      letter-spacing: 1px;
     }
 
-    .build-tag {
-      font-family: 'JetBrains Mono', monospace;
+    .metrics {
+      display: flex;
+      gap: 40px;
+      font-family: var(--mono);
       font-size: 11px;
-      background: var(--bg-main);
-      padding: 4px 10px;
-      border-radius: 6px;
-      color: var(--text-muted);
-      border: 1px solid var(--border-color);
+      text-transform: uppercase;
     }
+
+    .metric-item span { color: var(--text-dim); margin-right: 5px; }
 
     /* =========================================
-       4. CONVERSATION VIEW
+       3. WORKSPACE (LOG)
        ========================================= */
-    #chat-log {
-      flex: 1;
-      padding: 40px;
+    #log-view {
       overflow-y: auto;
+      padding: 60px;
       display: flex;
       flex-direction: column;
-      gap: 30px;
+      gap: 40px;
     }
 
-    #chat-log::-webkit-scrollbar { width: 5px; }
-    #chat-log::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    #log-view::-webkit-scrollbar { width: 4px; }
+    #log-view::-webkit-scrollbar-thumb { background: var(--border-main); }
 
-    .msg-group { display: flex; flex-direction: column; max-width: 80%; }
-    .msg-group.bot { align-self: flex-start; }
-    .msg-group.user { align-self: flex-end; align-items: flex-end; }
+    .entry {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
 
-    .sender-label {
-      font-size: 11px;
+    .entry-label {
+      font-family: var(--mono);
       font-weight: 700;
-      color: var(--text-muted);
+      font-size: 12px;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
+      padding-top: 4px;
     }
 
-    .bubble {
-      padding: 16px 20px;
-      border-radius: 14px;
-      font-size: 1rem;
-      line-height: 1.6;
+    .entry-content {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      font-weight: 400;
     }
 
-    .bot .bubble { background: var(--bg-main); color: var(--text-main); border-bottom-left-radius: 2px; }
-    .user .bubble { background: var(--accent); color: white; border-bottom-right-radius: 2px; }
+    .entry.user .entry-label { color: var(--action-color); }
+    .entry.bot .entry-label { color: var(--border-main); }
 
     /* =========================================
-       5. INPUT ENGINE
+       4. CONTROL MODULE (INPUT)
        ========================================= */
-    .input-wrapper {
-      padding: 30px 40px;
-      background: #ffffff;
-      border-top: 1px solid var(--border-color);
+    .controls {
+      border-top: 2px solid var(--border-main);
+      background: #fff;
+      display: grid;
+      grid-template-columns: 1fr 300px;
     }
 
-    .text-box-container {
-      background: #fdfdfd;
-      border: 2px solid var(--border-color);
-      border-radius: 14px;
-      padding: 10px;
-      transition: all 0.2s ease;
-    }
-
-    .text-box-container:focus-within {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.05);
+    .input-zone {
+      padding: 20px 30px;
+      border-right: 2px solid var(--border-main);
+      display: flex;
+      align-items: center;
     }
 
     textarea {
       width: 100%;
+      height: 60px;
       border: none;
-      background: transparent;
-      padding: 12px;
-      font-size: 1rem;
-      font-family: inherit;
+      font-family: var(--sans);
+      font-size: 1.2rem;
+      font-weight: 500;
       resize: none;
-      height: 50px;
-      color: var(--text-main);
+      background: transparent;
     }
 
-    .action-row {
+    textarea::placeholder { color: #ccc; }
+
+    .action-zone {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+    }
+
+    .btn {
+      width: 100%;
+      height: 100%;
+      border: none;
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 13px;
+      text-transform: uppercase;
+      cursor: pointer;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-top: 8px;
-      padding: 0 10px;
+      justify-content: center;
+      transition: all 0.1s;
     }
 
     #sendButton {
-      background: var(--text-main);
-      color: white;
-      border: none;
-      padding: 10px 24px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s;
+      background: var(--border-main);
+      color: #fff;
+      grid-row: span 2;
     }
 
-    #sendButton:hover:enabled { background: #000; transform: translateY(-1px); }
-    #sendButton:disabled { background: #cbd5e1; cursor: not-allowed; }
+    #sendButton:hover { background: var(--action-color); }
+    #sendButton:active { transform: scale(0.98); }
+    #sendButton:disabled { background: #eee; color: #aaa; cursor: not-allowed; }
 
-    /* Progress States */
-    #progressSection {
+    /* Progress Overlay */
+    #progress-overlay {
       display: none;
-      margin-top: 20px;
-      padding: 20px;
-      background: var(--accent-soft);
-      border-radius: 12px;
+      position: absolute;
+      bottom: 142px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: #eee;
     }
 
-    .prog-text {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 10px;
+    #progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--action-color);
+      transition: width 0.3s;
     }
 
-    .bar-bg { height: 6px; background: rgba(0, 102, 255, 0.1); border-radius: 10px; overflow: hidden; }
-    #bar-fill { height: 100%; width: 0%; background: var(--accent); transition: width 0.4s ease; }
-
-    /* Final Result Buttons */
-    #finalActions {
+    /* Result buttons */
+    #final-module {
       display: none;
-      gap: 12px;
-      margin-top: 20px;
-    }
-
-    .btn-res {
-      flex: 1;
-      padding: 16px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border: 2px solid var(--border-main);
+      padding: 40px;
+      box-shadow: 20px 20px 0px var(--border-main);
+      z-index: 100;
       text-align: center;
-      text-decoration: none;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      transition: 0.2s;
+      animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .play-btn { background: var(--success); color: white; }
-    .play-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+    @keyframes pop { from { transform: translate(-50%, -40%) scale(0.9); } }
 
-    .down-btn { background: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color); }
-    .down-btn:hover { background: #fff; border-color: var(--text-muted); }
+    .res-link {
+      display: block;
+      margin: 10px 0;
+      padding: 15px 40px;
+      text-decoration: none;
+      color: white;
+      font-family: var(--mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      background: var(--border-main);
+    }
+
+    .res-link:first-child { background: var(--action-color); }
+
+    .close-btn {
+      margin-top: 15px;
+      font-family: var(--mono);
+      font-size: 10px;
+      text-decoration: underline;
+      cursor: pointer;
+    }
 
   </style>
 </head>
 
 <body>
 
-  <div id="studio-app">
-    <div class="navbar">
-      <div class="logo-area">
-        <div class="logo-circle">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-        </div>
-        <span class="brand-name">Architect Studio</span>
-        <span class="build-tag" id="dynamicBuild">BUILD: ...</span>
+  <div id="console-container">
+    <header class="data-strip">
+      <div class="system-id">SLOT_ARCHITECT // CORE</div>
+      <div class="metrics">
+        <div class="metric-item"><span>CLOCK:</span> <span id="clock" style="color:#1a1a1a">00:00:00</span></div>
+        <div class="metric-item"><span>STATUS:</span> ONLINE</div>
+        <div class="metric-item"><span>LATENCY:</span> 24MS</div>
       </div>
-      <div style="font-size: 12px; font-weight: 600; color: var(--success);">● SYSTEM LIVE</div>
+    </header>
+
+    <main id="log-view">
+      <div class="entry bot">
+        <div class="entry-label">SYS_OUT</div>
+        <div class="entry-content">Kernel initialized. Ready for slot logic parameters. Input prompt to begin generation sequence.</div>
+      </div>
+    </main>
+
+    <div id="progress-overlay">
+      <div id="progress-fill"></div>
     </div>
 
-    <div id="chat-log">
-      <div class="msg-group bot">
-        <span class="sender-label">Architect AI</span>
-        <div class="bubble">System ready. Describe the slot mechanics or math model you'd like to initialize today.</div>
-      </div>
+    <div id="final-module">
+      <h2 style="font-family:var(--mono); font-size: 18px; margin-bottom: 20px;">GENERATION COMPLETE</h2>
+      <a id="playLink" href="#" target="_blank" class="res-link">Play the Game</a>
+      <a id="downloadLink" href="#" download class="res-link">Download Game File</a>
+      <div class="close-btn" onclick="this.parentElement.style.display='none'">DISMISS WINDOW</div>
     </div>
 
-    <div class="input-wrapper">
-      
-      <div id="progressSection">
-        <div class="prog-text">
-          <span>INITIALIZING GENERATION ENGINE...</span>
-          <span id="percentText">0%</span>
-        </div>
-        <div class="bar-bg">
-          <div id="bar-fill"></div>
-        </div>
+    <footer class="controls">
+      <div class="input-zone">
+        <textarea id="messageInput" placeholder="TYPE COMMAND..."></textarea>
       </div>
-
-      <div id="finalActions">
-        <a id="playLink" href="#" target="_blank" class="btn-res play-btn">Play the Game</a>
-        <a id="downloadLink" href="#" download class="btn-res down-btn">Download Game File</a>
+      <div class="action-zone">
+        <button id="sendButton" onclick="sendMessage()">EXECUTE SEND</button>
       </div>
-
-      <div class="text-box-container" style="margin-top: 15px;">
-        <textarea id="messageInput" placeholder="Enter your prompt..."></textarea>
-        <div class="action-row">
-          <span id="typingStatus" style="font-size: 11px; color: var(--text-muted); font-weight: 600;">READY</span>
-          <button id="sendButton" onclick="sendMessage()">Send</button>
-        </div>
-      </div>
-
-    </div>
+    </footer>
   </div>
 
   <script>
-    // 1. Generate a Dynamic Build ID (Live Professional Touch)
-    const buildId = "B-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-    document.getElementById("dynamicBuild").innerText = `BUILD: ${buildId}`;
+    // Live Clock Logic
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock').innerText = now.toTimeString().split(' ')[0];
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
 
     const url = "https://hamster-teaching-serval.ngrok-free.app";
-    const session_id = "studio_" + Math.floor(Math.random() * 999999);
+    const session_id = "core_" + Math.random().toString(36).substr(2, 9);
     
     const sendBtn = document.getElementById("sendButton");
     const input = document.getElementById("messageInput");
 
-    function addMessage(text, sender) {
-      const group = document.createElement("div");
-      group.className = "msg-group " + sender;
+    function addEntry(text, type) {
+      const row = document.createElement("div");
+      row.className = "entry " + type;
       
-      const label = document.createElement("span");
-      label.className = "sender-label";
-      label.innerText = sender === "user" ? "Developer" : "Architect AI";
+      const label = document.createElement("div");
+      label.className = "entry-label";
+      label.innerText = type === "user" ? "USER_IN" : "SYS_OUT";
       
-      const bubble = document.createElement("div");
-      bubble.className = "bubble";
-      bubble.textContent = text;
+      const content = document.createElement("div");
+      content.className = "entry-content";
+      content.textContent = text;
       
-      group.appendChild(label);
-      group.appendChild(bubble);
+      row.appendChild(label);
+      row.appendChild(content);
       
-      const log = document.getElementById("chat-log");
-      log.appendChild(group);
-      log.scrollTop = log.scrollHeight;
+      const view = document.getElementById("log-view");
+      view.appendChild(row);
+      view.scrollTop = view.scrollHeight;
     }
 
     function sendMessage() {
       const msg = input.value.trim();
       if (!msg || sendBtn.disabled) return;
 
-      addMessage(msg, "user");
+      addEntry(msg, "user");
       input.value = "";
-      
-      document.getElementById("typingStatus").innerText = "PROCESSING...";
       sendBtn.disabled = true;
 
       fetch(`${url}/receive_message`, {
@@ -355,12 +331,11 @@
       })
       .then(r => r.json())
       .then(data => {
-        if (data.status === "True") addMessage(data.reply, "bot");
-        document.getElementById("typingStatus").innerText = "READY";
+        if (data.status === "True") addEntry(data.reply, "bot");
         sendBtn.disabled = false;
       })
       .catch(e => {
-        addMessage("Server communication error.", "bot");
+        addEntry("LINK FAILURE: TERMINAL DISCONNECTED", "bot");
         sendBtn.disabled = false;
       });
     }
@@ -374,36 +349,33 @@
       .then(r => r.json())
       .then(data => {
         const p = data.process_percent;
-        const prog = document.getElementById("progressSection");
-        const actions = document.getElementById("finalActions");
-        const fill = document.getElementById("bar-fill");
-        const pText = document.getElementById("percentText");
+        const overlay = document.getElementById("progress-overlay");
+        const fill = document.getElementById("progress-fill");
+        const modal = document.getElementById("final-module");
 
         if (p > 0 && p < 100) {
-          prog.style.display = "block";
-          actions.style.display = "none";
+          overlay.style.display = "block";
           fill.style.width = p + "%";
-          pText.innerText = p + "%";
+          sendBtn.innerText = "PROCESSING...";
           sendBtn.disabled = true;
         } 
         else if (p === 100) {
           fill.style.width = "100%";
-          pText.innerText = "100%";
-          prog.style.display = "block";
-          actions.style.display = "flex";
+          modal.style.display = "block";
           
           document.getElementById("playLink").href = `${url}${data.game_link}`;
           document.getElementById("downloadLink").href = `${url}${data.download_link}`;
+          
+          sendBtn.innerText = "EXECUTE SEND";
           sendBtn.disabled = false;
         } 
         else {
-          prog.style.display = "none";
-          actions.style.display = "none";
+          overlay.style.display = "none";
         }
       });
     }
 
-    setInterval(checkStatus, 1000);
+    setInterval(checkStatus, 1500);
   </script>
 </body>
 </html>
