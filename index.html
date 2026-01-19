@@ -28,7 +28,10 @@
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #1a1a1a;
+      background: var(--bg-dark);
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.15), transparent),
+        radial-gradient(ellipse 60% 50% at 50% 120%, rgba(139, 92, 246, 0.1), transparent);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -44,20 +47,50 @@
       max-width: 900px;
       height: 92vh;
       max-height: 900px;
-      background: #2a2a2a;
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       border-radius: 24px;
-      border: 1px solid #3a3a3a;
+      border: 1px solid var(--card-border);
+      box-shadow: 
+        0 0 0 1px rgba(99, 102, 241, 0.05),
+        0 20px 60px -15px rgba(0, 0, 0, 0.7),
+        0 0 100px -20px rgba(99, 102, 241, 0.2);
+      animation: fadeInScale 0.7s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       flex-direction: column;
       overflow: hidden;
       position: relative;
     }
 
+    /* Ambient glow effect */
+    #chatInner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.03) 0%, transparent 70%);
+      pointer-events: none;
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.96) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
     /* ===== HEADER ===== */
     .header {
       padding: 28px 36px;
-      border-bottom: 1px solid #3a3a3a;
-      background: #252525;
+      border-bottom: 1px solid var(--card-border);
+      background: rgba(17, 17, 27, 0.6);
       position: relative;
       z-index: 1;
     }
@@ -164,8 +197,8 @@
     /* ===== INPUT AREA ===== */
     .input-area {
       padding: 24px 36px 28px;
-      background: #252525;
-      border-top: 1px solid #3a3a3a;
+      background: rgba(17, 17, 27, 0.8);
+      border-top: 1px solid var(--card-border);
       position: relative;
       z-index: 1;
     }
@@ -507,10 +540,9 @@
   </div>
 
   <script>
+    const url = "https://supersecure-rozella-nonalliteratively.ngrok-free.dev";
+    const session_id = "user_" + Math.floor(Math.random() * 1000000);
     const sendButton = document.getElementById("sendButton");
-    let isGenerating = false;
-    let progressInterval = null;
-    let currentProgress = 0;
 
     function addMessage(text, sender) {
       const msgDiv = document.createElement("div");
@@ -521,81 +553,89 @@
       document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
     }
 
-    function startTestProgress() {
-      currentProgress = 0;
-      const progressContainer = document.getElementById("progressContainer");
-      const progressFill = document.getElementById("progressFill");
-      const percentText = document.getElementById("percentText");
-      const links = document.getElementById("links");
-
-      // Show progress bar
-      progressContainer.style.display = "block";
-      links.style.display = "none";
-
-      // Disable send button
-      sendButton.disabled = true;
-      sendButton.innerHTML = `
-        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-        </svg>
-        Processing...
-      `;
-
-      // Clear any existing interval
-      if (progressInterval) {
-        clearInterval(progressInterval);
-      }
-
-      // Update progress every 100ms (10 seconds / 100 steps = 100ms per step)
-      progressInterval = setInterval(() => {
-        currentProgress += 1;
-        
-        progressFill.style.width = currentProgress + "%";
-        percentText.innerText = currentProgress + "%";
-
-        if (currentProgress >= 100) {
-          clearInterval(progressInterval);
-          
-          // Show download links after completion
-          setTimeout(() => {
-            links.style.display = "flex";
-            
-            // Set placeholder links (you can replace these with actual URLs)
-            document.getElementById("playLink").href = "#play-game";
-            document.getElementById("downloadLink").href = "#download-game";
-            
-            // Re-enable send button
-            sendButton.disabled = false;
-            sendButton.innerHTML = `
-              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-              </svg>
-              Send
-            `;
-            
-            isGenerating = false;
-          }, 500);
-        }
-      }, 100); // 100ms interval = 10 seconds total
-    }
-
     function sendMessage() {
       const input = document.getElementById("messageInput");
       const message = input.value.trim();
-      if (!message || sendButton.disabled || isGenerating) return;
+      if (!message || sendButton.disabled) return;
 
-      // Add user message
       addMessage(message, "user");
       input.value = "";
       
-      // Add bot response
-      setTimeout(() => {
-        addMessage("The game is now being generated. Please wait a few seconds", "bot");
-        
-        // Start test progress
-        isGenerating = true;
-        startTestProgress();
-      }, 500);
+      document.getElementById("waitMessage").style.display = "flex";
+
+      fetch(`${url}/receive_message`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: message, session_id: session_id })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "True") {
+          addMessage(data.reply, "bot");
+        } else {
+          addMessage("Error: " + data.reply, "bot");
+        }
+        document.getElementById("waitMessage").style.display = "none";
+      })
+      .catch(err => {
+        addMessage("System connection error. Please retry.", "bot");
+        document.getElementById("waitMessage").style.display = "none";
+      });
+    }
+
+    function checkStatus() {
+      fetch(`${url}/get_status`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: session_id })
+      })
+      .then(response => response.json())
+      .then(data => {
+        const percent = data.process_percent;
+        const progressContainer = document.getElementById("progressContainer");
+        const progressFill = document.getElementById("progressFill");
+        const links = document.getElementById("links");
+        const percentText = document.getElementById("percentText");
+
+        if (percent > 0 && percent < 100) {
+          progressContainer.style.display = "block";
+          links.style.display = "none";
+          progressFill.style.width = percent + "%";
+          if(percentText) percentText.innerText = percent + "%";
+          sendButton.disabled = true;
+          sendButton.innerHTML = `
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            Processing...
+          `;
+        } else if (percent === 100) {
+          progressFill.style.width = "100%";
+          if(percentText) percentText.innerText = "100%";
+          progressContainer.style.display = "block";
+          links.style.display = "flex";
+          
+          const baseUrl = url;
+          const playUrl = `${baseUrl}${data.game_link}`;
+          const downloadUrl = `${baseUrl}${data.download_link}`;
+          
+          document.getElementById("playLink").href = playUrl;
+          document.getElementById("downloadLink").href = downloadUrl;
+          
+          sendButton.disabled = false;
+          sendButton.innerHTML = `
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+            </svg>
+            Send
+          `;
+        } else {
+          progressContainer.style.display = "none";
+          links.style.display = "none";
+          progressFill.style.width = "0%";
+        }
+      })
+      .catch(err => console.error("Status poll error:", err));
     }
 
     // Allow Enter to send (Shift+Enter for new line)
@@ -605,6 +645,12 @@
         sendMessage();
       }
     });
+
+    setInterval(checkStatus, 1000);
   </script>
 </body>
 </html>
+
+
+
+
