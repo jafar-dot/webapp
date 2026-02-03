@@ -478,7 +478,7 @@
     </div>
 
     <div id="messages">
-      <div class="message bot">Hello! Describe the slot machine mechanics you wish to build today. Once created, you can adjust the game by typing changes like "change theme to underwater" or "replace symbol 1 with a dragon".</div>
+      <div class="message bot">Hello! Describe the slot machine mechanics you wish to build today".</div>
     </div>
 
     <div class="input-area">
@@ -659,6 +659,10 @@
       addMessage(message, "user");
       input.value = "";
       
+      // Reset clarification flag when sending new message
+      lastClarificationShown = false;
+      lastConfirmationShown = false;
+      
       // For adjustments, show "Analyzing..." instead of progress bar
       if (gameExists) {
         document.getElementById("waitMessage").style.display = "flex";
@@ -801,6 +805,9 @@
           // Check if there's a clarification waiting
           if (data.clarification_question && !lastClarificationShown) {
             lastClarificationShown = true;
+            // Hide wait message
+            document.getElementById("waitMessage").style.display = "none";
+            // Show clarification
             addMessage("🤔 " + data.clarification_question, "bot", true);
             sendButton.disabled = false;
             document.getElementById("buttonText").textContent = "Reply";
