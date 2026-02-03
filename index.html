@@ -478,7 +478,7 @@
     </div>
 
     <div id="messages">
-      <div class="message bot">Hello! Describe the slot machine mechanics you wish to build today".</div>
+      <div class="message bot">Hello! Describe the slot machine mechanics you wish to build today. Once created, you can adjust the game by typing changes like "change theme to underwater" or "replace symbol 1 with a dragon".</div>
     </div>
 
     <div class="input-area">
@@ -492,7 +492,7 @@
       </div>
       
       <div class="input-wrapper">
-        <textarea id="messageInput" placeholder="Describe your slot machine idea or type adjustments for an existing game..." rows="3"></textarea>
+        <textarea id="messageInput" placeholder="Describe your slot machine idea" rows="3"></textarea>
       </div>
       
       <button id="sendButton" onclick="sendMessage()">
@@ -559,7 +559,6 @@
     let currentGameLink = null;
     let isAdjustmentMode = false;
     let lastAdjustmentComplete = false;
-    let lastClarificationShown = false;
     let lastConfirmationShown = false;
     let gameWindow = null; // Reference to game window for auto-refresh
 
@@ -659,18 +658,11 @@
       addMessage(message, "user");
       input.value = "";
       
-      // Reset clarification flag when sending new message
-      lastClarificationShown = false;
-      lastConfirmationShown = false;
-      
-      // For adjustments, show "Analyzing..." instead of progress bar
-      if (gameExists) {
-        document.getElementById("waitMessage").style.display = "flex";
-        document.getElementById("waitMessage").querySelector("span").textContent = "Analyzing your request...";
-      } else {
-        document.getElementById("waitMessage").style.display = "flex";
-      }
+      // Show progress immediately
+      document.getElementById("waitMessage").style.display = "flex";
+      document.getElementById("waitMessage").querySelector("span").textContent = gameExists ? "Applying changes..." : "Processing your request...";
       sendButton.disabled = true;
+      document.getElementById("buttonText").textContent = gameExists ? "Adjusting..." : "Processing...";
 
       fetch(`${url}/receive_message`, {
         method: "POST",
@@ -683,21 +675,17 @@
           addMessage(data.reply, "bot", data.is_adjustment);
           if (data.is_adjustment) {
             lastAdjustmentComplete = false;
-            lastClarificationShown = false;
-            lastConfirmationShown = false;
           }
         } else {
           addMessage("Error: " + data.reply, "bot");
         }
         document.getElementById("waitMessage").style.display = "none";
-        
-        // Reset wait message text
-        document.getElementById("waitMessage").querySelector("span").textContent = "Processing your request...";
       })
       .catch(err => {
         addMessage("System connection error. Please retry.", "bot");
         document.getElementById("waitMessage").style.display = "none";
         sendButton.disabled = false;
+        document.getElementById("buttonText").textContent = gameExists ? "Apply Changes" : "Send";
       });
     }
 
@@ -718,30 +706,17 @@
         const isAdjustment = data.is_adjustment;
 
         if (percent > 0 && percent < 100) {
-          // Only show progress if we're actually processing (not clarification)
+          // Show progress bar
           progressContainer.style.display = "block";
           links.style.display = "none";
           progressFill.style.width = percent + "%";
           if (percentText) percentText.innerText = percent + "%";
           sendButton.disabled = true;
-          
           document.getElementById("buttonText").textContent = isAdjustment ? "Adjusting..." : "Processing...";
           
         } else if (percent === 100) {
           progressFill.style.width = "100%";
           if (percentText) percentText.innerText = "100%";
-          
-          // Check for clarification question - show message, NO progress bar
-          if (data.clarification_question && !lastClarificationShown) {
-            lastClarificationShown = true;
-            addMessage("🤔 " + data.clarification_question, "bot", true);
-            sendButton.disabled = false;
-            document.getElementById("buttonText").textContent = "Reply";
-            progressContainer.style.display = "none";
-            links.style.display = "none";
-            return;
-          }
-          
           progressContainer.style.display = "block";
           links.style.display = "flex";
           
@@ -760,22 +735,18 @@
             refreshLink.classList.add("show");
           }
           
-          // Show confirmation message if available
+          // Show confirmation message
           if (data.confirmation_message && !lastConfirmationShown) {
             lastConfirmationShown = true;
             addMessage("✅ " + data.confirmation_message, "bot", true);
           }
           
-          // AUTO-REFRESH: Open/refresh game automatically when adjustment completes
+          // AUTO-REFRESH game window when adjustment completes
           if (!lastAdjustmentComplete && (isAdjustment || data.should_refresh)) {
             lastAdjustmentComplete = true;
-            lastClarificationShown = false;
-            lastConfirmationShown = false;
             
-            // Open game in new tab or refresh existing
             const gameUrl = url + data.game_link + "?t=" + Date.now();
             
-            // Try to refresh existing game window, or open new one
             if (gameWindow && !gameWindow.closed) {
               gameWindow.location.href = gameUrl;
               gameWindow.focus();
@@ -783,14 +754,13 @@
               gameWindow = window.open(gameUrl, 'slotGameWindow');
             }
             
-            // Also refresh preview iframe if open
             const frame = document.getElementById("gameFrame");
             if (frame.src) {
               frame.src = gameUrl;
             }
           }
           
-          // Auto-open game on first creation too
+          // Auto-open game on first creation
           if (!lastAdjustmentComplete && !isAdjustment && !gameWindow) {
             lastAdjustmentComplete = true;
             const gameUrl = url + data.game_link;
@@ -801,27 +771,11 @@
           sendButton.disabled = false;
           document.getElementById("buttonText").textContent = gameExists ? "Apply Changes" : "Send";
           
-        } else if (percent === 0) {
-          // Check if there's a clarification waiting
-          if (data.clarification_question && !lastClarificationShown) {
-            lastClarificationShown = true;
-            // Hide wait message
-            document.getElementById("waitMessage").style.display = "none";
-            // Show clarification
-            addMessage("🤔 " + data.clarification_question, "bot", true);
-            sendButton.disabled = false;
-            document.getElementById("buttonText").textContent = "Reply";
-          }
-          
-          progressContainer.style.display = "none";
-          links.style.display = "none";
-          progressFill.style.width = "0%";
         } else {
           progressContainer.style.display = "none";
           links.style.display = "none";
           progressFill.style.width = "0%";
           lastAdjustmentComplete = false;
-          lastClarificationShown = false;
           lastConfirmationShown = false;
         }
       })
