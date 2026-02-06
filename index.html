@@ -10,6 +10,12 @@
       --primary: #6366f1;
       --primary-hover: #4f46e5;
       --primary-light: rgba(99, 102, 241, 0.1);
+      --visual: #10b981;
+      --visual-hover: #059669;
+      --visual-light: rgba(16, 185, 129, 0.1);
+      --logic: #f59e0b;
+      --logic-hover: #d97706;
+      --logic-light: rgba(245, 158, 11, 0.1);
       --bg-dark: #0a0a0f;
       --card-bg: rgba(17, 17, 27, 0.85);
       --card-border: rgba(99, 102, 241, 0.15);
@@ -139,16 +145,45 @@
     /* Adjustment Mode Bar */
     #adjustmentModeBar {
       display: none;
-      padding: 10px 36px;
-      background: var(--warning-bg);
-      border-bottom: 1px solid var(--warning);
+      padding: 12px 36px;
+      background: var(--primary-light);
+      border-bottom: 1px solid var(--primary);
       align-items: center;
-      gap: 10px;
-      font-size: 0.85rem;
-      color: var(--warning);
+      justify-content: center;
+      gap: 16px;
+      font-size: 0.9rem;
+      color: var(--text-main);
     }
 
     #adjustmentModeBar.active { display: flex; }
+
+    .adjustment-type-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.85rem;
+    }
+
+    .adjustment-type-label.visual {
+      background: var(--visual-light);
+      color: var(--visual);
+    }
+
+    .adjustment-type-label.logic {
+      background: var(--logic-light);
+      color: var(--logic);
+    }
+
+    .adjustment-type-label::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
 
     #messages {
       flex: 1;
@@ -195,8 +230,8 @@
     }
 
     .bot.adjustment-msg {
-      border-color: var(--warning);
-      background: var(--warning-bg);
+      border-color: var(--primary);
+      background: var(--primary-light);
     }
 
     .input-area {
@@ -216,7 +251,7 @@
       border: 1px solid var(--card-border);
     }
 
-    #waitMessage.adjustment { background: var(--warning-bg); border-color: var(--warning); }
+    #waitMessage.adjustment { background: var(--primary-light); border-color: var(--primary); }
     
     .pulse-dots { display: flex; gap: 4px; }
 
@@ -230,256 +265,271 @@
     .pulse-dot:nth-child(2) { animation-delay: 0.2s; }
     .pulse-dot:nth-child(3) { animation-delay: 0.4s; }
 
-    #waitMessage.adjustment .pulse-dot { background: var(--warning); }
+    #waitMessage.adjustment .pulse-dot { background: var(--primary); }
 
     @keyframes pulse-dot {
       0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
       40% { opacity: 1; transform: scale(1.2); }
     }
 
-    #waitMessage span { color: var(--text-muted); font-size: 0.88rem; font-weight: 500; }
-
-    .input-wrapper { position: relative; margin-bottom: 14px; }
-
-    textarea {
-      width: 100%;
-      padding: 16px 18px;
-      font-size: 0.95rem;
-      border-radius: 12px;
-      border: 1.5px solid var(--card-border);
-      background: rgba(0, 0, 0, 0.3);
-      color: var(--text-main);
-      resize: none;
-      outline: none;
-      font-family: 'Inter', sans-serif;
-      transition: all 0.3s ease;
-      height: 90px;
-      line-height: 1.5;
-    }
-
-    textarea:focus {
-      border-color: var(--primary);
-      background: rgba(0, 0, 0, 0.4);
-      box-shadow: 0 0 0 3px var(--primary-light);
-    }
-
-    textarea::placeholder { color: rgba(161, 161, 170, 0.5); }
-
-    textarea.adjustment-mode { border-color: var(--warning); }
-    textarea.adjustment-mode:focus { box-shadow: 0 0 0 3px var(--warning-bg); }
-
-    #sendButton {
-      width: 100%;
-      padding: 14px 24px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
-      color: white;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
-    }
-
-    #sendButton:hover:enabled { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4); }
-    #sendButton:disabled { background: rgba(71, 85, 105, 0.5); color: var(--text-muted); cursor: not-allowed; box-shadow: none; }
-
-    #sendButton.adjustment-mode {
-      background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
-      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
-    }
-
     #progressContainer {
       display: none;
-      margin: 14px 0;
-      padding: 14px;
-      background: rgba(39, 39, 52, 0.4);
-      border-radius: 12px;
-      border: 1px solid var(--card-border);
+      margin-bottom: 14px;
     }
 
-    #progressContainer.adjustment { border-color: var(--warning); background: var(--warning-bg); }
-
-    .progress-label {
+    .progress-header {
       display: flex;
       justify-content: space-between;
+      margin-bottom: 6px;
       font-size: 0.85rem;
       color: var(--text-muted);
-      margin-bottom: 8px;
     }
 
-    #percentText { color: var(--primary); font-weight: 600; }
-    #progressContainer.adjustment #percentText { color: var(--warning); }
-
-    #progressBar {
+    .progress-bar {
       width: 100%;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 8px;
+      height: 6px;
+      background: rgba(99, 102, 241, 0.1);
+      border-radius: 10px;
       overflow: hidden;
-      height: 8px;
+      position: relative;
     }
 
-    #progressFill {
+    .progress-fill {
       height: 100%;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-hover) 100%);
+      border-radius: 10px;
+      transition: width 0.3s ease;
       width: 0%;
-      background: linear-gradient(90deg, var(--primary), #818cf8);
-      transition: width 0.4s ease;
-      border-radius: 8px;
     }
 
-    #progressContainer.adjustment #progressFill { background: linear-gradient(90deg, var(--warning), #fbbf24); }
+    #progressContainer.adjustment .progress-fill {
+      background: linear-gradient(90deg, var(--primary) 0%, #8b5cf6 100%);
+    }
 
     #links {
       display: none;
-      gap: 12px;
-      margin-top: 14px;
-      animation: fadeInUp 0.5s ease;
+      gap: 10px;
+      margin-bottom: 14px;
     }
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(10px); } 
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    #links a {
+    .link-button {
       flex: 1;
+      padding: 10px 16px;
+      text-align: center;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .link-button.play {
+      background: var(--success-bg);
+      color: var(--success);
+      border-color: var(--success);
+    }
+
+    .link-button.play:hover {
+      background: rgba(16, 185, 129, 0.2);
+    }
+
+    .link-button.download {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .link-button.download:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    #refreshLink {
+      display: none;
+      padding: 8px 14px;
+      text-align: center;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid var(--warning);
+      background: var(--warning-bg);
+      color: var(--warning);
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-left: 8px;
+    }
+
+    #refreshLink.show { display: inline-flex; }
+
+    #refreshLink:hover {
+      background: rgba(245, 158, 11, 0.2);
+    }
+
+    /* Button Container for Visual/Logic Split */
+    .button-container {
+      display: flex;
+      gap: 10px;
+    }
+
+    .button-container.adjustment-mode {
+      flex-direction: row;
+    }
+
+    .button-container.normal-mode {
+      flex-direction: column;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: 1.5px solid var(--card-border);
+      background: rgba(39, 39, 52, 0.4);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      resize: vertical;
+      min-height: 80px;
+      max-height: 200px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      margin-bottom: 12px;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: rgba(39, 39, 52, 0.6);
+    }
+
+    button {
+      padding: 12px 28px;
+      border-radius: 12px;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 12px 18px;
-      text-decoration: none;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
+      flex: 1;
     }
 
-    #playLink {
-      background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+    #sendButton {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
       color: white;
-      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
     }
 
-    #playLink:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4); }
-
-    #downloadLink {
-      background: rgba(39, 39, 52, 0.6);
-      color: var(--text-main);
-      border: 1.5px solid var(--card-border);
+    #sendButton:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
     }
 
-    #downloadLink:hover { background: rgba(39, 39, 52, 0.8); border-color: var(--primary); transform: translateY(-2px); }
+    #sendButton:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
-    #refreshLink {
-      background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+    /* Visual and Logic Buttons */
+    #visualButton {
+      background: linear-gradient(135deg, var(--visual) 0%, var(--visual-hover) 100%);
       color: white;
-      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
       display: none;
     }
 
-    #refreshLink.show { display: flex; }
-    #refreshLink:hover { transform: translateY(-2px); }
-
-    .icon { width: 18px; height: 18px; }
-
-    /* Game Preview Panel */
-    #gamePreviewPanel {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 90%;
-      max-width: 1200px;
-      height: 85%;
-      background: var(--bg-dark);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      z-index: 1000;
-      overflow: hidden;
-      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8);
+    #visualButton:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
     }
 
-    #gamePreviewPanel.active { display: block; animation: fadeInScale 0.3s ease; }
+    #visualButton:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
-    #previewHeader {
+    #logicButton {
+      background: linear-gradient(135deg, var(--logic) 0%, var(--logic-hover) 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+      display: none;
+    }
+
+    #logicButton:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    }
+
+    #logicButton:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .button-container.adjustment-mode #sendButton {
+      display: none;
+    }
+
+    .button-container.adjustment-mode #visualButton,
+    .button-container.adjustment-mode #logicButton {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 20px;
-      background: rgba(17, 17, 27, 0.9);
-      border-bottom: 1px solid var(--card-border);
     }
 
-    #previewHeader h3 { color: var(--text-main); font-size: 1rem; }
+    .button-container.normal-mode #sendButton {
+      display: flex;
+    }
 
-    #closePreview {
-      background: none;
-      border: none;
+    .button-hint {
+      font-size: 0.75rem;
       color: var(--text-muted);
-      cursor: pointer;
-      padding: 8px;
-      border-radius: 8px;
-      transition: all 0.2s;
+      margin-top: 8px;
+      text-align: center;
+      line-height: 1.4;
     }
 
-    #closePreview:hover { background: rgba(255,255,255,0.1); color: var(--text-main); }
-
-    #gamePreviewPanel iframe { width: 100%; height: calc(100% - 50px); border: none; }
-
-    #previewOverlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 999;
+    .button-hint.visual {
+      color: var(--visual);
     }
 
-    #previewOverlay.active { display: block; }
-
-    @media (max-width: 768px) {
-      #chatInner { height: 95vh; border-radius: 16px; }
-      .header { padding: 16px 20px; }
-      h2 { font-size: 1.1rem; }
-      #messages { padding: 20px; }
-      .input-area { padding: 16px 20px; }
-      #links { flex-direction: column; }
-      #gamePreviewPanel { width: 95%; height: 80%; }
+    .button-hint.logic {
+      color: var(--logic);
     }
   </style>
 </head>
-
 <body>
   <div id="chatInner">
     <div class="header">
       <h2>
-        AI Slot Machine Architect
-        <span class="ai-badge">AI Powered</span>
+        AI Slot Machine
+        <span class="ai-badge">Powered by AI</span>
       </h2>
       <div id="gameActiveIndicator" onclick="openGamePreview()">
-        🎮 Game Active - Click to Preview
+        Game Active - Click to View
+      </div>
+    </div>
+    
+    <div id="adjustmentModeBar">
+      <span>🎮 Game exists - Choose adjustment type:</span>
+      <div class="adjustment-type-label visual">
+        <span>Visual</span>
+        <span style="font-size: 0.75rem;">(Theme, Symbols, Buttons)</span>
+      </div>
+      <div class="adjustment-type-label logic">
+        <span>Game Logic</span>
+        <span style="font-size: 0.75rem;">(Grid, Mechanics, Code)</span>
       </div>
     </div>
 
-    <div id="adjustmentModeBar">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-      </svg>
-      <span>Adjustment Mode - Type your changes (theme, symbols, grid size, etc.)</span>
-    </div>
-
-    <div id="messages">
-      <div class="message bot">Hello! Describe the slot machine mechanics you wish to build today.</div>
-    </div>
+    <div id="messages"></div>
 
     <div class="input-area">
       <div id="waitMessage">
@@ -490,114 +540,94 @@
         </div>
         <span id="waitText">AI is processing your request...</span>
       </div>
-      
-      <div class="input-wrapper">
-        <textarea id="messageInput" placeholder="Describe your slot machine idea." rows="3"></textarea>
-      </div>
-      
-      <button id="sendButton" onclick="sendMessage()">
-        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-        </svg>
-        <span id="buttonText">Send</span>
-      </button>
 
       <div id="progressContainer">
-        <div class="progress-label">
+        <div class="progress-header">
           <span id="progressLabel">Building your game</span>
           <span id="percentText">0%</span>
         </div>
-        <div id="progressBar">
-          <div id="progressFill"></div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
         </div>
       </div>
 
       <div id="links">
-        <a id="playLink" href="#" target="_blank">
-          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          Play Game
+        <a href="#" id="playLink" class="link-button play" target="_blank">
+          ▶️ Play Game
         </a>
-        <a id="refreshLink" href="#" onclick="refreshGame(event)">
-          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-          </svg>
-          Refresh Game
+        <a href="#" id="downloadLink" class="link-button download" download>
+          ⬇️ Download
         </a>
-        <a id="downloadLink" href="#" download>
-          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-          </svg>
-          Download
+        <a href="#" id="refreshLink" onclick="refreshGame(event)">
+          🔄 Refresh
         </a>
+      </div>
+
+      <textarea 
+        id="messageInput" 
+        placeholder="Describe your slot machine game...&#10;&#10;Examples:&#10;• Create a space-themed slot with 5 reels&#10;• Change theme to underwater with dolphins&#10;• Change grid to 4 rows and 3 columns"
+      ></textarea>
+
+      <div class="button-container normal-mode" id="buttonContainer">
+        <button id="sendButton" onclick="sendMessage()">
+          <span id="buttonText">Send</span>
+        </button>
+        
+        <button id="visualButton" onclick="sendVisualAdjustment()">
+          <span>🎨 Visual</span>
+        </button>
+        
+        <button id="logicButton" onclick="sendLogicAdjustment()">
+          <span>⚙️ Game Logic</span>
+        </button>
+      </div>
+
+      <div class="button-hint">
+        💡 Press Enter to send, Shift+Enter for new line
       </div>
     </div>
   </div>
 
-  <!-- Game Preview Panel -->
-  <div id="previewOverlay" onclick="closeGamePreview()"></div>
-  <div id="gamePreviewPanel">
-    <div id="previewHeader">
-      <h3>🎰 Game Preview</h3>
-      <button id="closePreview" onclick="closeGamePreview()">
-        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-      </button>
-    </div>
-    <iframe id="gameFrame" src=""></iframe>
-  </div>
-
   <script>
-    const url = "https://jaafar.ngrok.app";
-    const session_id = "user_" + Math.floor(Math.random() * 1000000);
-    const sendButton = document.getElementById("sendButton");
-    
+    const url = "http://localhost";
+    const session_id = Math.random().toString(36).substring(2, 15);
     let gameExists = false;
     let currentGameLink = null;
-    let isAdjustmentMode = false;
+    let gameWindow = null;
     let lastAdjustmentComplete = false;
     let lastConfirmationShown = false;
-    let gameWindow = null; // Reference to game window for auto-refresh
 
     function addMessage(text, sender, isAdjustment = false) {
-      const msgDiv = document.createElement("div");
-      msgDiv.className = "message " + sender;
-      if (isAdjustment && sender === "bot") {
-        msgDiv.classList.add("adjustment-msg");
+      const messagesDiv = document.getElementById("messages");
+      const messageDiv = document.createElement("div");
+      messageDiv.className = `message ${sender}`;
+      if (sender === "bot" && isAdjustment) {
+        messageDiv.classList.add("adjustment-msg");
       }
-      msgDiv.textContent = text; 
-      document.getElementById("messages").appendChild(msgDiv);
-      document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+      messageDiv.textContent = text;
+      messagesDiv.appendChild(messageDiv);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
     function setAdjustmentMode(enabled) {
-      isAdjustmentMode = enabled;
-      const textarea = document.getElementById("messageInput");
+      const buttonContainer = document.getElementById("buttonContainer");
       const adjustmentBar = document.getElementById("adjustmentModeBar");
       const waitMessage = document.getElementById("waitMessage");
       const progressContainer = document.getElementById("progressContainer");
+      const textarea = document.getElementById("messageInput");
       
       if (enabled) {
-        textarea.classList.add("adjustment-mode");
-        sendButton.classList.add("adjustment-mode");
+        buttonContainer.className = "button-container adjustment-mode";
         adjustmentBar.classList.add("active");
         waitMessage.classList.add("adjustment");
         progressContainer.classList.add("adjustment");
-        document.getElementById("waitText").textContent = "Adjusting your game...";
-        document.getElementById("progressLabel").textContent = "Applying changes";
-        document.getElementById("buttonText").textContent = "Apply Changes";
+        textarea.placeholder = "Describe your changes...\n\nExamples:\n• Visual: Change theme to underwater\n• Visual: Change symbol 1 to dolphin\n• Logic: Change grid to 4 rows\n• Logic: Change spin speed to faster";
       } else {
-        textarea.classList.remove("adjustment-mode");
-        sendButton.classList.remove("adjustment-mode");
+        buttonContainer.className = "button-container normal-mode";
         adjustmentBar.classList.remove("active");
         waitMessage.classList.remove("adjustment");
         progressContainer.classList.remove("adjustment");
-        document.getElementById("waitText").textContent = "AI is processing your request...";
-        document.getElementById("progressLabel").textContent = "Building your game";
-        document.getElementById("buttonText").textContent = "Send";
+        textarea.placeholder = "Describe your slot machine game...\n\nExamples:\n• Create a space-themed slot with 5 reels\n• Make an underwater slot with cascading symbols\n• Design a western-themed slot machine";
       }
     }
 
@@ -617,52 +647,26 @@
 
     function openGamePreview() {
       if (!currentGameLink) return;
-      
-      const panel = document.getElementById("gamePreviewPanel");
-      const overlay = document.getElementById("previewOverlay");
-      const frame = document.getElementById("gameFrame");
-      
-      frame.src = url + currentGameLink;
-      panel.classList.add("active");
-      overlay.classList.add("active");
-    }
-
-    function closeGamePreview() {
-      const panel = document.getElementById("gamePreviewPanel");
-      const overlay = document.getElementById("previewOverlay");
-      const frame = document.getElementById("gameFrame");
-      
-      panel.classList.remove("active");
-      overlay.classList.remove("active");
-      frame.src = "";
+      window.open(url + currentGameLink, '_blank');
     }
 
     function refreshGame(event) {
       event.preventDefault();
       if (currentGameLink) {
-        // Refresh the game iframe if preview is open
-        const frame = document.getElementById("gameFrame");
-        if (frame.src) {
-          frame.src = frame.src;
-        }
-        // Also open in new tab
-        window.open(url + currentGameLink, '_blank');
+        window.open(url + currentGameLink + "?t=" + Date.now(), '_blank');
       }
     }
 
     function sendMessage() {
       const input = document.getElementById("messageInput");
       const message = input.value.trim();
-      if (!message || sendButton.disabled) return;
+      if (!message || document.getElementById("sendButton").disabled) return;
 
       addMessage(message, "user");
       input.value = "";
       
-      // Show progress immediately
       document.getElementById("waitMessage").style.display = "flex";
-      document.getElementById("waitMessage").querySelector("span").textContent = gameExists ? "Applying changes..." : "Processing your request...";
-      sendButton.disabled = true;
-      document.getElementById("buttonText").textContent = gameExists ? "Adjusting..." : "Processing...";
+      document.getElementById("sendButton").disabled = true;
 
       fetch(`${url}/receive_message`, {
         method: "POST",
@@ -684,8 +688,77 @@
       .catch(err => {
         addMessage("System connection error. Please retry.", "bot");
         document.getElementById("waitMessage").style.display = "none";
-        sendButton.disabled = false;
-        document.getElementById("buttonText").textContent = gameExists ? "Apply Changes" : "Send";
+        document.getElementById("sendButton").disabled = false;
+      });
+    }
+
+    function sendVisualAdjustment() {
+      const input = document.getElementById("messageInput");
+      const message = input.value.trim();
+      if (!message || document.getElementById("visualButton").disabled) return;
+
+      addMessage("🎨 VISUAL: " + message, "user");
+      input.value = "";
+      
+      document.getElementById("waitMessage").style.display = "flex";
+      document.getElementById("visualButton").disabled = true;
+      document.getElementById("logicButton").disabled = true;
+
+      fetch(`${url}/adjust_visual`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: message, session_id: session_id })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "True") {
+          addMessage(data.reply, "bot", true);
+          lastAdjustmentComplete = false;
+        } else {
+          addMessage("Error: " + data.reply, "bot");
+        }
+        document.getElementById("waitMessage").style.display = "none";
+      })
+      .catch(err => {
+        addMessage("System connection error. Please retry.", "bot");
+        document.getElementById("waitMessage").style.display = "none";
+        document.getElementById("visualButton").disabled = false;
+        document.getElementById("logicButton").disabled = false;
+      });
+    }
+
+    function sendLogicAdjustment() {
+      const input = document.getElementById("messageInput");
+      const message = input.value.trim();
+      if (!message || document.getElementById("logicButton").disabled) return;
+
+      addMessage("⚙️ GAME LOGIC: " + message, "user");
+      input.value = "";
+      
+      document.getElementById("waitMessage").style.display = "flex";
+      document.getElementById("visualButton").disabled = true;
+      document.getElementById("logicButton").disabled = true;
+
+      fetch(`${url}/adjust_logic`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: message, session_id: session_id })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "True") {
+          addMessage(data.reply, "bot", true);
+          lastAdjustmentComplete = false;
+        } else {
+          addMessage("Error: " + data.reply, "bot");
+        }
+        document.getElementById("waitMessage").style.display = "none";
+      })
+      .catch(err => {
+        addMessage("System connection error. Please retry.", "bot");
+        document.getElementById("waitMessage").style.display = "none";
+        document.getElementById("visualButton").disabled = false;
+        document.getElementById("logicButton").disabled = false;
       });
     }
 
@@ -706,13 +779,13 @@
         const isAdjustment = data.is_adjustment;
 
         if (percent > 0 && percent < 100) {
-          // Show progress bar
           progressContainer.style.display = "block";
           links.style.display = "none";
           progressFill.style.width = percent + "%";
           if (percentText) percentText.innerText = percent + "%";
-          sendButton.disabled = true;
-          document.getElementById("buttonText").textContent = isAdjustment ? "Adjusting..." : "Processing...";
+          document.getElementById("sendButton").disabled = true;
+          document.getElementById("visualButton").disabled = true;
+          document.getElementById("logicButton").disabled = true;
           
         } else if (percent === 100) {
           progressFill.style.width = "100%";
@@ -727,40 +800,28 @@
           document.getElementById("playLink").href = playUrl;
           document.getElementById("downloadLink").href = downloadUrl;
           
-          // Update game active indicator
           updateGameActiveIndicator(true, data.game_link);
           
-          // Show refresh button if this was an adjustment
           if (isAdjustment || data.should_refresh) {
             refreshLink.classList.add("show");
           }
           
-          // Show confirmation message
           if (data.confirmation_message && !lastConfirmationShown) {
             lastConfirmationShown = true;
             addMessage("✅ " + data.confirmation_message, "bot", true);
           }
           
-          // AUTO-REFRESH game window when adjustment completes
           if (!lastAdjustmentComplete && (isAdjustment || data.should_refresh)) {
             lastAdjustmentComplete = true;
-            
             const gameUrl = url + data.game_link + "?t=" + Date.now();
-            
             if (gameWindow && !gameWindow.closed) {
               gameWindow.location.href = gameUrl;
               gameWindow.focus();
             } else {
               gameWindow = window.open(gameUrl, 'slotGameWindow');
             }
-            
-            const frame = document.getElementById("gameFrame");
-            if (frame.src) {
-              frame.src = gameUrl;
-            }
           }
           
-          // Auto-open game on first creation
           if (!lastAdjustmentComplete && !isAdjustment && !gameWindow) {
             lastAdjustmentComplete = true;
             const gameUrl = url + data.game_link;
@@ -768,8 +829,9 @@
             addMessage("✅ Game created! Opened in new window.", "bot", false);
           }
           
-          sendButton.disabled = false;
-          document.getElementById("buttonText").textContent = gameExists ? "Apply Changes" : "Send";
+          document.getElementById("sendButton").disabled = false;
+          document.getElementById("visualButton").disabled = false;
+          document.getElementById("logicButton").disabled = false;
           
         } else {
           progressContainer.style.display = "none";
@@ -782,7 +844,6 @@
       .catch(err => console.error("Status poll error:", err));
     }
 
-    // Check if game already exists on load
     function checkGameExists() {
       fetch(`${url}/check_game_exists`, {
         method: "POST",
@@ -798,21 +859,20 @@
       .catch(err => console.error("Check game exists error:", err));
     }
 
-    // Allow Enter to send (Shift+Enter for new line)
     document.getElementById("messageInput").addEventListener("keydown", function(e) {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
-        sendMessage();
+        if (gameExists) {
+          // In adjustment mode, default to visual
+          sendVisualAdjustment();
+        } else {
+          sendMessage();
+        }
       }
     });
 
-    // Initial check
     checkGameExists();
-    
-    // Poll for status every second
     setInterval(checkStatus, 1000);
   </script>
 </body>
 </html>
-
-
